@@ -1,6 +1,34 @@
+import { useEffect } from 'react';
 import '../styles/TransactionSection.css';
 
 function TransactionSection() {
+
+  async function getRecentCheckingTransaction() {
+    try {
+        const response = await fetch("http://localhost:8080/api/transactions/checking/recent/1", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Recent Transaction:", data);
+        return data;
+    } catch (error) {
+        console.error("Error fetching recent transaction:", error);
+    }
+}
+
+useEffect( () => {
+  getRecentCheckingTransaction();
+
+}, []);
+
   return (
     <section className="transaction-section">
       <h2>거래내역</h2>
