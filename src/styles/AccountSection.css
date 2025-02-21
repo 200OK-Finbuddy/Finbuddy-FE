@@ -1,0 +1,28 @@
+.account-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  height: 100%;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between; /* 좌우 정렬 */
+  align-items: center;
+  margin-bottom: 24px;
+  position: relative; /* 버튼 위치 조정을 위해 추가 ✅ */
+}
+
+.transfer-btn {
+  background-color: #f0f7ff; /* 기존과 동일한 연한 파란색 ✅ */
+  color: #197bbd; /* 기존과 동일한 파란색 텍스트 ✅ */
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  position: absolute;
+  top: 0; /* 상단에 고정 ✅ */
+  right: 16px; /* 오른쪽 정렬 ✅ */
+}

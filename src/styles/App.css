@@ -1,0 +1,28 @@
+.app {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.welcome-section {
+  margin-bottom: 32px;
+}
+
+.welcome-section h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 8px;
+}
+
+.welcome-section p {
+  color: #979797;
+  font-size: 14px;
+}

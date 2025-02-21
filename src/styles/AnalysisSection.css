@@ -1,0 +1,44 @@
+.analysis-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #404040;
+}
+
+.chart-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.donut-chart {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 30px auto;
+  background: conic-gradient(
+    #62b2fd 0% 45%,
+    #9bdfc4 45% 65%,
+    #f99bab 65% 80%,
+    #ffb44f 80% 90%,
+    #9f97f7 90% 100%
+  );
+  border-radius: 50%;
+}
