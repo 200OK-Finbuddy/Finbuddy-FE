@@ -17,32 +17,38 @@ function ExpenseChart() {
 
   const getCategoryExpenses = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/transactions/category-expenses?memberId=1&year=2025&month=2", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth() + 1;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      const response = await fetch(
+          `http://localhost:8080/api/transactions/category-expenses?memberId=1&year=${currentYear}&month=${currentMonth}`, 
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        
+        const expensesWithColors = data.map(expense => ({
+          ...expense,
+          color: CATEGORY_COLORS[expense.categoryName] || CATEGORY_COLORS.기타
+        }));
+    
+        setExpenses(expensesWithColors);
+        const total = data.reduce((sum, item) => sum + item.totalAmount, 0);
+        setTotalAmount(total);
+      } catch (error) {
+        console.error("Error fetching category expenses:", error);
       }
-
-      const data = await response.json();
-      
-      const expensesWithColors = data.map(expense => ({
-        ...expense,
-        color: CATEGORY_COLORS[expense.categoryName] || CATEGORY_COLORS.기타
-      }));
-
-      setExpenses(expensesWithColors);
-      const total = data.reduce((sum, item) => sum + item.totalAmount, 0);
-      setTotalAmount(total);
-      console.log("Recent dd:", data);
-    } catch (error) {
-      console.error("Error fetching category expenses:", error);
-    }
-  }, []);
+    }, []);
 
   useEffect(() => {
     getCategoryExpenses();
