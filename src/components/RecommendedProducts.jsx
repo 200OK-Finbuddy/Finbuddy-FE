@@ -41,17 +41,16 @@ function RecommendedProducts() {
     );
   };
 
-  const getVisibleProducts = () => {
-    if (products.length === 0) return [];
-    
-    const firstProduct = products[currentIndex];
-    const secondIndex = (currentIndex + 1) % products.length;
-    const secondProduct = products[secondIndex];
-    
-    return [firstProduct, secondProduct];
+  const getMaxProductNameLength = () => {
+    return Math.max(...products.map(product => product.name.length), 0);
   };
 
-  const visibleProducts = getVisibleProducts();
+  const visibleProducts = products.length ? [
+    products[currentIndex], 
+    products[(currentIndex + 1) % products.length]
+  ] : [];
+
+  const maxProductNameLength = getMaxProductNameLength();
 
   return (
     <section className="recommended-section">
@@ -73,7 +72,7 @@ function RecommendedProducts() {
             <div key={product.productId} className="product-card">
               <input type="hidden" value={product.productId} />
               <div className="content-wrapper">
-                <div className="bank-info">
+                <div className="bank-info" style={{ marginBottom: '8px' }}>
                   <img 
                     src={product.bankLogoUrl || "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-1n9rNnaXovWfjgyAlC9x9H3N0QpFzY.png"} 
                     alt={`${product.bankName} 로고`}
@@ -84,10 +83,12 @@ function RecommendedProducts() {
                 
                 <div className="product-info">
                   <span className="product-type">{getProductTypeText(product.productType)}</span>
-                  <h3 className="product-name">{product.name}</h3>
+                  <h3 className="product-name" style={{ minHeight: `${maxProductNameLength * 1.2}px` }}>
+                    {product.name}
+                  </h3>
                 </div>
 
-                <div className="rate-info">
+                <div style={{ marginTop: '6px' }} className="rate-info">
                   <span className="label">금리</span>
                   <div className="value">
                     {formatInterestRate(product.minInterestRate)} ~ {formatInterestRate(product.maxInterestRate)}%
