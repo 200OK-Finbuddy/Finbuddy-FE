@@ -1,8 +1,8 @@
 import '../styles/Dashboard.css';
 import AccountSection from './AccountSection';
 import TransactionSection from './TransactionSection';
-import AnalysisSection from './AnalysisSection';
 import RecommendedProducts from './RecommendedProducts';
+import ExpenseChart from './ExpenseChart';
 
 function Dashboard() {
   return (
@@ -19,7 +19,7 @@ function Dashboard() {
 
       <div className="content-grid">
         <TransactionSection />
-        <AnalysisSection />
+        <ExpenseChart />
       </div>
     </main>
   );
