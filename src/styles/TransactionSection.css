@@ -2,7 +2,7 @@
   background: #fff;
   border-radius: 16px;
   padding: 24px;
-  min-height: 600px;
+  min-height: 500px;
 }
 
 .transaction-section h2 {
@@ -16,12 +16,12 @@
   width: 100%;
 }
 
-table {
+.transaction-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
-th {
+.transaction-table th {
   text-align: left;
   padding: 12px;
   color: #979797;
@@ -30,8 +30,24 @@ th {
   border-bottom: 1px solid #efefef;
 }
 
-td {
+.transaction-table td {
   padding: 12px;
   font-size: 14px;
   border-bottom: 1px solid #efefef;
+}
+
+.transaction-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transaction-info .icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  border-radius: 8px;
 }
