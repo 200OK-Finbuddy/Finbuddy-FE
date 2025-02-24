@@ -98,7 +98,9 @@ function RecommendedProducts() {
                 <div className="term-info">
                   <span className="label">가입기간</span>
                   <div className="value">
-                    {product.minSavingTerm} ~ {product.maxSavingTerm}개월
+                  {product.minSavingTerm === product.maxSavingTerm
+                      ? `${product.maxSavingTerm}개월`
+                      : `${product.minSavingTerm} ~ ${product.maxSavingTerm}개월`}
                   </div>
                 </div>
               </div>
