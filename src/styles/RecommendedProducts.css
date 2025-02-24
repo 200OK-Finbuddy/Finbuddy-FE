@@ -84,6 +84,7 @@
 }
 
 .product-info {
+  margin-top: 10px;
   margin-bottom: 24px;
 }
 
@@ -100,6 +101,7 @@
   color: #404040;
   margin: 0;
   line-height: 1.4;
+  height: 30px;
 }
 
 .rate-info {
