@@ -3,8 +3,9 @@ import AccountSection from './AccountSection';
 import TransactionSection from './TransactionSection';
 import RecommendedProducts from './RecommendedProducts';
 import ExpenseChart from './ExpenseChart';
+import PropTypes from 'prop-types';
 
-function Dashboard() {
+function Dashboard({ setActiveNav }) {
   return (
     <main className="main-content">
       <header className="welcome-section">
@@ -14,7 +15,7 @@ function Dashboard() {
 
       <div className="account-grid">
         <AccountSection />
-        <RecommendedProducts />
+        <RecommendedProducts setActiveNav={setActiveNav} />
       </div>
 
       <div className="content-grid">
@@ -24,5 +25,9 @@ function Dashboard() {
     </main>
   );
 }
+
+Dashboard.propTypes = {
+  setActiveNav: PropTypes.func.isRequired,  // 추가
+};
 
 export default Dashboard;

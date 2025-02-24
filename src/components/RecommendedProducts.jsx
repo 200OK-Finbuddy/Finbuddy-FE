@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import PropTypes from 'prop-types';
 import '../styles/RecommendedProducts.css';
 
-function RecommendedProducts() {
+function RecommendedProducts({ setActiveNav }) {
   const [products, setProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
@@ -25,7 +26,8 @@ function RecommendedProducts() {
     fetchProducts();
   }, []);
 
-  const handleNavigation = (path) => {
+  const handleNavigation = (path, navType) => {
+    setActiveNav(navType);
     navigate(path);
   };
 
@@ -64,7 +66,7 @@ function RecommendedProducts() {
         <h2>추천상품</h2>
         <button 
           className="add-btn" 
-          onClick={() => handleNavigation('/products')}
+          onClick={() => handleNavigation('/products', 'products')}
         >
           +
         </button>
@@ -130,5 +132,9 @@ function RecommendedProducts() {
     </section>
   );
 }
+
+RecommendedProducts.propTypes = {
+  setActiveNav: PropTypes.func.isRequired,  // 추가
+};
 
 export default RecommendedProducts;

@@ -38,7 +38,7 @@ function App() {
           path="/"
           element={
             <Layout navType={activeNav} onNavChange={setActiveNav}>
-              <Dashboard />
+              <Dashboard setActiveNav={setActiveNav} />
             </Layout>
           }
         />
@@ -51,7 +51,7 @@ function App() {
           path="/products"
           element={
             <Layout navType={activeNav} onNavChange={setActiveNav}>
-              <Products />
+              <Products setActiveNav={setActiveNav} />
             </Layout>
           }
         />
