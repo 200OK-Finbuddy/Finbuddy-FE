@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '../styles/RecommendedProducts.css';
 
 function RecommendedProducts() {
   const [products, setProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,6 +24,10 @@ function RecommendedProducts() {
 
     fetchProducts();
   }, []);
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
   const getProductTypeText = (type) => {
     return type === 'DEPOSIT' ? '예금' : '적금';
@@ -56,7 +62,12 @@ function RecommendedProducts() {
     <section className="recommended-section">
       <div className="section-header">
         <h2>추천상품</h2>
-        <button className="add-btn">+</button>
+        <button 
+          className="add-btn" 
+          onClick={() => handleNavigation('/products')}
+        >
+          +
+        </button>
       </div>
       <div className="carousel-wrapper">
         <button 
