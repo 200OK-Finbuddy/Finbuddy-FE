@@ -1,0 +1,204 @@
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid transparent;
+  border-bottom-color: #00b090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorMessage {
+  text-align: center;
+  color: #ef4444;
+  padding: 2rem;
+  font-size: 1.125rem;
+}
+
+.productDetail {
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bankInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bankLogo {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+}
+
+.bankName {
+  font-size: 1.25rem;
+  color: #00b090;
+  font-weight: 600;
+}
+
+.productName {
+  font-size: 1.5rem;
+  color: #111827;
+  font-weight: 600;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.value {
+  font-size: 1rem;
+  color: #111827;
+  font-weight: 500;
+}
+
+.optionsTable {
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.optionsTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.optionsTable th,
+.optionsTable td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.optionsTable th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.optionsTable td {
+  color: #111827;
+  font-size: 0.875rem;
+}
+
+.evenRow {
+  background-color: white;
+}
+
+.oddRow {
+  background-color: #f9fafb;
+}
+
+.termCell {
+  font-weight: 500;
+  color: #374151;
+}
+
+.rateCell {
+  text-align: right;
+  font-family: "Roboto Mono", monospace;
+}
+
+.maxRate {
+  color: #00b090;
+  font-weight: 600;
+}
+
+.optionsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.additionalNotes {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .productDetail {
+    padding: 1rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .optionsTable {
+    margin: 0;
+    border-radius: 6px;
+  }
+
+  .optionsTable th,
+  .optionsTable td {
+    padding: 0.75rem;
+  }
+}
+
+/* 테이블 hover 효과 */
+.optionsTable tbody tr:hover {
+  background-color: #f3f4f6;
+}
+

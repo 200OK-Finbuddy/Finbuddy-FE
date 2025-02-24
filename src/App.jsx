@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar"
 import Dashboard from "./components/Dashboard"
 import SignupForm from "./components/SignupForm"
 import Products from "./components/Products"
+import ProductDetail from "./components/ProductDetail"
 
 // Layout 컴포넌트를 분리하고 setActiveNav를 props로 전달
 const Layout = ({ children, navType, onNavChange }) => {
@@ -51,6 +52,24 @@ function App() {
           element={
             <Layout navType={activeNav} onNavChange={setActiveNav}>
               <Products />
+            </Layout>
+          }
+        />
+        {/* 예금 상품 상세 페이지 라우트 */}
+        <Route
+          path="/products/deposit/:productId"
+          element={
+            <Layout navType={activeNav} onNavChange={setActiveNav}>
+              <ProductDetail />
+            </Layout>
+          }
+        />
+        {/* 적금 상품 상세 페이지 라우트 */}
+        <Route
+          path="/products/saving/:productId"
+          element={
+            <Layout navType={activeNav} onNavChange={setActiveNav}>
+              <ProductDetail />
             </Layout>
           }
         />

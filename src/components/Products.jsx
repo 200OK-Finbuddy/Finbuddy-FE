@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import styles from "../styles/Products.module.css"
 
 // 은행 목록 데이터
@@ -27,6 +28,7 @@ const BANKS = [
 ]
 
 export default function Products() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("deposits")
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedBank, setSelectedBank] = useState("")
@@ -84,6 +86,14 @@ export default function Products() {
   // 마지막 페이지로 이동
   const goToLastPage = () => {
     setCurrentPage(totalPages - 1)
+  }
+
+  const handleDetailClick = (productId) => {
+    // 현재 활성화된 탭에 따라 상품 타입 결정
+    const productType = activeTab === "deposits" ? "deposit" : "saving"
+    navigate(`/products/${productType}/${productId}`, {
+      state: { productType },
+    })
   }
 
   return (
@@ -193,7 +203,9 @@ export default function Products() {
                       <p className={styles.maxRate}>{product.maxInterestRate.toFixed(2)}%</p>
                       <p className={styles.baseRate}>기본 {product.minInterestRate.toFixed(2)}%</p>
                     </div>
-                    <button className={styles.detailButton}>상세보기</button>
+                    <button className={styles.detailButton} onClick={() => handleDetailClick(product.productId)}>
+                      상세보기
+                    </button>
                   </div>
                 </div>
               ))}
