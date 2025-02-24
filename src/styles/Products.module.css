@@ -1,0 +1,431 @@
+/* 페이지네이션 스타일 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 16px 0;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: 4px;
+  margin: 0 4px;
+}
+
+.pageNumber {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageNumber:hover {
+  border-color: #00b090;
+  color: #00b090;
+  background-color: #f0fdf9;
+}
+
+.activePage {
+  background-color: #00b090;
+  color: white;
+  border-color: #00b090;
+  box-shadow: 0 2px 4px rgba(0, 176, 144, 0.1);
+}
+
+.activePage:hover {
+  color: white;
+  background-color: #00b090;
+}
+
+.pageButton {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+  border-color: #00b090;
+  color: #00b090;
+  background-color: #f0fdf9;
+}
+
+.pageButton:disabled {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.pageButtonEdge {
+  background-color: #f8f9fa;
+}
+
+.pageButtonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* 필터 컨테이너 스타일 */
+.filterContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* 검색 입력 필드에 X 버튼을 위한 공간 확보 */
+.searchInput[type="text"] {
+  padding-right: 64px; /* X 버튼과 검색 아이콘을 위한 공간 */
+}
+
+/* X 버튼 스타일 */
+.clearButton {
+  position: absolute;
+  right: 36px; /* 검색 아이콘 왼쪽으로 */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fca5a5; /* 빨간색 */
+  cursor: pointer;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearButton:hover {
+  color: #f87171; /* 호버 시 더 밝은 빨간색 */
+}
+
+/* 검색 아이콘이 클릭을 방해하지 않도록 */
+.searchIcon {
+  pointer-events: none;
+}
+
+.product-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 32px;
+  color: #404040;
+}
+
+.tabContainer {
+  display: inline-flex;
+  background-color: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.tabButton {
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.tabButton:hover:not(.tabButtonActive) {
+  background-color: #e5e7eb;
+}
+
+.tabButtonActive {
+  background-color: #00b090;
+  color: white;
+}
+
+/* 검색 영역 스타일 */
+.searchInputGroup {
+  display: flex;
+  gap: 16px;
+}
+
+.searchInputWrapper {
+  position: relative;
+  width: 200px;
+}
+
+/* select 스타일 추가 */
+.searchInput {
+  width: 100%;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background-color: white;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5563;
+  font-family: inherit;
+}
+
+/* select 화살표 아이콘 */
+select.searchInput {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+/* select 옵션 스타일링 */
+.searchInput option {
+  font-size: 14px;
+  padding: 8px;
+  color: #4b5563;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchInput:focus {
+  border-color: #00b090;
+}
+
+.searchInput:focus {
+  border-color: #00b090;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+}
+
+/* 기본 스타일 */
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 32px;
+  color: #404040;
+}
+
+.productListContainer {
+  min-height: 200px;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid transparent;
+  border-bottom-color: #00b090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 상품 목록 스타일 */
+.productList {
+  display: grid;
+  gap: 16px;
+}
+
+.productItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+  background-color: white;
+}
+
+.productItem:hover {
+  border-color: #00b090;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bankLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.bankInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: auto;
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bankName {
+  font-weight: 500;
+  color: #404040;
+}
+
+.productName {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.subscriptionMethod {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.additionalNotes {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 1000px;
+  cursor: help;
+}
+
+.interestInfo {
+  text-align: right;
+}
+
+.interestRates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.maxRate {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00b090;
+}
+
+.baseRate {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.detailButton {
+  font-size: 14px;
+  color: white;           /* 변경: 텍스트 색상을 흰색으로 */
+  background-color: #6ac4a9; /* 변경: 민트색 배경 추가 */
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;       /* 변경: 상단 여백 증가 */
+  padding: 8px 16px;     /* 변경: 버튼다운 패딩 추가 */
+  border-radius: 20px;   /* 변경: 둥근 모서리 추가 */
+  transition: background-color 0.2s ease; /* 변경: 호버 효과 트랜지션 추가 */
+}
+
+.detailButton:hover {
+  background-color: #009378; /* 변경: 호버 시 더 진한 배경색으로 변경 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .additionalNotes {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pageNumbers {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pageButton {
+    order: 1;
+  }
+
+  .pageButtonEdge {
+    display: none;
+  }
+
+  .additionalNotes {
+    max-width: 200px;
+  }
+
+  .searchInputGroup {
+    flex-direction: column;
+  }
+
+  .searchInputWrapper {
+    width: 100%;
+  }
+
+  .productItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .interestInfo {
+    width: 100%;
+    text-align: left;
+  }
+
+  .interestRates {
+    align-items: flex-start;
+  }
+}
+

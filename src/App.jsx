@@ -1,23 +1,33 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './styles/App.css';
-import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import SignupForm from './components/SignupForm';
-import Products from './components/Products';
+"use client"
+
+import { useState } from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import PropTypes from "prop-types"
+import "./styles/App.css"
+import Sidebar from "./components/Sidebar"
+import Dashboard from "./components/Dashboard"
+import SignupForm from "./components/SignupForm"
+import Products from "./components/Products"
+
+// Layout 컴포넌트를 분리하고 setActiveNav를 props로 전달
+const Layout = ({ children, navType, onNavChange }) => {
+  return (
+    <div className="app">
+      <Sidebar activeNav={navType} setActiveNav={onNavChange} />
+      {children}
+    </div>
+  )
+}
+
+// PropTypes 업데이트
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  navType: PropTypes.string.isRequired,
+  onNavChange: PropTypes.func.isRequired,
+}
 
 function App() {
-  const [activeNav, setActiveNav] = useState('dashboard');
-
-  // 사이드바와 함께 보여줄 레이아웃
-  const Layout = ({ children, navType }) => {
-    return (
-      <div className="app">
-        <Sidebar activeNav={navType} setActiveNav={setActiveNav} />
-        {children}
-      </div>
-    );
-  };
+  const [activeNav, setActiveNav] = useState("dashboard")
 
   return (
     <Router>
@@ -26,12 +36,12 @@ function App() {
         <Route
           path="/"
           element={
-            <Layout navType="dashboard">
+            <Layout navType={activeNav} onNavChange={setActiveNav}>
               <Dashboard />
             </Layout>
           }
         />
-        
+
         {/* 회원가입 페이지 */}
         <Route path="/signup" element={<SignupForm />} />
 
@@ -39,14 +49,15 @@ function App() {
         <Route
           path="/products"
           element={
-            <Layout navType="products">
+            <Layout navType={activeNav} onNavChange={setActiveNav}>
               <Products />
             </Layout>
           }
         />
       </Routes>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
+
