@@ -1,33 +1,44 @@
 .sidebar {
   width: 240px;
-  background-color: #fff;
-  padding: 24px 16px;
-  border-right: 1px solid #efefef;
+  background: white;
+  border-right: 1px solid #eee;
+  padding: 20px 0;
+  height: 100vh;
 }
 
 .logo {
-  padding: 0 8px;
-  margin-bottom: 40px;
+  padding: 0 20px;
+  margin-bottom: 20px;
 }
 
 .nav-menu ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .nav-menu li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  margin-bottom: 8px;
-  color: #696969;
+  padding: 12px 20px;
+  color: #666;
   cursor: pointer;
-  border-radius: 8px;
-  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.nav-menu li:hover {
+  background-color: rgba(0, 176, 144, 0.05);
 }
 
 .nav-menu li.active {
-  background-color: #f0f7ff;
-  color: #197bbd;
+  color: #00B090;
+  background-color: rgba(0, 176, 144, 0.1);
+}
+
+.nav-menu li svg {
+  margin-right: 12px;
+}
+
+.nav-menu li span {
+  font-size: 14px;
 }

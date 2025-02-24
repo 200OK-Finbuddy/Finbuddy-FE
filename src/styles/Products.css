@@ -1,0 +1,211 @@
+.product-container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.product-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
+
+/* 탭 스타일링 */
+.tab-container {
+  display: inline-flex;
+  background-color: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.tab-button:hover:not(.active) {
+  background-color: #e5e7eb;
+}
+
+.tab-button.active {
+  background-color: #00b090;
+  color: white;
+}
+
+/* 검색 영역 스타일링 */
+.search-container {
+  background-color: #f3f4f6;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.search-input-group {
+  display: flex;
+  gap: 16px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #00b090;
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+}
+
+/* 상품 목록 스타일링 */
+.product-list-container {
+  margin-top: 24px;
+  min-height: 200px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid transparent;
+  border-bottom-color: #00b090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.product-list {
+  display: grid;
+  gap: 16px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.product-item:hover {
+  border-color: #00b090;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bank-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bank-name {
+  font-weight: 600;
+}
+
+.product-name,
+.subscription-method {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.interest-info {
+  text-align: right;
+}
+
+.interest-rates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.max-rate {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00b090;
+}
+
+.base-rate {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.detail-button {
+  font-size: 14px;
+  color: #00b090;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 4px;
+  padding: 0;
+}
+
+.detail-button:hover {
+  text-decoration: underline;
+}
+
+/* 웰컴 섹션 */
+.welcome-section {
+  margin-bottom: 32px;
+}
+
+.welcome-section h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 8px;
+}
+
+.welcome-section p {
+  color: #979797;
+  font-size: 14px;
+}

@@ -1,35 +1,62 @@
 import { BarChart2, Users, Send, CreditCard, Settings, HelpCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../styles/Sidebar.css';
 
 function Sidebar({ activeNav, setActiveNav }) {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path, navType) => {
+    setActiveNav(navType);
+    navigate(path);
+  };
+
   return (
     <aside className="sidebar">
       <div className="logo">
-        <img src="/placeholder.svg?height=40&width=120" alt="Finbuddy" />
+        <img src="/placeholder.svg?height=40&width=120" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer' }} />
       </div>
       <nav className="nav-menu">
         <ul>
-          <li className={activeNav === 'dashboard' ? 'active' : ''} onClick={() => setActiveNav('dashboard')}>
+          <li 
+            className={activeNav === 'dashboard' ? 'active' : ''} 
+            onClick={() => handleNavigation('/', 'dashboard')}
+          >
             <BarChart2 size={20} />
             <span>대시보드</span>
           </li>
-          <li className={activeNav === 'transactions' ? 'active' : ''} onClick={() => setActiveNav('transactions')}>
+          <li 
+            className={activeNav === 'transactions' ? 'active' : ''} 
+            onClick={() => handleNavigation('/transactions', 'transactions')}
+          >
             <Users size={20} />
             <span>거래내역</span>
           </li>
-          <li className={activeNav === 'transfer' ? 'active' : ''} onClick={() => setActiveNav('transfer')}>
+          <li 
+            className={activeNav === 'transfer' ? 'active' : ''} 
+            onClick={() => handleNavigation('/transfer', 'transfer')}
+          >
             <Send size={20} />
             <span>이체하기</span>
           </li>
-          <li className={activeNav === 'products' ? 'active' : ''} onClick={() => setActiveNav('products')}>
+          <li 
+            className={activeNav === 'products' ? 'active' : ''} 
+            onClick={() => handleNavigation('/products', 'products')}
+          >
             <CreditCard size={20} />
             <span>금융상품</span>
           </li>
-          <li className={activeNav === 'settings' ? 'active' : ''} onClick={() => setActiveNav('settings')}>
+          <li 
+            className={activeNav === 'settings' ? 'active' : ''} 
+            onClick={() => handleNavigation('/settings', 'settings')}
+          >
             <Settings size={20} />
             <span>설정</span>
           </li>
-          <li className={activeNav === 'support' ? 'active' : ''} onClick={() => setActiveNav('support')}>
+          <li 
+            className={activeNav === 'support' ? 'active' : ''} 
+            onClick={() => handleNavigation('/support', 'support')}
+          >
             <HelpCircle size={20} />
             <span>문의하기</span>
           </li>
@@ -38,5 +65,10 @@ function Sidebar({ activeNav, setActiveNav }) {
     </aside>
   );
 }
+
+Sidebar.propTypes = {
+  activeNav: PropTypes.string.isRequired,
+  setActiveNav: PropTypes.func.isRequired
+};
 
 export default Sidebar;
