@@ -143,4 +143,3 @@ RecommendedProducts.propTypes = {
 };
 
 export default RecommendedProducts;
-
