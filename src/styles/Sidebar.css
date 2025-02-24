@@ -3,7 +3,7 @@
   background: white;
   border-right: 1px solid #eee;
   padding: 20px 0;
-  height: 100vh;
+  height: auto;
 }
 
 .logo {
@@ -31,8 +31,8 @@
 }
 
 .nav-menu li.active {
-  color: #00B090;
-  background-color: rgba(0, 176, 144, 0.1);
+  background-color: #f0f7ff;
+  color: #197bbd;
 }
 
 .nav-menu li svg {

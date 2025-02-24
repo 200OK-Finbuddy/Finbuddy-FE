@@ -86,31 +86,34 @@ export default function ProductSearch() {
             <div className="loading-spinner"></div>
           </div>
         ) : (
-          <div className="product-list">
-            {products.map((product) => (
-              <div key={product.productId} className="product-item">
-                <div className="product-info">
-                  <img
-                    src={product.bankLogoUrl || "/placeholder.svg"}
-                    alt={product.bankName}
-                    className="bank-logo"
-                  />
-                  <div className="product-details">
+        <div className="product-list">
+          {products.map((product) => (
+            <div key={product.productId} className="product-item">
+              <div className="product-info">
+                <img
+                  src={product.bankLogoUrl || "/placeholder.svg"}
+                  alt={product.bankName}
+                  className="bank-logo"
+                />
+                <div className="product-details">
+                  <div className="bank-info">
                     <h3 className="bank-name">{product.bankName}</h3>
-                    <p className="product-name">{product.productName}</p>
-                    <p className="subscription-method">{product.subscriptionMethod}</p>
+                    <span className="subscription-method">{product.subscriptionMethod}</span>
                   </div>
-                </div>
-                <div className="interest-info">
-                  <div className="interest-rates">
-                    <p className="max-rate">{product.maxInterestRate.toFixed(2)}%</p>
-                    <p className="base-rate">기본 {product.minInterestRate.toFixed(2)}%</p>
-                  </div>
-                  <button className="detail-button">상세보기</button>
+                  <p className="product-name">{product.productName}</p>
+                  <p className="additional-notes">{product.additionalNotes}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="interest-info">
+                <div className="interest-rates">
+                  <p className="max-rate">{product.maxInterestRate.toFixed(2)}%</p>
+                  <p className="base-rate">기본 {product.minInterestRate.toFixed(2)}%</p>
+                </div>
+                <button className="detail-button">상세보기</button>
+              </div>
+            </div>
+          ))}
+        </div>
         )}
       </div>
     </div>
