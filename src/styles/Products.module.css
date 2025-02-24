@@ -293,9 +293,10 @@ select.searchInput {
 }
 
 .bankLogo {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .bankInfo {
@@ -428,4 +429,3 @@ select.searchInput {
     align-items: flex-start;
   }
 }
-

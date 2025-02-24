@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState, useCallback } from "react"
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -184,13 +182,13 @@ export default function Products({ setActiveNav }) {
                 <div key={product.productId} className={styles.productItem}>
                   <input type="hidden" value={product.productId} />
                   <div className={styles.productInfo}>
-                    <img
-                      src={product.bankLogoUrl || "/placeholder.svg"}
-                      alt={product.bankName}
-                      className={styles.bankLogo}
-                    />
                     <div className={styles.productDetails}>
                       <div className={styles.bankInfo}>
+                        <img
+                          src={product.bankLogoUrl || "/placeholder.svg"}
+                          alt={product.bankName}
+                          className={styles.bankLogo}
+                        />
                         <h3 className={styles.bankName}>{product.bankName}</h3>
                         <span className={styles.subscriptionMethod}>{product.subscriptionMethod}</span>
                       </div>
