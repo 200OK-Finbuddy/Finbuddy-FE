@@ -21,7 +21,6 @@ function AccountSection() {
       }
 
       const data = await response.json();
-      console.log("Checking Accounts:", data);
       setAccountSummary(data);
     } catch (error) {
       console.error("Error fetching checking accounts:", error);
