@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import PropTypes from 'prop-types';
 import styles from "../styles/Products.module.css"
 
 // 은행 목록 데이터
@@ -25,7 +26,7 @@ const BANKS = [
   { id: 18, name: "토스뱅크 주식회사" },
 ]
 
-export default function Products() {
+export default function Products({ setActiveNav }) {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("deposits")
   const [searchTerm, setSearchTerm] = useState("")
@@ -55,7 +56,8 @@ export default function Products() {
 
   useEffect(() => {
     handleSearch()
-  }, [handleSearch])
+    setActiveNav("products")
+  }, [handleSearch, setActiveNav ])
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
@@ -264,3 +266,6 @@ export default function Products() {
   )
 }
 
+Products.propTypes = {
+  setActiveNav: PropTypes.func.isRequired,  // 추가
+};
