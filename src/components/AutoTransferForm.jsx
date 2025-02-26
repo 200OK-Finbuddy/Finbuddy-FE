@@ -26,19 +26,18 @@ export default function AutoTransferForm() {
     label: `${i + 1}일`,
   }))
 
-  // // fetch 요청에 사용할 공통 options
-  // const fetchOptions = {
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     "Access-Control-Allow-Origin": "*",
-  //   },
-  //   credentials: "include",
-  // }
+  // fetch 요청에 사용할 공통 options
+  const fetchOptions = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }
 
   useEffect(() => {
     const fetchCheckingAccounts = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/accounts/checking/${memberId}`)
+        const response = await fetch(`http://localhost:8080/api/accounts/checking/${memberId}`, fetchOptions)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setCheckingAccounts(data.top3Accounts)
@@ -57,15 +56,18 @@ export default function AutoTransferForm() {
       if (!isEditing) return
 
       try {
-        const response = await fetch(`http://localhost:8080/api/autotransfer/${id}`)
+        const response = await fetch(`http://localhost:8080/api/autotransfer/${id}`, fetchOptions)
         if (!response.ok) throw new Error("Failed to fetch auto transfer details")
         const data = await response.json()
 
+        console.log("Fetched auto transfer details:", data) // 디버깅용 로그
+
+        // 모든 필드를 올바르게 설정
         setFormData({
-          fromAccountId: data.fromAccountId.toString(),
-          targetAccountNumber: data.targetAccountNumber,
-          amount: data.amount.toString(),
-          transferDay: data.transferDay.toString(),
+          fromAccountId: data?.fromAccountId?.toString() || "",
+          targetAccountNumber: data?.toAccountNumber || "", // toAccountNumber로 수정
+          amount: data?.amount?.toString() || "",
+          transferDay: data?.transferDay?.toString() || "",
         })
       } catch (error) {
         console.error("Error fetching auto transfer details:", error)
@@ -85,7 +87,7 @@ export default function AutoTransferForm() {
       const method = isEditing ? "PATCH" : "POST"
 
       const response = await fetch(url, {
-        // ...fetchOptions,
+        ...fetchOptions,
         method,
         body: JSON.stringify({
           ...formData,
@@ -176,7 +178,7 @@ export default function AutoTransferForm() {
                 <option value="">출금 계좌를 선택하세요</option>
                 {checkingAccounts.map((account) => (
                   <option key={account.accountId} value={account.accountId}>
-                    {account.accountName} | {account.accountNumber}
+                    {account.accountName} ({account.accountNumber})
                   </option>
                 ))}
               </select>
