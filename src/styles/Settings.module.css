@@ -1,0 +1,79 @@
+.menuGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.menuCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.menuCard:hover {
+  border-color: #00b090;
+  background-color: #f0fdf9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 176, 144, 0.1);
+}
+
+.menuContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #f0fdf9;
+  border-radius: 12px;
+  color: #00b090;
+}
+
+.menuInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menuTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.menuDescription {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.arrowIcon {
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+  transition: transform 0.2s ease;
+}
+
+.menuCard:hover .arrowIcon {
+  transform: translateX(4px);
+  color: #00b090;
+}
+
+@media (max-width: 640px) {
+  .menuGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
