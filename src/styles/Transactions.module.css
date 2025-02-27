@@ -1,0 +1,484 @@
+/* 계좌 캐러셀 */
+.accountCarouselWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.accountCards {
+  display: flex;
+  gap: 16px;
+  overflow-x: hidden;
+  padding: 8px 0;
+  flex: 1;
+}
+
+.accountCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  min-width: 300px;
+  flex: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.accountCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.accountCard.active {
+  border-color: #197bbd;
+  background-color: #f0f7ff;
+}
+
+.accountCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bankInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bankLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #f0f7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accountInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.accountName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #404040;
+}
+
+.accountNumber {
+  font-size: 14px;
+  color: #979797;
+}
+
+.accountBalance {
+  font-size: 20px;
+  font-weight: 700;
+  color: #404040;
+}
+
+.carouselButton {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  color: #6b7280;
+}
+
+.carouselButton:hover:not(:disabled) {
+  background-color: #f0f7ff;
+  color: #197bbd;
+  border-color: #197bbd;
+}
+
+.carouselButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carouselButton.prev {
+  margin-right: 8px;
+}
+
+.carouselButton.next {
+  margin-left: 8px;
+}
+
+/* 계좌 상세 정보 */
+.accountDetailContainer {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.accountDetailHeader {
+  margin-bottom: 24px;
+}
+
+.accountTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 4px;
+}
+
+.accountNumberDetail {
+  font-size: 16px;
+  color: #979797;
+}
+
+.accountInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.infoCard {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.infoTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 16px;
+}
+
+.infoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoLabel {
+  font-size: 14px;
+  color: #979797;
+}
+
+.infoValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: #404040;
+}
+
+/* 월간 거래 요약 */
+.monthlySummaryCard {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.summaryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.monthSelect {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: white;
+  color: #404040;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.monthSelect:focus {
+  outline: none;
+  border-color: #197bbd;
+}
+
+.horizontalBarChart {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chartLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #404040;
+}
+
+.barWrapper {
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.incomeBar {
+  background-color: #197bbd;
+}
+
+.expenseBar {
+  background-color: #f99bab;
+}
+
+/* 거래내역 */
+.transactionsContainer {
+  margin-top: 32px;
+}
+
+.transactionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.transactionsTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+}
+
+.transactionTabs {
+  display: flex;
+  gap: 8px;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6b7280;
+}
+
+.tabButton:hover {
+  background-color: #f0f7ff;
+  color: #197bbd;
+}
+
+.tabButton.active {
+  background-color: #197bbd;
+  color: white;
+}
+
+.transactionsTableContainer {
+  position: relative;
+  min-height: 400px;
+  overflow-x: auto;
+}
+
+.transactionsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactionsTable th,
+.transactionsTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transactionsTable th {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  background-color: #f9f9f9;
+}
+
+.transactionsTable td {
+  font-size: 14px;
+  color: #404040;
+}
+
+.income {
+  color: #197bbd;
+  font-weight: 500;
+}
+
+.expense {
+  color: #f99bab;
+  font-weight: 500;
+}
+
+.noData {
+  text-align: center;
+  color: #979797;
+  padding: 32px 0;
+}
+
+/* 로딩 상태 */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: 16px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f4f6;
+  border-top-color: #197bbd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingMore {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .accountInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .accountCards {
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+
+  .accountCard {
+    min-width: 250px;
+  }
+
+  .transactionsHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .transactionTabs {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .tabButton {
+    flex: 1;
+  }
+}
+
+/* 기존 스타일 유지하고 새로운 스타일 추가 */
+
+.transactionFilters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dateFilters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dateInput {
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #197bbd;
+}
+
+.sortButton {
+  padding: 6px 12px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sortButton:hover {
+  background-color: #e5e7eb;
+}
+
+/* 예/적금 정보 스타일 */
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.infoValue {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .transactionFilters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dateFilters {
+    flex-direction: column;
+  }
+
+  .dateInput {
+    width: 100%;
+  }
+}
+
