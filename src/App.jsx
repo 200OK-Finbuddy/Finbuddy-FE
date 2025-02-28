@@ -10,6 +10,11 @@ import SignupForm from "./components/SignupForm"
 import Products from "./components/Products"
 import ProductDetail from "./components/ProductDetail"
 import SingUp from "./pages/SignUp"
+import AutoTransferList from "./components/AutoTransferList"
+import AutoTransferForm from "./components/AutoTransferForm"
+import Settings from "./components/Settings"
+import Transactions from "./components/Transactions"
+
 
 // Layout 컴포넌트를 분리하고 setActiveNav를 props로 전달
 const Layout = ({ children, navType, onNavChange }) => {
@@ -76,6 +81,46 @@ function App() {
             </Layout>
           }
         />
+              <Route
+        path="/autotransfer"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <AutoTransferList />
+          </Layout>
+        }
+      />
+      <Route
+        path="/autotransfer/create"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <AutoTransferForm />
+          </Layout>
+        }
+      />
+      <Route
+        path="/autotransfer/edit/:id"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <AutoTransferForm />
+          </Layout>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <Settings />
+          </Layout>
+        }
+      />
+      <Route
+        path="/transactions"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <Transactions />
+          </Layout>
+        }
+      />
       </Routes>
     </Router>
   )
