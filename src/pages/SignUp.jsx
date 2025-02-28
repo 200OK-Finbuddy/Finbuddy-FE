@@ -19,9 +19,11 @@ function SingUp() {
     
         const { birthYear, birthMonth, birthDay, emailId, emailDomain, ...rest } = data;
         const email = `${emailId}@${emailDomain}`;
-        const birthDate = new Date(birthYear, birthMonth - 1, birthDay)
-                            .toISOString()
-                            .slice(0, 10); // yyyy-MM-dd
+        // const birthDate = new Date(birthYear, birthMonth - 1, birthDay)
+        //                     .toISOString()
+        //                     .slice(0, 10); // yyyy-MM-dd
+        const birthDate = `${birthYear}-${String(birthMonth).padStart(2, '0')}-${String(birthDay).padStart(2, '0')}`;
+
     
         const formData = {
             ...rest,
@@ -67,7 +69,7 @@ function SingUp() {
                 alert(`이메일 전송 실패: ${response.data.error}`);
             }
         } catch (error) {
-            alert(`인증번호 발송 실패: ${error}`);
+            alert(`서버 요청 중 오류가 발생했습니다: ${error}`);
         }
     };
 
@@ -104,7 +106,7 @@ function SingUp() {
                     message: '이름은 최소 2자 이상이어야 합니다.'
                 }})} />
                 {errors.name && <p>{errors.name.message}</p>}
-            
+
             {/* 이메일 */}
             <label htmlFor="email">이메일</label>
             <input id="email" {...register("emailId",{ required: true})} />
@@ -195,11 +197,11 @@ function SingUp() {
             <label htmlFor="income">월 소득</label>
                 <select id="income" {...register("income", {required: true})}>
                     <option value="">월 소득을 선택하세요</option>
-                    <option value="0">소득 없음</option>
-                    <option value="1">200만원 미만</option>
-                    <option value="2">200만원 이상 400만원 미만</option>
-                    <option value="3">400만원 이상 600만원 미만</option>
-                    <option value="4">600만원 이상</option>
+                    <option value="none">소득 없음</option>
+                    <option value="below_200">200만원 미만</option>
+                    <option value="between_200_400">200만원 이상 400만원 미만</option>
+                    <option value="between_400_600">400만원 이상 600만원 미만</option>
+                    <option value="above_600">600만원 이상</option>
                 </select>
 
             <button type="submit" disabled={ !isValid || isSubmitting || emailStatus !== 'verified'}>회원가입</button>
