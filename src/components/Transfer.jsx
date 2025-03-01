@@ -22,7 +22,7 @@ export default function Transfer() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/accounts/all/checking?memberId=${memberId}`)
+        const response = await fetch(`http://localhost:8080/api/transfers/all/checking-account?memberId=${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
