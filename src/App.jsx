@@ -13,6 +13,7 @@ import AutoTransferList from "./components/AutoTransferList"
 import AutoTransferForm from "./components/AutoTransferForm"
 import Settings from "./components/Settings"
 import Transactions from "./components/Transactions"
+import Transfer from "./components/Transfer"
 
 // Layout 컴포넌트를 분리하고 setActiveNav를 props로 전달
 const Layout = ({ children, navType, onNavChange }) => {
@@ -114,6 +115,14 @@ function App() {
         element={
           <Layout navType={activeNav} onNavChange={setActiveNav}>
             <Transactions />
+          </Layout>
+        }
+      />
+      <Route
+        path="/transfer"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <Transfer />
           </Layout>
         }
       />

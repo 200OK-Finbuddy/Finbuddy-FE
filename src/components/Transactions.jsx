@@ -62,8 +62,8 @@ export default function Transactions() {
 
   // 월간 거래 요약 상태 추가
   const [monthlySummary, setMonthlySummary] = useState({
-    totalIncome: 0,
-    totalExpense: 0,
+    depositTotal: 0,
+    withdrawalTotal: 0,
   })
 
   // 날짜 필터 상태 추가
@@ -116,6 +116,29 @@ export default function Transactions() {
     fetchAccountDetails()
   }, [selectedAccount])
 
+  // 월간 거래 요약 데이터를 가져오는 함수 추가
+  const fetchMonthlySummary = useCallback(async () => {
+    if (!selectedAccount) return
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/transactions/account/monthly-summary?memberId=${memberId}&accountId=${selectedAccount.accountId}&year=${selectedMonth.year}&month=${selectedMonth.value}`,
+      )
+
+      if (!response.ok) throw new Error("Failed to fetch monthly summary")
+      const data = await response.json()
+      setMonthlySummary(data)
+    } catch (error) {
+      console.error("Error fetching monthly summary:", error)
+      setMonthlySummary({ depositTotal: 0, withdrawalTotal: 0 })
+    }
+  }, [selectedAccount, selectedMonth, memberId])
+
+  // selectedAccount나 selectedMonth가 변경될 때마다 월간 거래 요약 조회
+  useEffect(() => {
+    fetchMonthlySummary()
+  }, [fetchMonthlySummary, selectedAccount, selectedMonth])
+
   // 거래내역 조회 - 페이지네이션 추가
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -154,42 +177,18 @@ export default function Transactions() {
 
         setTransactions((prev) => (page === 0 ? data.content : [...prev, ...data.content]))
         setHasMore(!data.last)
-
-        if (page === 0) {
-          const summary = calculateMonthlySummary(data.content, selectedMonth.year, selectedMonth.value)
-          setMonthlySummary(summary)
-        }
       } catch (error) {
         console.error("Error fetching transactions:", error)
         setTransactions([])
-        setMonthlySummary({ totalIncome: 0, totalExpense: 0 })
+        setMonthlySummary({ depositTotal: 0, withdrawalTotal: 0 })
       }
     }
 
     fetchTransactions()
-  }, [selectedAccount, selectedMonth, page, activeTab, dateFilter, sortDirection])
+  }, [selectedAccount, page, activeTab, dateFilter, sortDirection, memberId])
 
   // 월간 거래 요약 데이터 계산 함수 추가
-  const calculateMonthlySummary = (transactions, year, month) => {
-    return transactions
-      .filter((transaction) => {
-        const transactionDate = new Date(transaction.transactionDate)
-        return transactionDate.getFullYear() === year && transactionDate.getMonth() + 1 === month
-      })
-      .reduce(
-        (acc, transaction) => {
-          if (transaction.transactionType === 1) {
-            // 입금
-            acc.totalIncome += transaction.amount
-          } else if (transaction.transactionType === 2) {
-            // 출금
-            acc.totalExpense += transaction.amount
-          }
-          return acc
-        },
-        { totalIncome: 0, totalExpense: 0 },
-      )
-  }
+  //const calculateMonthlySummary = (transactions, year, month) => { ... } // 제거
 
   const handleNext = () => {
     if (accounts.length <= 1) return
@@ -429,31 +428,31 @@ export default function Transactions() {
                   <div className={styles.horizontalBarChart}>
                     <div className={styles.chartLabel}>
                       <span>입금</span>
-                      <span>{formatAmount(monthlySummary.totalIncome)}원</span>
+                      <span>{formatAmount(monthlySummary.depositTotal)}원</span>
                     </div>
                     <div className={styles.barWrapper}>
                       <div
                         className={`${styles.bar} ${styles.incomeBar}`}
                         style={{
                           width:
-                            monthlySummary.totalIncome === 0 && monthlySummary.totalExpense === 0
+                            monthlySummary.depositTotal === 0 && monthlySummary.withdrawalTotal === 0
                               ? "1%" // 0원일 때 1%로 수정
-                              : `${(monthlySummary.totalIncome / Math.max(monthlySummary.totalIncome + monthlySummary.totalExpense, 1)) * 100}%`,
+                              : `${(monthlySummary.depositTotal / Math.max(monthlySummary.depositTotal + monthlySummary.withdrawalTotal, 1)) * 100}%`,
                         }}
                       />
                     </div>
                     <div className={styles.chartLabel}>
                       <span>출금</span>
-                      <span>{formatAmount(monthlySummary.totalExpense)}원</span>
+                      <span>{formatAmount(monthlySummary.withdrawalTotal)}원</span>
                     </div>
                     <div className={styles.barWrapper}>
                       <div
                         className={`${styles.bar} ${styles.expenseBar}`}
                         style={{
                           width:
-                            monthlySummary.totalExpense === 0 && monthlySummary.totalIncome === 0
+                            monthlySummary.withdrawalTotal === 0 && monthlySummary.depositTotal === 0
                               ? "1%" // 0원일 때 1%로 수정
-                              : `${(monthlySummary.totalExpense / Math.max(monthlySummary.totalIncome + monthlySummary.totalExpense, 1)) * 100}%`,
+                              : `${(monthlySummary.withdrawalTotal / Math.max(monthlySummary.depositTotal + monthlySummary.withdrawalTotal, 1)) * 100}%`,
                         }}
                       />
                     </div>
