@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
 import styles from "../styles/Transfer.module.css"
 import { BANKS } from "../constants/banks"
+import PasswordInputKeypad from "./PasswordInputKeypad"
 
 export default function Transfer() {
   const [accounts, setAccounts] = useState([])
@@ -15,9 +16,11 @@ export default function Transfer() {
   const [senderMemo, setSenderMemo] = useState("")
   const [recipientName, setRecipientName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
-  const [isSearching, setIsSearching] = useState(false) // 계좌 검색 중 상태 추가
-  const [showConfirmModal, setShowConfirmModal] = useState(false) // 모달 상태 추가
-  const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  const [isSearching, setIsSearching] = useState(false)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [password, setPassword] = useState("")
+  const [resetPassword, setResetPassword] = useState(false) // 비밀번호 리셋 상태 추가
+  const memberId = 1
 
   // 계좌 목록 조회 - 입출금 계좌만 조회
   useEffect(() => {
@@ -81,7 +84,31 @@ export default function Transfer() {
     setAmount(value ? Number.parseInt(value).toLocaleString() : "")
   }
 
-  // 이체 실행
+  // 비밀번호 입력 완료 핸들러
+  const handlePasswordComplete = (passwordValue) => {
+    setPassword(passwordValue)
+  }
+
+  // 모든 입력값 초기화 함수
+  const resetAllInputs = () => {
+    setSelectedBank("")
+    setAccountNumber("")
+    setAmount("")
+    setRecipientMemo("")
+    setSenderMemo("")
+    setRecipientName("")
+    setPassword("")
+    setResetPassword((prev) => !prev) // 토글하여 리셋 트리거
+    setShowConfirmModal(false)
+  }
+
+  // 비밀번호만 초기화하는 함수
+  const resetPasswordOnly = () => {
+    setPassword("")
+    setResetPassword((prev) => !prev) // 토글하여 리셋 트리거
+  }
+
+  // 계좌 이체 API 요청 수정
   const handleTransfer = async () => {
     if (!selectedAccount || !selectedBank || !accountNumber || !amount) {
       alert("필수 정보를 모두 입력해주세요.")
@@ -93,19 +120,28 @@ export default function Transfer() {
       return
     }
 
+    if (!password) {
+      alert("비밀번호를 입력해주세요.")
+      return
+    }
+
     try {
-      const response = await fetch("http://localhost:8080/api/transfer", {
+      const url = new URL("http://localhost:8080/api/transfers")
+      url.searchParams.append("memberId", memberId.toString())
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           fromAccountId: selectedAccount.accountId,
-          toBankId: selectedBank,
+          toBankName: selectedBank,
           toAccountNumber: accountNumber,
           amount: Number(amount.replace(/,/g, "")),
-          recipientMemo,
-          senderMemo,
+          password: password,
+          senderName: senderMemo,
+          receiverName: recipientMemo,
         }),
       })
 
@@ -114,16 +150,11 @@ export default function Transfer() {
       }
 
       alert("이체가 성공적으로 완료되었습니다.")
-      // 이체 성공 후 폼 초기화
-      setAccountNumber("")
-      setAmount("")
-      setRecipientMemo("")
-      setSenderMemo("")
-      setRecipientName("")
-      setShowConfirmModal(false) // 모달 닫기
+      resetAllInputs() // 성공 시 모든 입력값 초기화
     } catch (error) {
       console.error("Error during transfer:", error)
       alert("이체 중 오류가 발생했습니다. 다시 시도해주세요.")
+      resetPasswordOnly() // 실패 시 비밀번호만 초기화
     }
   }
 
@@ -296,11 +327,17 @@ export default function Transfer() {
             />
           </div>
 
+          {/* 비밀번호 입력 컴포넌트 추가 - 이체 버튼 위에 추가 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>비밀번호</label>
+            <PasswordInputKeypad onPasswordComplete={handlePasswordComplete} reset={resetPassword} />
+          </div>
+
           {/* 이체 버튼 */}
           <button
             className={styles.transferButton}
             onClick={handleTransfer}
-            disabled={!selectedAccount || !selectedBank || !accountNumber || !amount || !recipientName}
+            disabled={!selectedAccount || !selectedBank || !accountNumber || !amount || !recipientName || !password}
           >
             확인
           </button>
