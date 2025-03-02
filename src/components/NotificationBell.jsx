@@ -51,8 +51,10 @@ export default function NotificationBell() {
     switch (type) {
       case "TRANSFER":
         return { icon: "💸", className: "transfer" }
-      case "ACCOUNT":
-        return { icon: "🏦", className: "account" }
+      case "AUTOTRANSFERSUCCESS":
+        return { icon: "✅", className: "autotransferSuccess" }
+      case "AUTOTRANSFERFAIL":
+        return { icon: "❌", className: "autotransferFail" }
       case "BUDGET":
         return { icon: "💰", className: "budget" }
       default:
@@ -95,7 +97,7 @@ export default function NotificationBell() {
                   >
                     <div className={styles.notificationIcon}>{typeInfo.icon}</div>
                     <div className={styles.notificationContent}>
-                      <p>{notification.content}</p>
+                      <p style={{ whiteSpace: 'pre-line' }}>{notification.content}</p>
                       <span className={styles.notificationTime}>{formatDate(notification.createdAt)}</span>
                     </div>
                     <div className={styles.notificationActions}>

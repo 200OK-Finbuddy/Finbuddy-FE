@@ -1,32 +1,25 @@
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"
 import Sidebar from "./Sidebar"
-import NotificationBell from "./NotificationBell"
-import "../styles/App.css"
+import Header from "./Header"
+import styles from "../styles/Layout.module.css"
 
 function Layout({ children, navType, onNavChange }) {
   return (
-    <div className="app">
+    <div className={styles.layout}>
       <Sidebar activeNav={navType} setActiveNav={onNavChange} />
-      <div className="main-container">
-        <header className="main-header">
-          <div className="header-actions">
-            {/* 알림 버튼 */}
-            <NotificationBell />
-            <div className="user-profile">
-              {/* <img src="/placeholder.svg?height=32&width=32" alt="User" className="user-avatar" /> */}
-            </div>
-          </div>
-        </header>
-        {children}
+      <div className={styles.mainContainer}>
+        <Header />
+        <main className={styles.mainContent}>{children}</main>
       </div>
     </div>
   )
 }
 
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  navType: PropTypes.string.isRequired,
+  onNavChange: PropTypes.func.isRequired,
+}
+
 export default Layout
 
-Layout.propTypes = {
-    children: PropTypes.node.isRequired, // children은 node 타입 (React 요소 또는 문자열, 숫자 등)
-    navType: PropTypes.string.isRequired, // navType은 문자열
-    onNavChange: PropTypes.func.isRequired, // onNavChange는 함수
-  };

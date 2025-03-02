@@ -1,9 +1,12 @@
 .sidebar {
   width: 240px;
+  min-width: 240px;
   background: white;
   border-right: 1px solid #eee;
   padding: 20px 0;
-  height: auto;
+  height: 100vh;
+  position: sticky;
+  top: 0;
 }
 
 .logo {
@@ -42,3 +45,4 @@
 .nav-menu li span {
   font-size: 14px;
 }
+

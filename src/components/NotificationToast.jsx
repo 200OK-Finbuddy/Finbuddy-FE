@@ -22,8 +22,10 @@ export default function NotificationToast({ notification, onClose }) {
     switch (type) {
       case "TRANSFER":
         return "💸"
-      case "ACCOUNT":
-        return "🏦"
+      case "AUTOTRANSFERSUCCESS":
+        return "✅"
+      case "AUTOTRANSFERFAIL":
+        return "❌"
       case "BUDGET":
         return "💰"
       default:
@@ -31,12 +33,28 @@ export default function NotificationToast({ notification, onClose }) {
     }
   }
 
+  // 타입에 따른 토스트 클래스 추가
+  const getNotificationClass = (type) => {
+    switch (type) {
+      case "AUTOTRANSFERSUCCESS":
+        return styles.successToast
+      case "AUTOTRANSFERFAIL":
+        return styles.failToast
+      case "BUDGET":
+        return styles.budgetToast
+      case "TRANSFER":
+        return styles.transferToast
+      default:
+        return ""
+    }
+  }
+
   return (
-    <div className={`${styles.notificationToast} ${isVisible ? styles.visible : styles.hidden}`}>
+    <div className={`${styles.notificationToast} ${isVisible ? styles.visible : styles.hidden} ${getNotificationClass(notification.notificationType)}`}>
       <div className={styles.toastIcon}>{getNotificationIcon(notification.notificationType)}</div>
       <div className={styles.toastContent}>
         <div className={styles.toastTitle}>새 알림</div>
-        <div className={styles.toastMessage}>{notification.content}</div>
+        <div className={styles.toastMessage} style={{ whiteSpace: 'pre-line' }}>{notification.content}</div>
       </div>
       <button className={styles.toastClose} onClick={() => setIsVisible(false)}>
         ×

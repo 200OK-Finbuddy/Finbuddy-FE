@@ -12,6 +12,8 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  margin-left: auto;
+  margin-bottom: 1rem;
 }
 
 .addButton:hover {

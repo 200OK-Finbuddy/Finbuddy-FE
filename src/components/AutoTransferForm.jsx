@@ -195,8 +195,8 @@ export default function AutoTransferForm() {
           },
           body: JSON.stringify({
             fromAccountId: selectedAccount.accountId,
-            toBankName: selectedBank,
-            toAccountNumber: accountNumber,
+            targetBankName: selectedBank,
+            targetAccountNumber: accountNumber,
             amount: Number(amount.replace(/,/g, "")),
             transferDay: Number(transferDay),
             password: modalPassword,
