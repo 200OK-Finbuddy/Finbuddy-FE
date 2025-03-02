@@ -13,7 +13,7 @@ function Layout({ children, navType, onNavChange }) {
             {/* 알림 버튼 */}
             <NotificationBell />
             <div className="user-profile">
-              <img src="/placeholder.svg?height=32&width=32" alt="User" className="user-avatar" />
+              {/* <img src="/placeholder.svg?height=32&width=32" alt="User" className="user-avatar" /> */}
             </div>
           </div>
         </header>
