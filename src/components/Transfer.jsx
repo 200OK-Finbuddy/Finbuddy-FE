@@ -55,6 +55,7 @@ export default function Transfer() {
       const response = await fetch(
         `http://localhost:8080/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
       )
+      console.log(selectedBank)
 
       if (!response.ok) {
         throw new Error("계좌 검색에 실패했습니다.")
@@ -253,7 +254,7 @@ export default function Transfer() {
               >
                 <option value="">은행 선택</option>
                 {BANKS.map((bank) => (
-                  <option key={bank.id} value={bank.name}>
+                  <option key={bank.id} value={bank.originName}>
                     {" "}
                     {/* value를 bank.id에서 bank.name으로 변경 */}
                     {bank.name}

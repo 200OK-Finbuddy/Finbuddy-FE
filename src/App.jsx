@@ -11,6 +11,7 @@ import AutoTransferForm from "./components/AutoTransferForm"
 import Settings from "./components/Settings"
 import Transactions from "./components/Transactions"
 import Transfer from "./components/Transfer"
+import SignupForm from "./components/SignupForm"
 
 function App() {
   const [activeNav, setActiveNav] = useState("dashboard")
@@ -89,6 +90,7 @@ function App() {
           </Layout>
         }
       />
+      <Route path="/signup" element={<SignupForm />} />
     </Routes>
   )
 }
