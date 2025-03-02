@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { Routes, Route } from "react-router-dom"
-import Layout from "./components/Layout"
+import PropTypes from "prop-types"
+import Sidebar from "./components/Sidebar"
 import Dashboard from "./components/Dashboard"
 import Products from "./components/Products"
 import ProductDetail from "./components/ProductDetail"
@@ -11,6 +12,24 @@ import AutoTransferForm from "./components/AutoTransferForm"
 import Settings from "./components/Settings"
 import Transactions from "./components/Transactions"
 import Transfer from "./components/Transfer"
+import "./styles/App.css"
+
+// Layout 컴포넌트를 분리하고 setActiveNav를 props로 전달
+const Layout = ({ children, navType, onNavChange }) => {
+  return (
+    <div className="app">
+      <Sidebar activeNav={navType} setActiveNav={onNavChange} />
+      {children}
+    </div>
+  )
+}
+
+// PropTypes 업데이트
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  navType: PropTypes.string.isRequired,
+  onNavChange: PropTypes.func.isRequired,
+}
 
 function App() {
   const [activeNav, setActiveNav] = useState("dashboard")
