@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { Search } from "lucide-react"
 import styles from "../styles/AutoTransfer.module.css"
+import { BANKS } from "../constants/banks"
+import PasswordInputKeypad from "./PasswordInputKeypad"
 
 export default function AutoTransferForm() {
   const navigate = useNavigate()
@@ -10,15 +13,18 @@ export default function AutoTransferForm() {
   const isEditing = !!id
   const memberId = 1 // 실제 구현시 로그인한 사용자의 ID를 사용
 
-  const [formData, setFormData] = useState({
-    fromAccountId: "",
-    targetAccountNumber: "",
-    amount: "",
-    transferDay: "",
-  })
-  const [checkingAccounts, setCheckingAccounts] = useState([])
+  const [accounts, setAccounts] = useState([])
+  const [selectedAccount, setSelectedAccount] = useState(null)
+  const [selectedBank, setSelectedBank] = useState("")
+  const [accountNumber, setAccountNumber] = useState("")
+  const [amount, setAmount] = useState("")
+  const [recipientMemo, setRecipientMemo] = useState("")
+  const [senderMemo, setSenderMemo] = useState("")
+  const [recipientName, setRecipientName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
-  const [isLoadingTransfer, setIsLoadingTransfer] = useState(isEditing)
+  const [isSearching, setIsSearching] = useState(false)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [transferDay, setTransferDay] = useState("")
 
   // 이체일 옵션 생성 (1~31일)
   const transferDayOptions = Array.from({ length: 31 }, (_, i) => ({
@@ -26,126 +32,268 @@ export default function AutoTransferForm() {
     label: `${i + 1}일`,
   }))
 
-  // fetch 요청에 사용할 공통 options
-  const fetchOptions = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  }
-
+  // 계좌 목록 조회
   useEffect(() => {
-    const fetchCheckingAccounts = async () => {
+    const fetchAccounts = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/accounts/checking/${memberId}`, fetchOptions)
+        const response = await fetch(`http://localhost:8080/api/transfers/all/checking-account?memberId=${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
-        setCheckingAccounts(data.top3Accounts)
+        setAccounts(data)
         setIsLoading(false)
       } catch (error) {
-        console.error("Error fetching checking accounts:", error)
+        console.error("Error fetching accounts:", error)
         setIsLoading(false)
       }
     }
 
-    fetchCheckingAccounts()
+    fetchAccounts()
   }, [])
 
+  // 자동이체 상세 정보 조회
   useEffect(() => {
     const fetchAutoTransferDetails = async () => {
       if (!isEditing) return
 
       try {
-        const response = await fetch(`http://localhost:8080/api/autotransfer/${id}`, fetchOptions)
+        const response = await fetch(`http://localhost:8080/api/autotransfer/${id}`)
         if (!response.ok) throw new Error("Failed to fetch auto transfer details")
         const data = await response.json()
 
-        console.log("Fetched auto transfer details:", data) // 디버깅용 로그
-
-        // 모든 필드를 올바르게 설정
-        setFormData({
-          fromAccountId: data?.fromAccountId?.toString() || "",
-          targetAccountNumber: data?.toAccountNumber || "", // toAccountNumber로 수정
-          amount: data?.amount?.toString() || "",
-          transferDay: data?.transferDay?.toString() || "",
-        })
+        setSelectedAccount(accounts.find((acc) => acc.accountId === data.fromAccountId))
+        setSelectedBank(data.targetBankName)
+        setAccountNumber(data.targetAccountNumber)
+        setAmount(data.amount.toString())
+        setTransferDay(data.transferDay.toString())
+        setRecipientName(data.receiverName)
+        setRecipientMemo(data.receiverMemo || "")
+        setSenderMemo(data.senderMemo || "")
       } catch (error) {
         console.error("Error fetching auto transfer details:", error)
-      } finally {
-        setIsLoadingTransfer(false)
       }
     }
 
-    fetchAutoTransferDetails()
-  }, [id, isEditing])
+    if (accounts.length > 0) {
+      fetchAutoTransferDetails()
+    }
+  }, [id, isEditing, accounts])
 
-  const handleSubmit = async (e) => {
+  // 계좌 검색 함수
+  const handleAccountSearch = async (e) => {
     e.preventDefault()
 
+    if (!selectedBank || !accountNumber) {
+      alert("은행과 계좌번호를 모두 입력해주세요.")
+      return
+    }
+
+    setIsSearching(true)
     try {
-      const url = isEditing ? `http://localhost:8080/api/autotransfer/${id}` : "http://localhost:8080/api/autotransfer"
-      const method = isEditing ? "PATCH" : "POST"
+      const response = await fetch(
+        `http://localhost:8080/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
+      )
 
-      const response = await fetch(url, {
-        ...fetchOptions,
-        method,
-        body: JSON.stringify({
-          ...formData,
-          amount: Number(formData.amount.replace(/,/g, "")),
-          transferDay: Number(formData.transferDay),
-          fromAccountId: Number(formData.fromAccountId),
-        }),
-      })
+      if (!response.ok) {
+        throw new Error("계좌 검색에 실패했습니다.")
+      }
 
-      if (!response.ok) throw new Error("Failed to save auto transfer")
-      navigate("/autotransfer")
+      const data = await response.json()
+      setRecipientName(data.receiverName)
+      setSenderMemo(data.receiverName) // 내 통장 표시에 수취인 이름 설정
     } catch (error) {
-      console.error("Error saving auto transfer:", error)
+      console.error("Error searching account:", error)
+      alert("계좌 검색 중 오류가 발생했습니다.")
+      setRecipientName("")
+      setSenderMemo("")
+    } finally {
+      setIsSearching(false)
     }
   }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  const formatAmount = (value) => {
-    if (!value) return ""
-    // 숫자만 추출
-    const numbers = value.replace(/[^\d]/g, "")
-    // 천단위 콤마 추가
-    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
-
+  // 금액 입력 시 천 단위 콤마 추가
   const handleAmountChange = (e) => {
-    const { value } = e.target
-    const numbers = value.replace(/[^\d]/g, "")
-    setFormData((prev) => ({
-      ...prev,
-      amount: numbers,
-    }))
+    const value = e.target.value.replace(/[^\d]/g, "")
+    setAmount(value ? Number.parseInt(value).toLocaleString() : "")
   }
 
-  if (isLoading || isLoadingTransfer) {
+  // 계좌 선택 핸들러 수정
+  const handleAccountSelect = (e) => {
+    const selected = accounts.find((acc) => acc.accountId === Number.parseInt(e.target.value))
+    setSelectedAccount(selected)
+    // 선택된 계좌의 소유주 이름으로 받는분 통장 표시 설정
+    if (selected) {
+      setRecipientMemo(selected.accountHolder || selected.senderName || "") // senderName도 체크
+    }
+  }
+
+  const formatBalance = (balance) => {
+    return balance?.toLocaleString() || "0"
+  }
+
+  const ConfirmModal = () => {
+    const [modalPassword, setModalPassword] = useState("")
+    const [modalResetPassword, setModalResetPassword] = useState(false)
+    const [isPasswordVerified, setIsPasswordVerified] = useState(false)
+
+    const handleModalPasswordComplete = (value) => {
+      setModalPassword(value)
+    }
+
+    const verifyPassword = async (accountId, password) => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/accounts/verify-password`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accountId,
+            password,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error("비밀번호 검증에 실패했습니다.")
+        }
+
+        const data = await response.json()
+        return data.valid
+      } catch (error) {
+        console.error("Error verifying password:", error)
+        return false
+      }
+    }
+
+    const handlePasswordVerification = async () => {
+      if (!modalPassword) {
+        alert("비밀번호를 입력해주세요.")
+        return
+      }
+
+      // 비밀번호 검증
+      const isValid = await verifyPassword(selectedAccount.accountId, modalPassword)
+
+      if (isValid) {
+        setIsPasswordVerified(true)
+      } else {
+        alert("비밀번호가 일치하지 않습니다.")
+        setModalPassword("")
+        setModalResetPassword((prev) => !prev)
+      }
+    }
+
+    const handleModalSubmit = async () => {
+      try {
+        const url = isEditing
+          ? `http://localhost:8080/api/autotransfer/${id}`
+          : "http://localhost:8080/api/autotransfer"
+
+        const response = await fetch(url, {
+          method: isEditing ? "PATCH" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fromAccountId: selectedAccount.accountId,
+            toBankName: selectedBank,
+            toAccountNumber: accountNumber,
+            amount: Number(amount.replace(/,/g, "")),
+            transferDay: Number(transferDay),
+            password: modalPassword,
+            senderMemo: senderMemo,
+            receiverMemo: recipientMemo,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error(isEditing ? "자동이체 수정에 실패했습니다." : "자동이체 등록에 실패했습니다.")
+        }
+
+        alert(isEditing ? "자동이체가 성공적으로 수정되었습니다." : "자동이체가 성공적으로 등록되었습니다.")
+        navigate("/autotransfer")
+      } catch (error) {
+        console.error("Error saving auto transfer:", error)
+        alert(error.message)
+        setModalPassword("")
+        setModalResetPassword((prev) => !prev)
+        setIsPasswordVerified(false)
+      }
+    }
+
+    if (!showConfirmModal) return null
+
     return (
-      <main className="main-content">
-        <header className="welcome-section">
-          <h1>환영합니다. 👋</h1>
-          <p>주간 온라인 거래 내역을 확인하세요.</p>
-        </header>
-        <div className="content-container">
-          <div className="page-header">
-            <h2 className="page-title">{isEditing ? "자동이체 수정" : "자동이체 등록"}</h2>
-          </div>
-          <div className={styles.container}>
-            <div className={styles.loadingContainer}>
-              <div className={styles.loadingSpinner}></div>
-              <p>정보를 불러오는 중입니다...</p>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3 className={styles.modalTitle}>자동이체 {isEditing ? "수정" : "등록"} 확인</h3>
+          <div className={styles.modalInfo}>
+            <div className={styles.modalInfoItem}>
+              <span className={styles.modalLabel}>출금계좌</span>
+              <span className={styles.modalValue}>
+                {selectedAccount?.bankName} {selectedAccount?.accountNumber}
+              </span>
+            </div>
+            <div className={styles.modalInfoItem}>
+              <span className={styles.modalLabel}>입금계좌</span>
+              <span className={styles.modalValue}>
+                {selectedBank} {accountNumber}
+              </span>
+            </div>
+            <div className={styles.modalInfoItem}>
+              <span className={styles.modalLabel}>이체금액</span>
+              <span className={styles.modalValue}>{amount}원</span>
+            </div>
+            <div className={styles.modalInfoItem}>
+              <span className={styles.modalLabel}>이체일</span>
+              <span className={styles.modalValue}>매월 {transferDay}일</span>
+            </div>
+            <div className={styles.modalInfoItem}>
+              <span className={styles.modalLabel}>받는분</span>
+              <span className={styles.modalValue}>{recipientName}</span>
             </div>
           </div>
+
+          <div className={styles.modalPasswordSection}>
+            <label className={styles.modalLabel}>비밀번호</label>
+            <PasswordInputKeypad onPasswordComplete={handleModalPasswordComplete} reset={modalResetPassword} />
+            {!isPasswordVerified && (
+              <button
+                className={styles.modalVerifyButton}
+                onClick={handlePasswordVerification}
+                disabled={!modalPassword}
+              >
+                비밀번호 확인
+              </button>
+            )}
+          </div>
+
+          <div className={styles.modalActions}>
+            <button
+              className={styles.modalCancelButton}
+              onClick={() => {
+                setShowConfirmModal(false)
+                setModalPassword("")
+                setModalResetPassword((prev) => !prev)
+                setIsPasswordVerified(false)
+              }}
+            >
+              취소
+            </button>
+            <button className={styles.modalSubmitButton} onClick={handleModalSubmit} disabled={!isPasswordVerified}>
+              {isEditing ? "수정" : "등록"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <main className="main-content">
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p>정보를 불러오는 중입니다...</p>
         </div>
       </main>
     )
@@ -157,94 +305,144 @@ export default function AutoTransferForm() {
         <h1>환영합니다. 👋</h1>
         <p>주간 온라인 거래 내역을 확인하세요.</p>
       </header>
-
       <div className="content-container">
         <div className="page-header">
           <h2 className="page-title">{isEditing ? "자동이체 수정" : "자동이체 등록"}</h2>
         </div>
 
-        <div className={styles.container}>
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label htmlFor="fromAccountId">출금 계좌</label>
+        <div className={styles.transferFormContainer}>
+          {/* 출금계좌 선택 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>출금계좌</label>
+            <div className={styles.formRow}>
               <select
-                id="fromAccountId"
-                name="fromAccountId"
-                value={formData.fromAccountId}
-                onChange={handleChange}
-                required
-                className={styles.accountSelect}
+                className={styles.formSelect}
+                value={selectedAccount?.accountId || ""}
+                onChange={handleAccountSelect}
               >
-                <option value="">출금 계좌를 선택하세요</option>
-                {checkingAccounts.map((account) => (
+                <option value="">계좌를 선택하세요</option>
+                {accounts.map((account) => (
                   <option key={account.accountId} value={account.accountId}>
-                    {account.accountName} ({account.accountNumber})
+                    {account.bankName} - {account.accountName}({account.accountNumber})
                   </option>
                 ))}
               </select>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="targetAccountNumber">입금 계좌번호</label>
-              <input
-                type="text"
-                id="targetAccountNumber"
-                name="targetAccountNumber"
-                value={formData.targetAccountNumber}
-                onChange={handleChange}
-                placeholder="입금 계좌번호를 입력하세요"
-                required
-                className={styles.formInput}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="amount">이체 금액</label>
-              <div className={styles.amountInputWrapper}>
-                <input
-                  type="text"
-                  id="amount"
-                  name="amount"
-                  value={formData.amount ? formatAmount(formData.amount) : ""}
-                  onChange={handleAmountChange}
-                  placeholder="이체 금액을 입력하세요"
-                  required
-                  className={styles.formInput}
-                />
-                <span className={styles.wonSymbol}>원</span>
+              <div className={styles.accountBalance}>
+                출금가능금액 {formatBalance(selectedAccount?.balance || 0)} 원
               </div>
             </div>
+          </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="transferDay">이체일</label>
+          {/* 입금계좌 입력 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>입금계좌</label>
+            <div className={styles.formRow}>
               <select
-                id="transferDay"
-                name="transferDay"
-                value={formData.transferDay}
-                onChange={handleChange}
-                required
-                className={styles.accountSelect}
+                className={`${styles.formSelect} ${styles.bankSelect}`}
+                value={selectedBank}
+                onChange={(e) => {
+                  setSelectedBank(e.target.value)
+                  setRecipientName("")
+                }}
               >
-                <option value="">이체일을 선택하세요</option>
-                {transferDayOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                <option value="">은행 선택</option>
+                {BANKS.map((bank) => (
+                  <option key={bank.id} value={bank.originName}>
+                    {bank.name}
                   </option>
                 ))}
               </select>
+              <div className={styles.accountNumberInputWrapper}>
+                <input
+                  type="text"
+                  className={`${styles.formInput} ${styles.accountNumberInput}`}
+                  placeholder="계좌번호 입력 (-없이 입력)"
+                  value={accountNumber}
+                  onChange={(e) => {
+                    setAccountNumber(e.target.value)
+                    setRecipientName("")
+                  }}
+                />
+                <button
+                  className={styles.searchButton}
+                  onClick={handleAccountSearch}
+                  disabled={isSearching || !selectedBank || !accountNumber}
+                >
+                  {isSearching ? <div className={styles.searchSpinner} /> : <Search size={20} />}
+                </button>
+              </div>
             </div>
+            {recipientName && <div className={styles.recipientName}>예금주: {recipientName}</div>}
+          </div>
 
-            <div className={styles.formActions}>
-              <button type="button" className={styles.cancelButton} onClick={() => navigate("/autotransfer")}>
-                취소
-              </button>
-              <button type="submit" className={styles.submitButton}>
-                {isEditing ? "수정" : "등록"}
-              </button>
+          {/* 입금금액 입력 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>입금금액</label>
+            <div className={`${styles.formRow} ${styles.amountRow}`}>
+              <input
+                type="text"
+                className={`${styles.formInput} ${styles.amountInput}`}
+                placeholder="0"
+                value={amount}
+                onChange={handleAmountChange}
+              />
+              <span className={styles.currencyUnit}>원</span>
             </div>
-          </form>
+            <div className={styles.amountInKorean}>일십만원</div>
+          </div>
+
+          {/* 이체일 선택 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>이체일</label>
+            <select className={styles.formSelect} value={transferDay} onChange={(e) => setTransferDay(e.target.value)}>
+              <option value="">이체일을 선택하세요</option>
+              {transferDayOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <hr className={styles.formDivider} />
+
+          {/* 받는분 통장 표시 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>받는분 통장 표시</label>
+            <input
+              type="text"
+              className={styles.formInput}
+              placeholder=""
+              maxLength={15}
+              value={recipientMemo}
+              onChange={(e) => setRecipientMemo(e.target.value)}
+            />
+          </div>
+
+          {/* 내 통장 표시 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>내 통장 표시</label>
+            <input
+              type="text"
+              className={styles.formInput}
+              placeholder=""
+              maxLength={15}
+              value={senderMemo}
+              onChange={(e) => setSenderMemo(e.target.value)}
+            />
+          </div>
+
+          {/* 확인 버튼 */}
+          <button
+            className={styles.transferButton}
+            onClick={() => setShowConfirmModal(true)}
+            disabled={!selectedAccount || !selectedBank || !accountNumber || !amount || !transferDay || !recipientName}
+          >
+            확인
+          </button>
         </div>
       </div>
+      <ConfirmModal />
     </main>
   )
 }

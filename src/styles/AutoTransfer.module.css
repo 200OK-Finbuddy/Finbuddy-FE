@@ -1,3 +1,4 @@
+/* 리스트 관련 스타일 - 원본 유지 */
 .addButton {
   display: flex;
   align-items: center;
@@ -127,85 +128,385 @@
   color: #9ca3af;
 }
 
-/* 폼 스타일 */
-.container {
+/* Transfer 컴포넌트와 동일한 폼 스타일 */
+.transferFormContainer {
   background: white;
   border-radius: 16px;
-  padding: 24px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  margin: 0 auto;
 }
 
 .formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.formGroup label {
+.formLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #404040;
+  margin-bottom: 12px;
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.formSelect {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #404040;
+  background-color: white;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.bankSelect {
+  max-width: 200px;
+  flex: 0 0 200px;
+}
+
+.formInput {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #404040;
+}
+
+.accountNumberInputWrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
+.accountNumberInput {
+  padding-right: 40px;
+}
+
+.searchButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchButton:hover {
+  color: #197bbd;
+}
+
+.searchButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.searchSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f4f6;
+  border-top-color: #197bbd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.accountBalance {
+  font-size: 14px;
+  color: #6b7280;
+  white-space: nowrap;
+  min-width: 200px;
+  text-align: right;
+}
+
+.amountRow {
+  position: relative;
+}
+
+.amountInput {
+  text-align: right;
+  padding-right: 40px;
+  font-weight: 500;
+}
+
+.currencyUnit {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #404040;
+}
+
+.amountInKorean {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: right;
+}
+
+.recipientName {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #197bbd;
+  font-weight: 500;
+  text-align: right;
+}
+
+.formDivider {
+  border: none;
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 32px 0;
+}
+
+.transferButton {
+  width: 100%;
+  padding: 16px;
+  background-color: #9acbd0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 16px;
+}
+
+.transferButton:hover {
+  background-color: #7fb9bf;
+}
+
+.transferButton:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+/* 모달 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 16px;
+}
+
+.modalMessage {
+  font-size: 16px;
+  color: #404040;
+  margin-bottom: 8px;
+}
+
+.modalSubMessage {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.highlightText {
+  font-weight: 600;
+  color: #197bbd;
+}
+
+.modalButton {
+  background-color: #197bbd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modalButton:hover {
+  background-color: #0f5a8e;
+}
+
+/* 모달 스타일 업데이트 */
+.modalInfo {
+  margin: 24px 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalInfoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modalLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.modalValue {
   font-size: 14px;
   font-weight: 500;
   color: #374151;
 }
 
-.formGroup input,
-.formGroup select {
-  padding: 8px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #374151;
+.modalPasswordSection {
+  margin: 24px 0;
+  text-align: left;
 }
 
-.formGroup input:focus,
-.formGroup select:focus {
-  outline: none;
-  border-color: #00b090;
-  box-shadow: 0 0 0 2px rgba(0, 176, 144, 0.1);
-}
-
-.formActions {
+.modalActions {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
 }
 
-.cancelButton,
-.submitButton {
-  padding: 8px 16px;
+.modalCancelButton {
+  padding: 12px 24px;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
+  background-color: white;
+  color: #4b5563;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.cancelButton {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  color: #4b5563;
-}
-
-.cancelButton:hover {
+.modalCancelButton:hover {
   background-color: #f3f4f6;
 }
 
-.submitButton {
-  background-color: #00b090;
+.modalSubmitButton {
+  padding: 12px 24px;
   border: none;
+  border-radius: 8px;
+  background-color: #00b090;
   color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.submitButton:hover {
+.modalSubmitButton:hover {
   background-color: #009378;
 }
 
+.modalSubmitButton:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+/* 기존 스타일에 추가 */
+.modalVerifyButton {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background-color: #197bbd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modalVerifyButton:hover {
+  background-color: #0f5a8e;
+}
+
+.modalVerifyButton:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+/* 로딩 상태 */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: 16px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f4f6;
+  border-top-color: #197bbd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 반응형 디자인 */
 @media (max-width: 768px) {
+  .formRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .bankSelect {
+    max-width: 100%;
+  }
+
+  .accountBalance {
+    text-align: right;
+    min-width: unset;
+  }
+
   .infoColumn {
     grid-template-columns: 1fr;
   }
@@ -217,99 +518,5 @@
   .actionButton {
     width: 100%;
   }
-}
-
-.accountSelect {
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #374151;
-  width: 100%;
-  background-color: white;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px;
-  padding-right: 40px;
-}
-
-.accountSelect:focus {
-  outline: none;
-  border-color: #00b090;
-  box-shadow: 0 0 0 2px rgba(0, 176, 144, 0.1);
-}
-
-.accountSelect option {
-  padding: 8px;
-}
-
-.formInput {
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #374151;
-  width: 100%;
-  background-color: white;
-}
-
-.formInput:focus {
-  outline: none;
-  border-color: #00b090;
-  box-shadow: 0 0 0 2px rgba(0, 176, 144, 0.1);
-}
-
-.amountInputWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.wonSymbol {
-  position: absolute;
-  right: 12px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.loadingText {
-  color: #6b7280;
-  font-size: 14px;
-  padding: 12px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.loadingContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px;
-  gap: 16px;
-}
-
-.loadingSpinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #f3f4f6;
-  border-top-color: #00b090;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loadingContainer p {
-  color: #6b7280;
-  font-size: 14px;
 }
 

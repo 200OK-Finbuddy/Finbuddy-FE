@@ -19,6 +19,7 @@ export default function AutoTransferList() {
       const response = await fetch(`http://localhost:8080/api/autotransfer/list/${memberId}`)
       if (!response.ok) throw new Error("Failed to fetch")
       const data = await response.json()
+      console.log(data)
       setAutoTransfers(data)
     } catch (error) {
       console.error("Error fetching auto transfers:", error)
@@ -83,7 +84,7 @@ export default function AutoTransferList() {
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.label}>입금계좌</span>
-                      <span className={styles.value}>{transfer.toAccountNumber}</span>
+                      <span className={styles.value}>{transfer.targetAccountNumber}</span>
                     </div>
                     <div className={styles.infoItem}>
                       <span className={styles.label}>이체금액</span>
