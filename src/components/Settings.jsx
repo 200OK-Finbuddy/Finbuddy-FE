@@ -1,7 +1,7 @@
 "use client"
 
 import { useNavigate } from "react-router-dom"
-import { UserCircle, ArrowRight, RefreshCw } from "lucide-react"
+import { UserCircle, ArrowRight, RefreshCw, Wallet } from "lucide-react"
 import styles from "../styles/Settings.module.css"
 
 export default function Settings() {
@@ -21,6 +21,13 @@ export default function Settings() {
       description: "자동이체 설정을 확인하고 관리합니다.",
       icon: <RefreshCw className={styles.menuIcon} />,
       path: "/autotransfer",
+    },
+    {
+      id: "budget",
+      title: "예산 관리",
+      description: "월별 지출 예산을 설정하고 관리합니다.",
+      icon: <Wallet className={styles.menuIcon} />,
+      path: "/budget",
     },
   ]
 

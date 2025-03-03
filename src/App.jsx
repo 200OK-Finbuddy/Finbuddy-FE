@@ -11,6 +11,8 @@ import AutoTransferForm from "./components/AutoTransferForm"
 import Settings from "./components/Settings"
 import Transactions from "./components/Transactions"
 import Transfer from "./components/Transfer"
+import Budget from "./components/Budget"
+import "./styles/App.css"
 
 function App() {
   const [activeNav, setActiveNav] = useState("dashboard")
@@ -70,6 +72,14 @@ function App() {
         element={
           <Layout navType={activeNav} onNavChange={setActiveNav}>
             <Settings />
+          </Layout>
+        }
+      />
+      <Route
+        path="/budget"
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <Budget />
           </Layout>
         }
       />

@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Bell, ChevronDown } from "lucide-react"
+import { ChevronDown } from "lucide-react"
+import NotificationBell from './NotificationBell';
 import styles from "../styles/Header.module.css"
 
 export default function Header() {
@@ -13,10 +14,7 @@ export default function Header() {
         {/* 우측 메뉴 */}
         <div className={styles.rightSection}>
           {/* 알림 버튼 */}
-          <button className={styles.iconButton}>
-            <Bell size={20} />
-            <span className={styles.notificationBadge}>2</span>
-          </button>
+          <NotificationBell />
 
           {/* 프로필 메뉴 */}
           <div className={styles.profileMenu}>
