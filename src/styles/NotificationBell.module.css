@@ -24,7 +24,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #f99bab;
+    background-color: #fc6a82;
     color: white;
     font-size: 10px;
     font-weight: 600;
@@ -40,7 +40,9 @@
   .notificationDropdown {
     position: absolute;
     top: 100%;
-    right: 0;
+    /* right: 0; */
+    left: 50%;
+    transform: translateX(-50%);
     width: 360px;
     max-height: 480px;
     background-color: white;
@@ -48,7 +50,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     overflow: hidden;
-    margin-top: 8px;
+    margin-top: 18px;
     display: flex;
     flex-direction: column;
   }
@@ -193,12 +195,12 @@
   }
   
   .deleteBtn {
-    color: #f99bab;
+    color: #f33a59;
     font-size: 16px;
   }
   
   .deleteBtn:hover {
-    background-color: #fff0f0;
+    background-color: #f0f7ff;
   }
   
   .emptyNotification {

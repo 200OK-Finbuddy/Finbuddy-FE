@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ArrowLeft, Edit2, Trash2, AlertCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import styles from "../styles/Budget.module.css"
+import BudgetTransactions from "./BudgetTransactions"
 
 export default function Budget() {
   const navigate = useNavigate()
@@ -351,6 +352,12 @@ export default function Budget() {
                     예산 설정하기
                   </button>
                 )}
+              </div>
+            )}
+            {/* Add the budget transactions section */}
+            {!isLoading && !isEditing && (
+              <div className={styles.transactionsSection}>
+                <BudgetTransactions />
               </div>
             )}
           </div>

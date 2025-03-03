@@ -115,7 +115,7 @@ export default function NotificationBell() {
                         onClick={() => deleteNotification(notification.notificationId)}
                         aria-label="삭제"
                       >
-                        ×
+                        x
                       </button>
                     </div>
                   </div>

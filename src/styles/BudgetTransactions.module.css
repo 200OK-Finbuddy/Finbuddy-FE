@@ -1,0 +1,191 @@
+.container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.sectionHeader h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #00b090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.errorMessage {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.noTransactions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.transactionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listHeader {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  padding: 0 20px 12px 20px;
+  gap: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 8px;
+}
+
+.headerItem {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.headerItemRight {
+  composes: headerItem;
+  text-align: right;
+}
+
+.transactionItem {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  gap: 16px;
+}
+
+.transactionItem:hover {
+  background: #f3f4f6;
+}
+
+.accountName,
+.accountNumber,
+.transactionPlace,
+.transactionDate,
+.transactionAmount,
+.transactionBalance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.transactionAmount,
+.transactionBalance {
+  text-align: right;
+}
+
+.primaryText {
+  font-size: 15px;
+  font-weight: 500;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.secondaryText {
+  font-size: 15px;
+  color: #5e6470;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.income {
+  color: #197bbd;
+}
+
+.expense {
+  color: #f77f7f;
+}
+
+@media (max-width: 1280px) {
+  .listHeader {
+    display: none;
+  }
+
+  .transactionItem {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .sectionHeader {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .transactionItem {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .transactionAmount,
+  .transactionBalance {
+    text-align: left;
+  }
+
+  .loadingContainer {
+    padding: 32px 0;
+  }
+
+  .noTransactions {
+    padding: 32px 0;
+  }
+}
+

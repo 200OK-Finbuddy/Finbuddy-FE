@@ -1,432 +1,437 @@
 .headerWithBack {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #404040;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #f3f4f6;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.editButton,
+.deleteButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.editButton {
+  background-color: #f0fdf9;
+  color: #00b090;
+}
+
+.editButton:hover {
+  background-color: #dcfce7;
+}
+
+.deleteButton {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.deleteButton:hover {
+  background-color: #fee2e2;
+}
+
+.budgetContainer {
+  margin-top: 24px;
+}
+
+.budgetCard {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.budgetHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.budgetTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+}
+
+.budgetAmount {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+
+.amountValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: #00b090;
+}
+
+.amountUnit {
+  font-size: 18px;
+  color: #00b090;
+  margin-left: 4px;
+}
+
+.budgetProgress {
+  margin-bottom: 16px;
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.progressBar {
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #00b090;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.budgetRemaining {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.remainingLabel {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.remainingValue {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+}
+
+.noBudget {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.noBudgetMessage {
+  margin-bottom: 24px;
+}
+
+.noBudgetMessage h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 8px;
+}
+
+.noBudgetMessage p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.createBudgetButton {
+  padding: 12px 24px;
+  background-color: #00b090;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.createBudgetButton:hover {
+  background-color: #009378;
+}
+
+.budgetForm {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin: 0 auto;
+}
+
+.formTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.formGroup {
+  margin-bottom: 24px;
+}
+
+.formLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #404040;
+  margin-bottom: 8px;
+}
+
+.amountInputWrapper {
+  position: relative;
+}
+
+.amountInput {
+  width: 100%;
+  padding: 12px 16px;
+  padding-right: 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #404040;
+  text-align: right;
+}
+
+.amountInput:focus {
+  outline: none;
+  border-color: #00b090;
+  box-shadow: 0 0 0 2px rgba(0, 176, 144, 0.1);
+}
+
+.currencyUnit {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.amountPreview {
+  text-align: right;
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelButton,
+.submitButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton {
+  background-color: white;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.cancelButton:hover {
+  background-color: #f3f4f6;
+}
+
+.submitButton {
+  background-color: #00b090;
+  color: white;
+  border: none;
+}
+
+.submitButton:hover {
+  background-color: #009378;
+}
+
+.submitButton:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+/* 모달 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #404040;
+  margin-bottom: 16px;
+}
+
+.modalMessage {
+  font-size: 16px;
+  color: #404040;
+  margin-bottom: 24px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modalCancelButton,
+.modalDeleteButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modalCancelButton {
+  background-color: white;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.modalCancelButton:hover {
+  background-color: #f3f4f6;
+}
+
+.modalDeleteButton {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.modalDeleteButton:hover {
+  background-color: #dc2626;
+}
+
+/* 로딩 및 에러 스타일 */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 16px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f4f6;
+  border-top-color: #00b090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  .backButton {
-    background: none;
-    border: none;
-    color: #404040;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border-radius: 50%;
-    transition: background-color 0.2s;
-  }
-  
-  .backButton:hover {
-    background-color: #f3f4f6;
-  }
-  
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #fef2f2;
+  color: #ef4444;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
   .headerActions {
-    display: flex;
+    flex-direction: column;
     gap: 8px;
   }
-  
-  .editButton,
-  .deleteButton {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-  }
-  
-  .editButton {
-    background-color: #f0fdf9;
-    color: #00b090;
-  }
-  
-  .editButton:hover {
-    background-color: #dcfce7;
-  }
-  
-  .deleteButton {
-    background-color: #fef2f2;
-    color: #ef4444;
-  }
-  
-  .deleteButton:hover {
-    background-color: #fee2e2;
-  }
-  
-  .budgetContainer {
-    margin-top: 24px;
-  }
-  
-  .budgetCard {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .budgetHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  
-  .budgetTitle {
-    font-size: 18px;
-    font-weight: 600;
-    color: #404040;
-  }
-  
-  .budgetAmount {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 24px;
-  }
-  
-  .amountValue {
-    font-size: 32px;
-    font-weight: 700;
-    color: #00b090;
-  }
-  
-  .amountUnit {
-    font-size: 18px;
-    color: #00b090;
-    margin-left: 4px;
-  }
-  
-  .budgetProgress {
-    margin-bottom: 16px;
-  }
-  
-  .progressInfo {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #6b7280;
-  }
-  
-  .progressBar {
-    height: 8px;
-    background-color: #e5e7eb;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  
-  .progressFill {
-    height: 100%;
-    background-color: #00b090;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-  
-  .budgetRemaining {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 16px;
-    border-top: 1px solid #e5e7eb;
-  }
-  
-  .remainingLabel {
-    font-size: 16px;
-    color: #6b7280;
-  }
-  
-  .remainingValue {
-    font-size: 18px;
-    font-weight: 600;
-    color: #404040;
-  }
-  
-  .noBudget {
-    background: white;
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    text-align: center;
-  }
-  
-  .noBudgetMessage {
-    margin-bottom: 24px;
-  }
-  
-  .noBudgetMessage h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #404040;
-    margin-bottom: 8px;
-  }
-  
-  .noBudgetMessage p {
-    font-size: 14px;
-    color: #6b7280;
-  }
-  
-  .createBudgetButton {
-    padding: 12px 24px;
-    background-color: #00b090;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .createBudgetButton:hover {
-    background-color: #009378;
-  }
-  
-  .budgetForm {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    margin: 0 auto;
-  }
-  
-  .formTitle {
-    font-size: 18px;
-    font-weight: 600;
-    color: #404040;
-    margin-bottom: 24px;
-    text-align: center;
-  }
-  
-  .formGroup {
-    margin-bottom: 24px;
-  }
-  
-  .formLabel {
-    display: block;
-    font-size: 16px;
-    font-weight: 500;
-    color: #404040;
-    margin-bottom: 8px;
-  }
-  
-  .amountInputWrapper {
-    position: relative;
-  }
-  
-  .amountInput {
-    width: 100%;
-    padding: 12px 16px;
-    padding-right: 40px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 16px;
-    color: #404040;
-    text-align: right;
-  }
-  
-  .amountInput:focus {
-    outline: none;
-    border-color: #00b090;
-    box-shadow: 0 0 0 2px rgba(0, 176, 144, 0.1);
-  }
-  
-  .currencyUnit {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #6b7280;
-  }
-  
-  .amountPreview {
-    text-align: right;
-    color: #6b7280;
-    font-size: 14px;
-    margin-top: 8px;
-  }
-  
+
   .formActions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
+    flex-direction: column;
   }
-  
+
   .cancelButton,
   .submitButton {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+    width: 100%;
   }
-  
-  .cancelButton {
-    background-color: white;
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
-  }
-  
-  .cancelButton:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .submitButton {
-    background-color: #00b090;
-    color: white;
-    border: none;
-  }
-  
-  .submitButton:hover {
-    background-color: #009378;
-  }
-  
-  .submitButton:disabled {
-    background-color: #cbd5e0;
-    cursor: not-allowed;
-  }
-  
-  /* 모달 스타일 */
-  .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modalContent {
-    background-color: white;
-    border-radius: 12px;
-    padding: 24px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .modalTitle {
-    font-size: 18px;
-    font-weight: 600;
-    color: #404040;
-    margin-bottom: 16px;
-  }
-  
-  .modalMessage {
-    font-size: 16px;
-    color: #404040;
-    margin-bottom: 24px;
-  }
-  
+
   .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+    flex-direction: column;
   }
-  
+
   .modalCancelButton,
   .modalDeleteButton {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+    width: 100%;
   }
-  
-  .modalCancelButton {
-    background-color: white;
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
-  }
-  
-  .modalCancelButton:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .modalDeleteButton {
-    background-color: #ef4444;
-    color: white;
-    border: none;
-  }
-  
-  .modalDeleteButton:hover {
-    background-color: #dc2626;
-  }
-  
-  /* 로딩 및 에러 스타일 */
-  .loadingContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    gap: 16px;
-  }
-  
-  .loadingSpinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f3f4f6;
-    border-top-color: #00b090;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .errorMessage {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background-color: #fef2f2;
-    color: #ef4444;
-    border-radius: 8px;
-    margin-bottom: 16px;
-  }
-  
-  /* 반응형 디자인 */
-  @media (max-width: 768px) {
-    .headerActions {
-      flex-direction: column;
-      gap: 8px;
-    }
-  
-    .formActions {
-      flex-direction: column;
-    }
-  
-    .cancelButton,
-    .submitButton {
-      width: 100%;
-    }
-  
-    .modalActions {
-      flex-direction: column;
-    }
-  
-    .modalCancelButton,
-    .modalDeleteButton {
-      width: 100%;
-    }
-  }
-  
-  .setupForm {
-    /* max-width: 600px; */
-    margin: 0 auto;
-    padding: 0 16px;
-  }
+}
+
+.setupForm {
+  /* max-width: 600px; */
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.transactionsSection {
+  margin-top: 24px;
+}
+
