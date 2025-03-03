@@ -10,7 +10,6 @@ export default function Transactions() {
   const [selectedAccount, setSelectedAccount] = useState(null)
   const [accountDetails, setAccountDetails] = useState(null)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [activeTab, setActiveTab] = useState("all")
   const [isLoading, setIsLoading] = useState(true)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
@@ -57,9 +56,6 @@ export default function Transactions() {
     }
   }).reverse()
 
-  // selectedMonth 초기값 설정 수정
-  const [selectedMonth, setSelectedMonth] = useState(monthOptions[monthOptions.length - 1]) // 현재 달로 초기화
-
   // 월간 거래 요약 상태 추가
   const [monthlySummary, setMonthlySummary] = useState({
     depositTotal: 0,
@@ -67,13 +63,19 @@ export default function Transactions() {
   })
 
   // 날짜 필터 상태 추가
-  const [dateFilter, setDateFilter] = useState({
+  // 거래내역 테이블을 위한 독립적인 상태들
+  const [transactionFilters, setTransactionFilters] = useState({
     startDate: null,
     endDate: null,
+    type: "all",
+    sortDirection: "DESC",
   })
 
+  // 월간 거래 요약을 위한 독립적인 상태
+  const [summaryMonth, setSummaryMonth] = useState(monthOptions[monthOptions.length - 1])
+
   // 정렬 상태 추가
-  const [sortDirection, setSortDirection] = useState("DESC")
+  //const [sortDirection, setSortDirection] = useState("DESC")
 
   // 계좌 목록 조회
   useEffect(() => {
@@ -94,7 +96,7 @@ export default function Transactions() {
     }
 
     fetchAccounts()
-  }, [])
+  }, [memberId])
 
   // 계좌 상세 정보 조회
   useEffect(() => {
@@ -114,7 +116,7 @@ export default function Transactions() {
     }
 
     fetchAccountDetails()
-  }, [selectedAccount])
+  }, [selectedAccount, memberId])
 
   // 월간 거래 요약 데이터를 가져오는 함수 추가
   const fetchMonthlySummary = useCallback(async () => {
@@ -122,7 +124,7 @@ export default function Transactions() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/transactions/account/monthly-summary?memberId=${memberId}&accountId=${selectedAccount.accountId}&year=${selectedMonth.year}&month=${selectedMonth.value}`,
+        `http://localhost:8080/api/transactions/account/monthly-summary?memberId=${memberId}&accountId=${selectedAccount.accountId}&year=${summaryMonth.year}&month=${summaryMonth.value}`,
       )
 
       if (!response.ok) throw new Error("Failed to fetch monthly summary")
@@ -132,12 +134,12 @@ export default function Transactions() {
       console.error("Error fetching monthly summary:", error)
       setMonthlySummary({ depositTotal: 0, withdrawalTotal: 0 })
     }
-  }, [selectedAccount, selectedMonth, memberId])
+  }, [selectedAccount, summaryMonth, memberId])
 
   // selectedAccount나 selectedMonth가 변경될 때마다 월간 거래 요약 조회
   useEffect(() => {
     fetchMonthlySummary()
-  }, [fetchMonthlySummary, selectedAccount, selectedMonth])
+  }, [fetchMonthlySummary])
 
   // 거래내역 조회 - 페이지네이션 추가
   useEffect(() => {
@@ -145,14 +147,15 @@ export default function Transactions() {
       if (!selectedAccount) return
 
       try {
-        const transactionType = activeTab === "income" ? 1 : activeTab === "expense" ? 2 : null
+        const transactionType =
+          transactionFilters.type === "income" ? 1 : transactionFilters.type === "expense" ? 2 : null
 
         // URL 파라미터 구성
         const params = new URLSearchParams({
           memberId: memberId.toString(),
           page: page.toString(),
           size: "20",
-          sort: `transactionDate,${sortDirection.toLowerCase()}`,
+          sort: `transactionDate,${transactionFilters.sortDirection.toLowerCase()}`,
         })
 
         // 거래 유형이 있는 경우 추가
@@ -161,11 +164,11 @@ export default function Transactions() {
         }
 
         // 날짜 필터가 있는 경우 추가
-        if (dateFilter.startDate) {
-          params.append("startDate", dateFilter.startDate)
+        if (transactionFilters.startDate) {
+          params.append("startDate", transactionFilters.startDate)
         }
-        if (dateFilter.endDate) {
-          params.append("endDate", dateFilter.endDate)
+        if (transactionFilters.endDate) {
+          params.append("endDate", transactionFilters.endDate)
         }
 
         const response = await fetch(
@@ -185,7 +188,7 @@ export default function Transactions() {
     }
 
     fetchTransactions()
-  }, [selectedAccount, page, activeTab, dateFilter, sortDirection, memberId])
+  }, [selectedAccount, page, transactionFilters, memberId])
 
   // 월간 거래 요약 데이터 계산 함수 추가
   //const calculateMonthlySummary = (transactions, year, month) => { ... } // 제거
@@ -283,36 +286,51 @@ export default function Transactions() {
       <div className={styles.dateFilters}>
         <input
           type="date"
-          value={dateFilter.startDate || ""}
-          onChange={(e) =>
-            setDateFilter((prev) => ({
-              ...prev,
-              startDate: e.target.value,
-            }))
-          }
+          value={transactionFilters.startDate || ""}
+          onChange={(e) => handleDateFilterChange(e.target.value, transactionFilters.endDate)}
           className={styles.dateInput}
         />
         <span>~</span>
         <input
           type="date"
-          value={dateFilter.endDate || ""}
-          onChange={(e) =>
-            setDateFilter((prev) => ({
-              ...prev,
-              endDate: e.target.value,
-            }))
-          }
+          value={transactionFilters.endDate || ""}
+          onChange={(e) => handleDateFilterChange(transactionFilters.startDate, e.target.value)}
           className={styles.dateInput}
         />
       </div>
-      <button
-        className={styles.sortButton}
-        onClick={() => setSortDirection((prev) => (prev === "DESC" ? "ASC" : "DESC"))}
-      >
-        {sortDirection === "DESC" ? "최신순" : "과거순"}
+      <button className={styles.sortButton} onClick={handleSortDirectionChange}>
+        {transactionFilters.sortDirection === "DESC" ? "최신순" : "과거순"}
       </button>
     </div>
   )
+
+  const handleTransactionFilterChange = (type) => {
+    setTransactionFilters((prev) => ({
+      ...prev,
+      type,
+    }))
+    setPage(0)
+    setTransactions([])
+  }
+
+  const handleSortDirectionChange = () => {
+    setTransactionFilters((prev) => ({
+      ...prev,
+      sortDirection: prev.sortDirection === "DESC" ? "ASC" : "DESC",
+    }))
+    setPage(0)
+    setTransactions([])
+  }
+
+  const handleDateFilterChange = (startDate, endDate) => {
+    setTransactionFilters((prev) => ({
+      ...prev,
+      startDate,
+      endDate,
+    }))
+    setPage(0)
+    setTransactions([])
+  }
 
   if (isLoading) {
     return (
@@ -410,11 +428,9 @@ export default function Transactions() {
                   <h3 className={styles.infoTitle}>월간 거래 요약</h3>
                   <select
                     className={styles.monthSelect}
-                    value={JSON.stringify(selectedMonth)}
+                    value={JSON.stringify(summaryMonth)}
                     onChange={(e) => {
-                      setSelectedMonth(JSON.parse(e.target.value))
-                      setPage(0) // 월 변경 시 페이지 초기화
-                      setTransactions([]) // 거래내역 초기화
+                      setSummaryMonth(JSON.parse(e.target.value))
                     }}
                   >
                     {monthOptions.map((month) => (
@@ -461,7 +477,12 @@ export default function Transactions() {
               </div>
             </div>
 
-            <AccountExpenseChart accountId={selectedAccount.accountId} memberId={memberId} />
+            {/* AccountExpenseChart를 독립적으로 렌더링 */}
+            <AccountExpenseChart
+              accountId={selectedAccount.accountId}
+              memberId={memberId}
+              key={`expense-chart-${selectedAccount.accountId}`} // 계좌 변경 시 컴포넌트 리셋
+            />
 
             {/* 거래내역 테이블 */}
             <div className={styles.transactionsContainer}>
@@ -470,32 +491,20 @@ export default function Transactions() {
                 {renderTransactionFilters()}
                 <div className={styles.transactionTabs}>
                   <button
-                    className={`${styles.tabButton} ${activeTab === "all" ? styles.active : ""}`}
-                    onClick={() => {
-                      setActiveTab("all")
-                      setPage(0)
-                      setTransactions([])
-                    }}
+                    className={`${styles.tabButton} ${transactionFilters.type === "all" ? styles.active : ""}`}
+                    onClick={() => handleTransactionFilterChange("all")}
                   >
                     전체
                   </button>
                   <button
-                    className={`${styles.tabButton} ${activeTab === "income" ? styles.active : ""}`}
-                    onClick={() => {
-                      setActiveTab("income")
-                      setPage(0)
-                      setTransactions([])
-                    }}
+                    className={`${styles.tabButton} ${transactionFilters.type === "income" ? styles.active : ""}`}
+                    onClick={() => handleTransactionFilterChange("income")}
                   >
                     입금
                   </button>
                   <button
-                    className={`${styles.tabButton} ${activeTab === "expense" ? styles.active : ""}`}
-                    onClick={() => {
-                      setActiveTab("expense")
-                      setPage(0)
-                      setTransactions([])
-                    }}
+                    className={`${styles.tabButton} ${transactionFilters.type === "expense" ? styles.active : ""}`}
+                    onClick={() => handleTransactionFilterChange("expense")}
                   >
                     출금
                   </button>
