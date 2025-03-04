@@ -33,7 +33,7 @@ function SingUp() {
         console.log(formData);
 
         try {
-            const response = await axios.post("http://localhost:8080/api/signup", formData);
+            const response = await axios.post("/api/signup", formData);
             if (response.data.success) {
                 alert('회원가입에 성공했습니다.');
             } else {
@@ -61,7 +61,7 @@ function SingUp() {
         const { emailId, emailDomain } = getValues();
         const mail = `${emailId}@${emailDomain}`;
         try {
-            const response = await axios.post("http://localhost:8080/api/mail/send", { mail })
+            const response = await axios.post("/api/mail/send", { mail })
             if (response.data.success) {
                 setEmailStatus('sent');
                 alert(response.data.message);
@@ -78,7 +78,7 @@ function SingUp() {
         const mail = `${emailId}@${emailDomain}`;
         const code = verificationCode;
         try {
-            const response = await axios.post('http://localhost:8080/api/mail/verify', { mail, code });
+            const response = await axios.post('/api/mail/verify', { mail, code });
             if (response.data.success) {
                 setEmailStatus('verified');
                 alert('이메일 인증 성공!');

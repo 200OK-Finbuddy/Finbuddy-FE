@@ -14,7 +14,7 @@ function BudgetTransactions() {
       try {
         setIsLoading(true)
         setError(null)
-        const response = await fetch(`http://localhost:8080/api/budgets/checking/recent/${memberId}`)
+        const response = await fetch(`/api/budgets/checking/recent/${memberId}`)
 
         if (!response.ok) {
           throw new Error("거래내역을 불러오는데 실패했습니다.")

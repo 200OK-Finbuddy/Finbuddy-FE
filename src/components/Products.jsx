@@ -21,8 +21,8 @@ export default function Products() {
     try {
       const endpoint =
         activeTab === "deposits"
-          ? "http://localhost:8080/api/products/deposits"
-          : "http://localhost:8080/api/products/savings"
+          ? "/api/products/deposits"
+          : "/api/products/savings"
       const response = await fetch(`${endpoint}?name=${searchTerm}&bankName=${selectedBank}&page=${currentPage}`)
       const data = await response.json()
       setProducts(data.content)

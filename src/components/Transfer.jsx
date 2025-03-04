@@ -26,7 +26,7 @@ export default function Transfer() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/transfers/all/checking-account?memberId=${memberId}`)
+        const response = await fetch(`/api/transfers/all/checking-account?memberId=${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
@@ -53,7 +53,7 @@ export default function Transfer() {
     try {
       // 새로운 API 엔드포인트 사용
       const response = await fetch(
-        `http://localhost:8080/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
+        `/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
       )
       console.log(selectedBank)
 
@@ -127,10 +127,7 @@ export default function Transfer() {
     }
 
     try {
-      const url = new URL("http://localhost:8080/api/transfers")
-      url.searchParams.append("memberId", memberId.toString())
-
-      const response = await fetch(url, {
+      const response = await fetch(`/api/transfers?memberId=${memberId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

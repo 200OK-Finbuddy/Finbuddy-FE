@@ -14,7 +14,7 @@ export default function ProductDetail() {
     const fetchProductDetail = async () => {
       try {
         const productType = location.pathname.includes("/deposit/") ? "deposit" : "saving"
-        const response = await fetch(`http://localhost:8080/api/products/${productType}/${productId}`)
+        const response = await fetch(`/api/products/${productType}/${productId}`)
         if (!response.ok) {
           throw new Error("Product not found")
         }

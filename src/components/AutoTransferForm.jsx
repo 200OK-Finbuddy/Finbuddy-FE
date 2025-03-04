@@ -36,7 +36,7 @@ export default function AutoTransferForm() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/transfers/all/checking-account?memberId=${memberId}`)
+        const response = await fetch(`/api/transfers/all/checking-account?memberId=${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
@@ -56,7 +56,7 @@ export default function AutoTransferForm() {
       if (!isEditing) return
 
       try {
-        const response = await fetch(`http://localhost:8080/api/autotransfer/${id}`)
+        const response = await fetch(`/api/autotransfer/${id}`)
         if (!response.ok) throw new Error("Failed to fetch auto transfer details")
         const data = await response.json()
 
@@ -90,7 +90,7 @@ export default function AutoTransferForm() {
     setIsSearching(true)
     try {
       const response = await fetch(
-        `http://localhost:8080/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
+        `/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
       )
 
       if (!response.ok) {
@@ -141,7 +141,7 @@ export default function AutoTransferForm() {
 
     const verifyPassword = async (accountId, password) => {
       try {
-        const response = await fetch(`http://localhost:8080/api/accounts/verify-password`, {
+        const response = await fetch(`/api/accounts/verify-password`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -185,8 +185,8 @@ export default function AutoTransferForm() {
     const handleModalSubmit = async () => {
       try {
         const url = isEditing
-          ? `http://localhost:8080/api/autotransfer/${id}`
-          : "http://localhost:8080/api/autotransfer"
+          ? `/api/autotransfer/${id}`
+          : "/api/autotransfer"
 
         const response = await fetch(url, {
           method: isEditing ? "PATCH" : "POST",

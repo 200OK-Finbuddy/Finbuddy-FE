@@ -174,7 +174,7 @@ function SignupForm() {
     setError(null)
 
     try {
-      const response = await fetch("http://localhost:8080/api/mail/send", {
+      const response = await fetch("/api/mail/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,7 +204,7 @@ function SignupForm() {
 
     try {
       // 테스트를 위해 임시로 항상 성공하도록 수정
-      // const response = await fetch('http://localhost:8080/api/mail/verify', {
+      // const response = await fetch('/api/mail/verify', {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -251,7 +251,7 @@ function SignupForm() {
     setError(null)
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/signup", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

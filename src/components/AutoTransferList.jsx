@@ -16,7 +16,7 @@ export default function AutoTransferList() {
 
   const fetchAutoTransfers = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/autotransfer/list/${memberId}`)
+      const response = await fetch(`/api/autotransfer/list/${memberId}`)
       if (!response.ok) throw new Error("Failed to fetch")
       const data = await response.json()
       console.log(data)
@@ -30,7 +30,7 @@ export default function AutoTransferList() {
     if (!confirm("자동이체를 삭제하시겠습니까?")) return
 
     try {
-      const response = await fetch(`http://localhost:8080/api/autotransfer/${id}`, {
+      const response = await fetch(`/api/autotransfer/${id}`, {
         method: "DELETE",
       })
       if (!response.ok) throw new Error("Failed to delete")
@@ -42,7 +42,7 @@ export default function AutoTransferList() {
 
   const handleToggleStatus = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/autotransfer/${id}/toggle-status`, {
+      const response = await fetch(`/api/autotransfer/${id}/toggle-status`, {
         method: "PATCH",
       })
       if (!response.ok) throw new Error("Failed to toggle status")
