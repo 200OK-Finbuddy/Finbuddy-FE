@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -14,7 +15,7 @@ function RecommendedProducts({ setActiveNav }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products/recommendations")
+        const response = await fetch(`${API_URL}/api/products/recommendations`)
         if (!response.ok) {
           throw new Error("Network response was not ok")
         }
@@ -57,7 +58,7 @@ function RecommendedProducts({ setActiveNav }) {
     const productType = product.productType.toLowerCase()
     try {
       // API 호출
-      const response = await fetch(`/api/products/${productType}/${product.productId}`)
+      const response = await fetch(`${API_URL}/api/products/${productType}/${product.productId}`)
       if (!response.ok) {
         throw new Error("Product details fetch failed")
       }

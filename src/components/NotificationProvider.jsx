@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import PropTypes from "prop-types"
 import { createContext, useState, useContext, useEffect, useRef } from "react"
 import NotificationToast from "./NotificationToast"
@@ -43,7 +44,7 @@ export function NotificationProvider({ children }) {
   // SSE 연결 설정
   const setupSSE = () => {
     // 브라우저에서 SSE 연결 시작
-    const eventSource = new EventSource(`/api/notifications/subscribe/${memberId}`)
+    const eventSource = new EventSource(`${API_URL}/api/notifications/subscribe/${memberId}`)
 
     eventSource.addEventListener("connect", (event) => {
       console.log("✅ SSE Connected:", event.data)
@@ -77,7 +78,7 @@ export function NotificationProvider({ children }) {
   // 알림 목록 로드
   const loadNotifications = async () => {
     try {
-      const response = await fetch(`/api/notifications/${memberId}`)
+      const response = await fetch(`${API_URL}/api/notifications/${memberId}`)
       if (response.ok) {
         const data = await response.json()
         setNotifications(data)
@@ -90,7 +91,7 @@ export function NotificationProvider({ children }) {
   // 읽지 않은 알림 개수 업데이트
   const updateUnreadCount = async () => {
     try {
-      const response = await fetch(`/api/notifications/unread-count/${memberId}`)
+      const response = await fetch(`${API_URL}/api/notifications/unread-count/${memberId}`)
       if (response.ok) {
         const count = await response.json()
         setUnreadCount(count)
@@ -103,7 +104,7 @@ export function NotificationProvider({ children }) {
   // 알림 읽음 표시
   const markAsRead = async (notificationId) => {
     try {
-      const response = await fetch(`/api/notifications/${notificationId}/read`, {
+      const response = await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
         method: "PATCH",
       })
       if (response.ok) {
@@ -122,7 +123,7 @@ export function NotificationProvider({ children }) {
   // 알림 삭제
   const deleteNotification = async (notificationId) => {
     try {
-      const response = await fetch(`/api/notifications/${notificationId}`, {
+      const response = await fetch(`${API_URL}/api/notifications/${notificationId}`, {
         method: "DELETE",
       })
       if (response.ok) {
@@ -138,7 +139,7 @@ export function NotificationProvider({ children }) {
   // 모든 알림 삭제
   const deleteAllNotifications = async () => {
     try {
-      const response = await fetch(`/api/notifications/member/${memberId}`, {
+      const response = await fetch(`${API_URL}/api/notifications/member/${memberId}`, {
         method: "DELETE",
       })
       if (response.ok) {

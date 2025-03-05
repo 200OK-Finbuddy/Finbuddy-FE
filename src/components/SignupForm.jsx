@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config";
 import { useState, useEffect } from "react"
 import "../styles/SignupForm.css"
 
@@ -174,7 +175,7 @@ function SignupForm() {
     setError(null)
 
     try {
-      const response = await fetch("/api/mail/send", {
+      const response = await fetch(`${API_URL}/api/mail/send`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,7 +205,7 @@ function SignupForm() {
 
     try {
       // 테스트를 위해 임시로 항상 성공하도록 수정
-      // const response = await fetch('/api/mail/verify', {
+      // const response = await fetch(`${API_URL}/api/mail/verify`, {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -251,7 +252,7 @@ function SignupForm() {
     setError(null)
 
     try {
-      const response = await fetch("/api/auth/signup", {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

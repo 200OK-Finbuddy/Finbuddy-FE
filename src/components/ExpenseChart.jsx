@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useState, useEffect, useCallback } from 'react';
 import '../styles/ExpenseChart.css';
 
@@ -23,7 +24,7 @@ function ExpenseChart() {
       const currentMonth = today.getMonth() + 1; // JavaScript의 월은 0부터 시작하므로 1을 더합니다
 
       const response = await fetch(
-        `/api/transactions/category-expenses?memberId=1&year=${currentYear}&month=${currentMonth}`,
+        `${API_URL}/api/transactions/category-expenses?memberId=1&year=${currentYear}&month=${currentMonth}`,
         {
           method: "GET",
           headers: {

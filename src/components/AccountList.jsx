@@ -27,7 +27,7 @@ function AccountList({ accounts }) {
   );
 }
 
-/* ✅ PropTypes 추가 */
+/* PropTypes 추가 */
 AccountList.propTypes = {
   accounts: PropTypes.arrayOf(
     PropTypes.shape({

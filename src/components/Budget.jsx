@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { ArrowLeft, Edit2, Trash2, AlertCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -21,7 +22,7 @@ export default function Budget() {
     try {
       setIsLoading(true)
       setError(null)
-      const response = await fetch(`/api/budgets/current?memberId=${memberId}`)
+      const response = await fetch(`${API_URL}/api/budgets/current?memberId=${memberId}`)
 
       if (response.status === 404) {
         // 예산이 없는 경우
@@ -61,7 +62,7 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch(`/api/budgets?memberId=${memberId}&amount=${amount}`, {
+      const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}&amount=${amount}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -92,7 +93,7 @@ export default function Budget() {
       setError(null)
 
       const response = await fetch(
-        `/api/budgets/${budget.budgetId}?memberId=${memberId}&newAmount=${newAmount}`,
+        `${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}&newAmount=${newAmount}`,
         {
           method: "PATCH",
           headers: {
@@ -125,7 +126,7 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch(`/api/budgets/${budget.budgetId}?memberId=${memberId}`, {
+      const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}`, {
         method: "DELETE",
       })
 

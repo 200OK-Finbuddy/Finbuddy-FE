@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useState, useEffect, useCallback } from 'react';
 import '../styles/AccountSection.css';
 
@@ -9,7 +10,7 @@ function AccountSection() {
 
   const getCheckingAccounts = useCallback(async () => {
     try {
-      const response = await fetch("/api/accounts/checking/1", {
+      const response = await fetch(`${API_URL}/api/accounts/checking/1`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

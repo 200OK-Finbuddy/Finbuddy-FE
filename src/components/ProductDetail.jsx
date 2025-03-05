@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useEffect, useState } from "react"
 import { useParams, useLocation } from "react-router-dom"
 import styles from "../styles/ProductDetail.module.css"
@@ -14,7 +15,7 @@ export default function ProductDetail() {
     const fetchProductDetail = async () => {
       try {
         const productType = location.pathname.includes("/deposit/") ? "deposit" : "saving"
-        const response = await fetch(`/api/products/${productType}/${productId}`)
+        const response = await fetch(`${API_URL}/api/products/${productType}/${productId}`)
         if (!response.ok) {
           throw new Error("Product not found")
         }

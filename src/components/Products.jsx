@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useEffect, useState, useCallback } from "react"
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -21,8 +22,8 @@ export default function Products() {
     try {
       const endpoint =
         activeTab === "deposits"
-          ? "/api/products/deposits"
-          : "/api/products/savings"
+          ? `${API_URL}/api/products/deposits`
+          : `${API_URL}/api/products/savings`
       const response = await fetch(`${endpoint}?name=${searchTerm}&bankName=${selectedBank}&page=${currentPage}`)
       const data = await response.json()
       setProducts(data.content)

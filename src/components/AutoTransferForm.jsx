@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Search } from "lucide-react"
@@ -36,7 +37,7 @@ export default function AutoTransferForm() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`/api/transfers/all/checking-account?memberId=${memberId}`)
+        const response = await fetch(`${API_URL}/api/transfers/all/checking-account?memberId=${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
@@ -56,7 +57,7 @@ export default function AutoTransferForm() {
       if (!isEditing) return
 
       try {
-        const response = await fetch(`/api/autotransfer/${id}`)
+        const response = await fetch(`${API_URL}/api/autotransfer/${id}`)
         if (!response.ok) throw new Error("Failed to fetch auto transfer details")
         const data = await response.json()
 
@@ -90,7 +91,7 @@ export default function AutoTransferForm() {
     setIsSearching(true)
     try {
       const response = await fetch(
-        `/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
+        `${API_URL}/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
       )
 
       if (!response.ok) {
@@ -141,7 +142,7 @@ export default function AutoTransferForm() {
 
     const verifyPassword = async (accountId, password) => {
       try {
-        const response = await fetch(`/api/accounts/verify-password`, {
+        const response = await fetch(`${API_URL}/api/accounts/verify-password`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -185,8 +186,8 @@ export default function AutoTransferForm() {
     const handleModalSubmit = async () => {
       try {
         const url = isEditing
-          ? `/api/autotransfer/${id}`
-          : "/api/autotransfer"
+          ? `${API_URL}/api/autotransfer/${id}`
+          : `${API_URL}/api/autotransfer`
 
         const response = await fetch(url, {
           method: isEditing ? "PATCH" : "POST",

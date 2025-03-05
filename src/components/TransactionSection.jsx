@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useState, useEffect } from 'react';
 import '../styles/TransactionSection.css';
 
@@ -7,7 +8,7 @@ function TransactionSection() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch('/api/transactions/checking/recent/1');
+        const response = await fetch(`${API_URL}/api/transactions/checking/recent/1`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import styles from "../styles/BudgetTransactions.module.css"
 
@@ -14,7 +15,7 @@ function BudgetTransactions() {
       try {
         setIsLoading(true)
         setError(null)
-        const response = await fetch(`/api/budgets/checking/recent/${memberId}`)
+        const response = await fetch(`${API_URL}/api/budgets/checking/recent/${memberId}`)
 
         if (!response.ok) {
           throw new Error("거래내역을 불러오는데 실패했습니다.")

@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight } from "lucide-react"
@@ -16,7 +17,7 @@ export default function AutoTransferList() {
 
   const fetchAutoTransfers = async () => {
     try {
-      const response = await fetch(`/api/autotransfer/list/${memberId}`)
+      const response = await fetch(`${API_URL}/api/autotransfer/list/${memberId}`)
       if (!response.ok) throw new Error("Failed to fetch")
       const data = await response.json()
       console.log(data)
@@ -30,7 +31,7 @@ export default function AutoTransferList() {
     if (!confirm("자동이체를 삭제하시겠습니까?")) return
 
     try {
-      const response = await fetch(`/api/autotransfer/${id}`, {
+      const response = await fetch(`${API_URL}/api/autotransfer/${id}`, {
         method: "DELETE",
       })
       if (!response.ok) throw new Error("Failed to delete")
@@ -42,7 +43,7 @@ export default function AutoTransferList() {
 
   const handleToggleStatus = async (id) => {
     try {
-      const response = await fetch(`/api/autotransfer/${id}/toggle-status`, {
+      const response = await fetch(`${API_URL}/api/autotransfer/${id}/toggle-status`, {
         method: "PATCH",
       })
       if (!response.ok) throw new Error("Failed to toggle status")

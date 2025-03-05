@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import styles from "../styles/AccountExpenseChart.module.css"
@@ -41,7 +42,7 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
         setIsLoading(true)
         const promises = MONTHS.map((month) =>
           fetch(
-            `/api/transactions/account-category-expense?memberId=${memberId}&accountId=${accountId}&year=${month.year}&month=${month.value}`,
+            `${API_URL}/api/transactions/account-category-expense?memberId=${memberId}&accountId=${accountId}&year=${month.year}&month=${month.value}`,
           )
             .then((res) => res.json())
             .then((data) => ({

@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import styles from "../styles/Transactions.module.css"
@@ -81,7 +82,7 @@ export default function Transactions() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`/api/accounts/all/${memberId}`)
+        const response = await fetch(`${API_URL}/api/accounts/all/${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data || [])
@@ -105,7 +106,7 @@ export default function Transactions() {
 
       try {
         const response = await fetch(
-          `/api/accounts/${selectedAccount.accountId}?memberId=${memberId}`,
+          `${API_URL}/api/accounts/${selectedAccount.accountId}?memberId=${memberId}`,
         )
         if (!response.ok) throw new Error("Failed to fetch account details")
         const data = await response.json()
@@ -124,7 +125,7 @@ export default function Transactions() {
 
     try {
       const response = await fetch(
-        `/api/transactions/account/monthly-summary?memberId=${memberId}&accountId=${selectedAccount.accountId}&year=${summaryMonth.year}&month=${summaryMonth.value}`,
+        `${API_URL}/api/transactions/account/monthly-summary?memberId=${memberId}&accountId=${selectedAccount.accountId}&year=${summaryMonth.year}&month=${summaryMonth.value}`,
       )
 
       if (!response.ok) throw new Error("Failed to fetch monthly summary")
@@ -172,7 +173,7 @@ export default function Transactions() {
         }
 
         const response = await fetch(
-          `/api/transactions/account/${selectedAccount.accountId}?${params.toString()}`,
+          `${API_URL}/api/transactions/account/${selectedAccount.accountId}?${params.toString()}`,
         )
 
         if (!response.ok) throw new Error("Failed to fetch transactions")
