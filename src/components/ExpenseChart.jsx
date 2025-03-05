@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react"
 import "../styles/ExpenseChart.css"
 
 const CATEGORY_COLORS = {
-  식비: "#FF6B6B", // 빨간색 계열
-  쇼핑: "#4ECDC4", // 청록색 계열
-  오락: "#45B7D1", // 하늘색 계열
-  카페: "#96CEB4", // 민트 계열
-  교통: "#FFBE0B", // 노란색 계열
-  주거통신: "#9381FF", // 보라색 계열
-  기타: "#A5A58D", // 회색 계열
+  카페: "#fde4cf",
+  식비: "#f1c0e8",
+  교통: "#b9fbc0",
+  주거통신: "#a3c4f3",
+  쇼핑: "#8eecf5",
+  오락: "#98f5e1",
+  기타: "#fbf8cc",
 }
 
 function ExpenseChart() {

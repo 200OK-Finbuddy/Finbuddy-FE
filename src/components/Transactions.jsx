@@ -205,11 +205,17 @@ export default function Transactions() {
     setSelectedAccount(accounts[currentIndex === 0 ? accounts.length - 1 : currentIndex - 1])
   }
 
+  // 계좌 선택 시 거래내역 초기화 문제 해결
+  // handleAccountClick 함수 수정
   const handleAccountClick = (account) => {
-    setSelectedAccount(account)
-    const newIndex = accounts.findIndex((acc) => acc.accountId === account.accountId)
-    if (newIndex !== -1) {
-      setCurrentIndex(newIndex)
+    if (selectedAccount?.accountId !== account.accountId) {
+      setSelectedAccount(account)
+      setTransactions([]) // 거래내역 초기화
+      setPage(0) // 페이지 초기화
+      const newIndex = accounts.findIndex((acc) => acc.accountId === account.accountId)
+      if (newIndex !== -1) {
+        setCurrentIndex(newIndex)
+      }
     }
   }
 
@@ -331,6 +337,12 @@ export default function Transactions() {
     setPage(0)
     setTransactions([])
   }
+
+  useEffect(() => {
+    // 계좌가 변경될 때마다 거래내역과 페이지 초기화
+    setTransactions([])
+    setPage(0)
+  }, [selectedAccount])
 
   if (isLoading) {
     return (
@@ -527,7 +539,7 @@ export default function Transactions() {
                     {transactions && transactions.length > 0 ? (
                       transactions.map((transaction, index) => (
                         <tr
-                          key={transaction.transactionId}
+                          key={`${selectedAccount?.accountId}-${transaction.transactionId}-${index}`}
                           ref={index === transactions.length - 1 ? lastTransactionElementRef : null}
                         >
                           <td>{transaction.opponentName}</td>

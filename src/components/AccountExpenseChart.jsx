@@ -6,12 +6,13 @@ import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, Responsive
 import styles from "../styles/AccountExpenseChart.module.css"
 
 const CATEGORY_COLORS = {
-  카페: "#4ECDC4",
-  식비: "#FF6B6B",
-  교통: "#FFBE0B",
-  주거통신: "#9381FF",
-  쇼핑: "#45B7D1",
-  기타: "#A5A58D",
+  카페: "#fde4cf",
+  식비: "#f1c0e8",
+  교통: "#b9fbc0",
+  주거통신: "#a3c4f3",
+  쇼핑: "#8eecf5",
+  오락: "#98f5e1",
+  기타: "#fbf8cc",
 }
 
 // 현재 달을 기준으로 최근 6개월 배열 생성
@@ -188,7 +189,7 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
 
       {/* 월별 지출 추이 섹션 */}
       <div className={styles.trendSection}>
-        <h3 className={styles.sectionTitle}>월별 지출 추이</h3>
+        <h3 className={styles.sectionTitle}>월별 지출 추이 (단위: 만원)</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={lineChartData}>
             <XAxis dataKey="name" />
