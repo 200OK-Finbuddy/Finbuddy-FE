@@ -172,17 +172,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
 }
 
 .infoLabel {
+  color: #6b7280;
   font-size: 14px;
-  color: #979797;
 }
 
 .infoValue {
+  color: #111827;
   font-size: 14px;
   font-weight: 500;
-  color: #404040;
 }
 
 /* 월간 거래 요약 */
@@ -443,26 +449,25 @@
 }
 
 /* 예/적금 정보 스타일 */
-.infoRow {
+
+/* 은행 로고와 은행명을 위한 스타일 추가 */
+.bankInfoHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 8px;
 }
 
-.infoRow:last-child {
-  border-bottom: none;
+.bankLogoHeader {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  margin-right: 8px;
+  border-radius: 4px;
 }
 
-.infoLabel {
-  color: #6b7280;
+.bankNameHeader {
   font-size: 14px;
-}
-
-.infoValue {
-  color: #111827;
-  font-size: 14px;
+  color: #666;
   font-weight: 500;
 }
 

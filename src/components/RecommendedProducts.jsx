@@ -4,13 +4,20 @@ import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types"
+import { BANKS } from "../constants/banks"
 import "../styles/RecommendedProducts.css"
 
 function RecommendedProducts({ setActiveNav }) {
   const [products, setProducts] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const navigate = useNavigate()
+
+  // 은행 ID로 은행 이름 찾기 함수 추가
+  const getBankNameById = (bankId) => {
+    const bank = BANKS.find((bank) => bank.id === bankId)
+    return bank ? bank.name : "알 수 없는 은행"
+  }
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,7 +37,7 @@ function RecommendedProducts({ setActiveNav }) {
   }, [])
 
   const handleNavigation = (path, navType) => {
-    setActiveNav(navType);
+    setActiveNav(navType)
     navigate(path)
   }
 
@@ -79,10 +86,7 @@ function RecommendedProducts({ setActiveNav }) {
     <section className="recommended-section">
       <div className="section-header">
         <h2>추천상품</h2>
-        <button 
-          className="add-btn" 
-          onClick={() => handleNavigation('/products', 'products')}
-        >
+        <button className="add-btn" onClick={() => handleNavigation("/products", "products")}>
           +
         </button>
       </div>
@@ -99,10 +103,10 @@ function RecommendedProducts({ setActiveNav }) {
                 <div className="bank-info" style={{ marginBottom: "8px" }}>
                   <img
                     src={product.bankLogoUrl || "/placeholder.svg"}
-                    alt={`${product.bankName} 로고`}
+                    alt={`${getBankNameById(product.bankId)} 로고`}
                     className="bank-logo"
                   />
-                  <span className="bank-name">{product.bankName}</span>
+                  <span className="bank-name">{getBankNameById(product.bankId)}</span>
                 </div>
 
                 <div className="product-info">
@@ -140,7 +144,8 @@ function RecommendedProducts({ setActiveNav }) {
   )
 }
 RecommendedProducts.propTypes = {
-  setActiveNav: PropTypes.func.isRequired,  // 추가
-};
+  setActiveNav: PropTypes.func.isRequired, // 추가
+}
 
-export default RecommendedProducts;
+export default RecommendedProducts
+
