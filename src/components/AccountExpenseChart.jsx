@@ -162,12 +162,6 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
           </div>
 
           <div className={styles.barChartWrapper}>
-            {isEmpty ? (
-              <div className={styles.emptyState}>
-                <p>해당 기간에 지출 내역이 없습니다.</p>
-                <p className={styles.emptyStateSubtext}>지출이 발생하면 분석 결과를 확인할 수 있습니다.</p>
-              </div>
-            ) : (
               <div className={styles.barChart}>
                 {monthlyExpenses.map((data) => (
                   <div key={data.month} className={styles.barGroup}>
@@ -204,7 +198,6 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
                   </div>
                 )}
               </div>
-            )}
           </div>
         </div>
 
