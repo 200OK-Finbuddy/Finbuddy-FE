@@ -7,7 +7,7 @@ function TransactionSection() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/transactions/checking/recent/1');
+        const response = await fetch('/api/transactions/checking/recent/1');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

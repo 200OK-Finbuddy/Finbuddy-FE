@@ -41,7 +41,7 @@ export default function AccountExpenseChart({ accountId, memberId }) {
         setIsLoading(true)
         const promises = MONTHS.map((month) =>
           fetch(
-            `http://localhost:8080/api/transactions/account-category-expense?memberId=${memberId}&accountId=${accountId}&year=${month.year}&month=${month.value}`,
+            `/api/transactions/account-category-expense?memberId=${memberId}&accountId=${accountId}&year=${month.year}&month=${month.value}`,
           )
             .then((res) => res.json())
             .then((data) => ({

@@ -9,7 +9,7 @@ function AccountSection() {
 
   const getCheckingAccounts = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/accounts/checking/1", {
+      const response = await fetch("/api/accounts/checking/1", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

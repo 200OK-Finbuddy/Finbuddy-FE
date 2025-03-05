@@ -14,7 +14,7 @@ function RecommendedProducts({ setActiveNav }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/products/recommendations")
+        const response = await fetch("/api/products/recommendations")
         if (!response.ok) {
           throw new Error("Network response was not ok")
         }
@@ -57,7 +57,7 @@ function RecommendedProducts({ setActiveNav }) {
     const productType = product.productType.toLowerCase()
     try {
       // API 호출
-      const response = await fetch(`http://localhost:8080/api/products/${productType}/${product.productId}`)
+      const response = await fetch(`/api/products/${productType}/${product.productId}`)
       if (!response.ok) {
         throw new Error("Product details fetch failed")
       }
