@@ -11,7 +11,7 @@ const CATEGORY_COLORS = {
   카페: "#96CEB4",
   교통: "#FFBE0B",
   주거통신: "#9381FF",
-  기타: "#A5A583",
+  기타: "#A5A58D",
 }
 
 // 현재 달을 기준으로 최근 6개월 배열 생성
@@ -25,7 +25,7 @@ const MONTHS = Array.from({ length: 6 }, (_, i) => {
   }
 }).reverse()
 
-export default function AccountExpenseChart({ accountId, memberId }) {
+export default function AccountExpenseChart({ accountId, memberId, accountType }) {
   const [monthlyExpenses, setMonthlyExpenses] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(MONTHS[MONTHS.length - 1]) // 현재 달로 초기화
   const [hoveredAmount, setHoveredAmount] = useState(null)
@@ -109,6 +109,13 @@ export default function AccountExpenseChart({ accountId, memberId }) {
   // 최대 지출액 계산
   const maxExpense = Math.max(...monthlyExpenses.map((data) => data.totalAmount))
 
+  // Only render for checking accounts
+  if (accountType !== "CHECKING") {
+    return null
+  }
+
+  const isEmpty = !currentMonthExpenses.length || currentMonthExpenses.every((expense) => expense.totalAmount === 0)
+
   if (isLoading) {
     return <div className={styles.loading}>로딩 중...</div>
   }
@@ -123,10 +130,12 @@ export default function AccountExpenseChart({ accountId, memberId }) {
               Last Month
               <span className={styles.amount}>₩{formatAmount(currentAmount)}</span>
             </div>
-            <div className={`${styles.change} ${percentageChange >= 0 ? styles.positive : styles.negative}`}>
-              {percentageChange > 0 ? "+" : ""}
-              {percentageChange}%
-            </div>
+            {currentAmount > 0 && previousAmount > 0 && (
+              <div className={`${styles.change} ${percentageChange >= 0 ? styles.positive : styles.negative}`}>
+                {percentageChange > 0 ? "+" : ""}
+                {percentageChange}%
+              </div>
+            )}
           </div>
         </div>
         <select
@@ -153,74 +162,93 @@ export default function AccountExpenseChart({ accountId, memberId }) {
           </div>
 
           <div className={styles.barChartWrapper}>
-            <div className={styles.barChart}>
-              {monthlyExpenses.map((data) => (
-                <div key={data.month} className={styles.barGroup}>
-                  <div
-                    className={styles.barContainer}
-                    onMouseEnter={(e) => {
-                      setHoveredAmount(data.totalAmount)
-                      setHoveredPosition({
-                        x: e.currentTarget.offsetLeft + e.currentTarget.offsetWidth / 2,
-                        y: e.currentTarget.offsetTop,
-                      })
-                    }}
-                    onMouseLeave={() => setHoveredAmount(null)}
-                  >
+            {isEmpty ? (
+              <div className={styles.emptyState}>
+                <p>해당 기간에 지출 내역이 없습니다.</p>
+                <p className={styles.emptyStateSubtext}>지출이 발생하면 분석 결과를 확인할 수 있습니다.</p>
+              </div>
+            ) : (
+              <div className={styles.barChart}>
+                {monthlyExpenses.map((data) => (
+                  <div key={data.month} className={styles.barGroup}>
                     <div
-                      className={styles.bar}
-                      style={{
-                        height: `${(data.totalAmount / maxExpense) * 100}%`,
+                      className={styles.barContainer}
+                      onMouseEnter={(e) => {
+                        setHoveredAmount(data.totalAmount)
+                        setHoveredPosition({
+                          x: e.currentTarget.offsetLeft + e.currentTarget.offsetWidth / 2,
+                          y: e.currentTarget.offsetTop,
+                        })
                       }}
-                    />
+                      onMouseLeave={() => setHoveredAmount(null)}
+                    >
+                      <div
+                        className={styles.bar}
+                        style={{
+                          height: `${(data.totalAmount / maxExpense) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <div className={styles.barLabel}>{data.month.split(".")[1]}월</div>
                   </div>
-                  <div className={styles.barLabel}>{data.month.split(".")[1]}월</div>
-                </div>
-              ))}
-              {hoveredAmount !== null && (
-                <div
-                  className={styles.tooltip}
-                  style={{
-                    left: hoveredPosition.x,
-                    top: hoveredPosition.y,
-                  }}
-                >
-                  ₩{formatAmount(hoveredAmount)}
-                </div>
-              )}
-            </div>
+                ))}
+                {hoveredAmount !== null && (
+                  <div
+                    className={styles.tooltip}
+                    style={{
+                      left: hoveredPosition.x,
+                      top: hoveredPosition.y,
+                    }}
+                  >
+                    ₩{formatAmount(hoveredAmount)}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         <div className={styles.donutChartSection}>
           <h4 className={styles.chartTitle}>카테고리별 지출</h4>
           <div className={styles.donutChartContainer}>
-            <div className={styles.donutChart} style={{ background: generateConicGradient() }}>
-              <div className={styles.chartCenter}>
-                <span className={styles.amount}>
-                  {formatAmount(
-                    Math.floor(monthlyExpenses.find((data) => data.month === selectedMonth.label)?.totalAmount / 10000),
-                  )}
-                </span>
-                <span className={styles.unit}>만원</span>
+            {isEmpty ? (
+              <div className={styles.emptyState}>
+                <p>카테고리별 지출 내역이 없습니다.</p>
               </div>
-            </div>
-
-            <div className={styles.chartLegend}>
-              {currentMonthExpenses.map((expense) => (
-                <div
-                  key={expense.key || `${expense.categoryName}-${expense.totalAmount}`}
-                  className={styles.legendItem}
-                >
-                  <div className={styles.legendColor} style={{ backgroundColor: expense.color }} />
-                  <span className={styles.legendLabel}>{expense.categoryName}</span>
-                  <span className={styles.legendAmount}>
-                    {formatAmount(expense.totalAmount)}원
-                    <span className={styles.legendPercentage}>({expense.percentage.toFixed(1)}%)</span>
-                  </span>
+            ) : (
+              <>
+                <div className={styles.donutChartWrapper}>
+                  <div className={styles.donutChart} style={{ background: generateConicGradient() }}>
+                    <div className={styles.chartCenter}>
+                      <span className={styles.amount}>
+                        {formatAmount(
+                          Math.floor(
+                            monthlyExpenses.find((data) => data.month === selectedMonth.label)?.totalAmount / 10000,
+                          ),
+                        )}
+                      </span>
+                      <span className={styles.unit}>만원</span>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                <div className={styles.chartLegend}>
+                  {currentMonthExpenses.map((expense) => (
+                    <div
+                      key={expense.key || `${expense.categoryName}-${expense.totalAmount}`}
+                      className={styles.legendItem}
+                    >
+                      <div className={styles.legendColor} style={{ backgroundColor: expense.color }} />
+                      <span className={styles.legendLabel}>{expense.categoryName}</span>
+                      <span className={styles.legendAmount}>
+                        {formatAmount(expense.totalAmount)}원
+                        <span className={styles.legendPercentage}>({expense.percentage.toFixed(1)}%)</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -232,5 +260,6 @@ export default function AccountExpenseChart({ accountId, memberId }) {
 AccountExpenseChart.propTypes = {
   accountId: PropTypes.number.isRequired,
   memberId: PropTypes.number.isRequired,
+  accountType: PropTypes.string.isRequired,
 }
 

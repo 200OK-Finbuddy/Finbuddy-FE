@@ -481,7 +481,8 @@ export default function Transactions() {
             <AccountExpenseChart
               accountId={selectedAccount.accountId}
               memberId={memberId}
-              key={`expense-chart-${selectedAccount.accountId}`} // 계좌 변경 시 컴포넌트 리셋
+              accountType={accountDetails.accountType}
+              key={`expense-chart-${selectedAccount.accountId}`}
             />
 
             {/* 거래내역 테이블 */}
