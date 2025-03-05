@@ -1,4 +1,4 @@
-import { BarChart2, Users, Send, CreditCard, Settings, HelpCircle, Cloud } from 'lucide-react';
+import { BarChart2, Users, Send, CreditCard, Settings, HelpCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../styles/Sidebar.css';
@@ -14,9 +14,7 @@ function Sidebar({ activeNav, setActiveNav }) {
   return (
     <aside className="sidebar">
       <div className="logo">
-        {/* <img src="/placeholder.svg?height=40&width=120" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer' }} /> */}
-        <Cloud size={20} />
-        <span>  Finbuddy</span>
+        <img src="/image/logo.png?height=5&width=7" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer', width: '120px', height: '27px' }} />
       </div>
       <nav className="nav-menu">
         <ul>
