@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import styles from "../styles/Transactions.module.css"
 import AccountExpenseChart from "./AccountExpenseChart"
+import { BANKS } from "../constants/banks"
 
 export default function Transactions() {
   const [accounts, setAccounts] = useState([])
@@ -15,7 +16,13 @@ export default function Transactions() {
   const [hasMore, setHasMore] = useState(true)
   const [transactions, setTransactions] = useState([])
   const observer = useRef()
-  const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 3 // 실제 구현시 로그인한 사용자 ID를 사용
+
+  // 은행 ID로 은행 이름 찾기
+  const getBankNameById = (bankId) => {
+    const bank = BANKS.find((bank) => bank.id === bankId)
+    return bank ? bank.name : "알 수 없는 은행"
+  }
 
   const getAccountTypeText = (type) => {
     switch (type) {
@@ -205,11 +212,17 @@ export default function Transactions() {
     setSelectedAccount(accounts[currentIndex === 0 ? accounts.length - 1 : currentIndex - 1])
   }
 
+  // 계좌 선택 시 거래내역 초기화 문제 해결
+  // handleAccountClick 함수 수정
   const handleAccountClick = (account) => {
-    setSelectedAccount(account)
-    const newIndex = accounts.findIndex((acc) => acc.accountId === account.accountId)
-    if (newIndex !== -1) {
-      setCurrentIndex(newIndex)
+    if (selectedAccount?.accountId !== account.accountId) {
+      setSelectedAccount(account)
+      setTransactions([]) // 거래내역 초기화
+      setPage(0) // 페이지 초기화
+      const newIndex = accounts.findIndex((acc) => acc.accountId === account.accountId)
+      if (newIndex !== -1) {
+        setCurrentIndex(newIndex)
+      }
     }
   }
 
@@ -332,6 +345,12 @@ export default function Transactions() {
     setTransactions([])
   }
 
+  useEffect(() => {
+    // 계좌가 변경될 때마다 거래내역과 페이지 초기화
+    setTransactions([])
+    setPage(0)
+  }, [selectedAccount])
+
   if (isLoading) {
     return (
       <main className="main-content">
@@ -412,6 +431,14 @@ export default function Transactions() {
         {selectedAccount && accountDetails && (
           <div className={styles.accountDetailContainer}>
             <div className={styles.accountDetailHeader}>
+              <div className={styles.bankInfoHeader}>
+                <img
+                  src={accountDetails.logoUrl || "/placeholder.svg"}
+                  alt={`${getBankNameById(accountDetails.bankId)} 로고`}
+                  className={styles.bankLogoHeader}
+                />
+                <span className={styles.bankNameHeader}>{getBankNameById(accountDetails.bankId)}</span>
+              </div>
               <h2 className={styles.accountTitle}>{accountDetails.accountName}</h2>
               <p className={styles.accountNumberDetail}>{accountDetails.accountNumber}</p>
             </div>
@@ -527,7 +554,7 @@ export default function Transactions() {
                     {transactions && transactions.length > 0 ? (
                       transactions.map((transaction, index) => (
                         <tr
-                          key={transaction.transactionId}
+                          key={`${selectedAccount?.accountId}-${transaction.transactionId}-${index}`}
                           ref={index === transactions.length - 1 ? lastTransactionElementRef : null}
                         >
                           <td>{transaction.opponentName}</td>
