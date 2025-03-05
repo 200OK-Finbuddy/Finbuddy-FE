@@ -15,7 +15,7 @@ export default function Transactions() {
   const [hasMore, setHasMore] = useState(true)
   const [transactions, setTransactions] = useState([])
   const observer = useRef()
-  const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 3 // 실제 구현시 로그인한 사용자 ID를 사용
 
   const getAccountTypeText = (type) => {
     switch (type) {
