@@ -1,337 +1,157 @@
-.expenseAnalysis {
-  background: white;
-  border-radius: 16px;
+.container {
   padding: 24px;
-  margin-top: 24px;
+  background-color: white;
+  border-radius: 12px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 24px;
 }
 
-.headerInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #404040;
-}
-
-.stats {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.lastWeek {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.amount {
-  font-size: 24px;
-  font-weight: 600;
-  color: #404040;
-}
-
-.change {
-  font-size: 14px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-
-.positive {
-  color: #10b981;
-  background-color: #ecfdf5;
-}
-
-.negative {
-  color: #ef4444;
-  background-color: #fef2f2;
+.mainTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1a1a1a;
 }
 
 .monthSelect {
   padding: 8px 12px;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: white;
-  color: #404040;
+  border-radius: 6px;
   font-size: 14px;
-  cursor: pointer;
+  color: #1a1a1a;
 }
 
-.monthSelect:focus {
-  outline: none;
-  border-color: #197bbd;
-}
-
-/* 월간 거래 요약 스타일 */
-.monthlySummary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.summaryCard {
-  background-color: #f8fafc;
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.summaryTitle {
-  font-size: 14px;
-  color: #6b7280;
-}
-
-.summaryAmount {
-  font-size: 20px;
-  font-weight: 600;
-  color: #404040;
-}
-
-.chartsContainer {
+.topSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-top: 24px;
-}
-
-.barChartSection {
-  display: flex;
-  gap: 16px;
-  height: 300px;
-}
-
-.yAxis {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-top: 16px;
-  padding-bottom: 40px;
-  width: 80px;
-}
-
-.yAxisLabel {
-  font-size: 12px;
-  color: #6b7280;
-  transform: translateY(50%);
-}
-
-.barChartWrapper {
-  flex: 1;
-  position: relative;
-  padding: 16px 0 40px 0;
-}
-
-.barChart {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
   gap: 24px;
-  padding: 0;
-  position: relative;
+  margin-bottom: 32px;
 }
 
-.barChart::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
-  background-size: 100% 25%;
-  z-index: 1;
+.totalExpenseSection,
+.categorySection {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
 }
 
-.barGroup {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  height: 100%;
-}
-
-.barContainer {
-  width: 40px;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
-  position: relative;
-  z-index: 2;
-}
-
-.bar {
-  width: 100%;
-  background-color: #197bbd;
-  border-radius: 4px 4px 0 0;
-  transition: height 0.3s ease;
-  min-height: 4px;
-  position: absolute;
-  bottom: 0;
-}
-
-.barLabel {
-  position: absolute;
-  bottom: -30px;
-  width: 100%;
-  text-align: center;
-  font-size: 12px;
-  color: #6b7280;
-}
-
-.tooltip {
-  position: absolute;
-  transform: translate(-50%, -120%);
-  background-color: #404040;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
+.sectionTitle {
   font-size: 16px;
-  font-weight: 600;
-  white-space: nowrap;
-  z-index: 10;
+  color: #666;
+  margin-bottom: 16px;
 }
 
-.tooltip::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 8px;
-  height: 8px;
-  background-color: #404040;
+.totalAmount {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
 }
 
-/* 도넛 차트 스타일 */
-.donutChartSection {
-  padding: 16px;
+.amount {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a1a1a;
 }
 
-.chartTitle {
+.currency {
   font-size: 16px;
-  font-weight: 600;
-  color: #404040;
-  margin-bottom: 24px;
+  color: #666;
 }
 
-.donutChartContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
-
-.donutChart {
-  position: relative;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-}
-
-.chartCenter {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  background: white;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.chartCenter .amount {
-  font-size: 20px;
-  font-weight: 600;
-  color: #404040;
-}
-
-.chartCenter .unit {
+.percentageChange {
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
   font-size: 14px;
-  color: #6b7280;
-  margin-top: 4px;
+  font-weight: 500;
 }
 
-.chartLegend {
+.positive {
+  color: #2f9e44;
+  background-color: #ebfbee;
+}
+
+.negative {
+  color: #e03131;
+  background-color: #fff5f5;
+}
+
+.categoryContent {
+  display: flex;
+  gap: 24px;
+}
+
+.pieChartContainer {
+  flex: 1;
+  max-width: 200px;
+}
+
+.categoryList {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 100%;
 }
 
-.legendItem {
+.categoryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.categoryInfo {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.legendColor {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-  flex-shrink: 0;
+.colorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
-.legendLabel {
-  font-size: 14px;
-  color: #6b7280;
-  flex: 1;
+.categoryName {
+  color: #1a1a1a;
 }
 
-.legendAmount {
-  font-size: 14px;
+.categoryPercentage {
+  color: #666;
+}
+
+.categoryAmount {
+  color: #1a1a1a;
   font-weight: 500;
-  color: #404040;
-  text-align: right;
 }
 
-.legendPercentage {
-  font-size: 12px;
-  color: #6b7280;
-  margin-left: 4px;
+.trendSection {
+  margin-top: 32px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #666;
+  font-size: 14px;
 }
 
 .loading {
-  text-align: center;
-  padding: 48px;
-  color: #6b7280;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  color: #666;
   font-size: 14px;
-}
-
-@media (max-width: 1024px) {
-  .chartsContainer {
-    grid-template-columns: 1fr;
-  }
-
-  .monthlySummary {
-    grid-template-columns: 1fr;
-  }
-
-  .donutChartSection {
-    padding: 0;
-  }
 }
 
