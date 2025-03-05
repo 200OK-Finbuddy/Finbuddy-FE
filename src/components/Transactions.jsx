@@ -238,9 +238,9 @@ export default function Transactions() {
 
   const visibleAccounts = accounts.length
     ? [
-        accounts[currentIndex],
-        accounts[(currentIndex + 1) % accounts.length],
-        accounts[(currentIndex + 2) % accounts.length],
+        { ...accounts[currentIndex], position: "current" },
+        { ...accounts[(currentIndex + 1) % accounts.length], position: "next" },
+        { ...accounts[(currentIndex + 2) % accounts.length], position: "nextNext" },
       ].filter(Boolean)
     : []
 
@@ -377,7 +377,7 @@ export default function Transactions() {
           <div className={styles.accountCards}>
             {visibleAccounts.map((account) => (
               <div
-                key={account.accountId}
+                key={`${account.accountId}-${account.position}`}
                 className={`${styles.accountCard} ${
                   selectedAccount?.accountId === account.accountId ? styles.active : ""
                 }`}

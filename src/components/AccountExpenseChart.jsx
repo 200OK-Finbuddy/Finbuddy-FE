@@ -11,7 +11,7 @@ const CATEGORY_COLORS = {
   카페: "#96CEB4",
   교통: "#FFBE0B",
   주거통신: "#9381FF",
-  기타: "#A5A58D",
+  기타: "#A5A583",
 }
 
 // 현재 달을 기준으로 최근 6개월 배열 생성
@@ -64,10 +64,12 @@ export default function AccountExpenseChart({ accountId, memberId }) {
 
         if (currentMonthData) {
           const total = currentMonthData.totalAmount
-          const expensesWithColors = currentMonthData.expenses.map((expense) => ({
+          const expensesWithColors = currentMonthData.expenses.map((expense, index) => ({
             ...expense,
             color: CATEGORY_COLORS[expense.categoryName] || CATEGORY_COLORS.기타,
             percentage: total > 0 ? (expense.totalAmount / total) * 100 : 0,
+            // Add a unique identifier if categoryName might be duplicated
+            key: `${expense.categoryName}-${index}`,
           }))
           setCurrentMonthExpenses(expensesWithColors)
         }
@@ -206,7 +208,10 @@ export default function AccountExpenseChart({ accountId, memberId }) {
 
             <div className={styles.chartLegend}>
               {currentMonthExpenses.map((expense) => (
-                <div key={expense.categoryName} className={styles.legendItem}>
+                <div
+                  key={expense.key || `${expense.categoryName}-${expense.totalAmount}`}
+                  className={styles.legendItem}
+                >
                   <div className={styles.legendColor} style={{ backgroundColor: expense.color }} />
                   <span className={styles.legendLabel}>{expense.categoryName}</span>
                   <span className={styles.legendAmount}>
