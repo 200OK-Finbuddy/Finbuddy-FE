@@ -14,7 +14,7 @@ function Sidebar({ activeNav, setActiveNav }) {
   return (
     <aside className="sidebar">
       <div className="logo">
-        <img src="/image/logo.png?height=5&width=7" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer', width: '120px', height: '27px' }} />
+        <img src="/image/logo.png" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer', width: '120px', height: '27px' }} />
       </div>
       <nav className="nav-menu">
         <ul>
