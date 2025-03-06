@@ -269,6 +269,7 @@ select.searchInput {
 .productList {
   display: grid;
   gap: 16px;
+  cursor: pointer;
 }
 
 .productItem {
@@ -361,13 +362,13 @@ select.searchInput {
 
 .detailButton {
   font-size: 14px;
-  color: white;           /* 변경: 텍스트 색상을 흰색으로 */
+  color: white; /* 변경: 텍스트 색상을 흰색으로 */
   background-color: #6ac4a9; /* 변경: 민트색 배경 추가 */
   border: none;
   cursor: pointer;
-  margin-top: 8px;       /* 변경: 상단 여백 증가 */
-  padding: 8px 16px;     /* 변경: 버튼다운 패딩 추가 */
-  border-radius: 20px;   /* 변경: 둥근 모서리 추가 */
+  margin-top: 8px; /* 변경: 상단 여백 증가 */
+  padding: 8px 16px; /* 변경: 버튼다운 패딩 추가 */
+  border-radius: 20px; /* 변경: 둥근 모서리 추가 */
   transition: background-color 0.2s ease; /* 변경: 호버 효과 트랜지션 추가 */
 }
 
@@ -429,3 +430,4 @@ select.searchInput {
     align-items: flex-start;
   }
 }
+

@@ -1,12 +1,36 @@
 "use client"
 
 import { BarChart2, Users, Send, CreditCard, UserCircle, RefreshCw, Wallet, Cloud } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useEffect } from "react"
 import PropTypes from "prop-types"
 import "../styles/Sidebar.css"
 
 function Sidebar({ activeNav, setActiveNav }) {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // 페이지 로드 시 한 번만 실행되도록 빈 의존성 배열 사용
+  useEffect(() => {
+    // URL 경로에 따라 적절한 네비게이션 상태 설정
+    const path = location.pathname
+
+    if (path.includes("/dashboard")) {
+      setActiveNav("dashboard")
+    } else if (path.includes("/transactions")) {
+      setActiveNav("transactions")
+    } else if (path.includes("/transfer")) {
+      setActiveNav("transfer")
+    } else if (path.includes("/products")) {
+      setActiveNav("products")
+    } else if (path.includes("/settings/profile")) {
+      setActiveNav("profile")
+    } else if (path.includes("/autotransfer")) {
+      setActiveNav("autotransfer")
+    } else if (path.includes("/budget")) {
+      setActiveNav("budget")
+    }
+  }, [location.pathname, setActiveNav]) // 빈 의존성 배열로 컴포넌트 마운트 시에만 실행
 
   const handleNavigation = (path, navType) => {
     setActiveNav(navType)
@@ -16,7 +40,6 @@ function Sidebar({ activeNav, setActiveNav }) {
   return (
     <aside className="sidebar">
       <div className="logo">
-        {/* <img src="/placeholder.svg?height=40&width=120" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer' }} /> */}
         <Cloud size={20} />
         <span> Finbuddy</span>
       </div>

@@ -20,10 +20,7 @@ export default function Products() {
   const handleSearch = useCallback(async () => {
     setIsLoading(true)
     try {
-      const endpoint =
-        activeTab === "deposits"
-          ? `${API_URL}/api/products/deposits`
-          : `${API_URL}/api/products/savings`
+      const endpoint = activeTab === "deposits" ? `${API_URL}/api/products/deposits` : `${API_URL}/api/products/savings`
       const response = await fetch(`${endpoint}?name=${searchTerm}&bankName=${selectedBank}&page=${currentPage}`)
       const data = await response.json()
       setProducts(data.content)
@@ -161,7 +158,11 @@ export default function Products() {
             <>
               <div className={styles.productList}>
                 {products.map((product) => (
-                  <div key={product.productId} className={styles.productItem}>
+                  <div
+                    key={product.productId}
+                    className={styles.productItem}
+                    onClick={() => handleDetailClick(product.productId)}
+                  >
                     <input type="hidden" value={product.productId} />
                     <div className={styles.productInfo}>
                       <div className={styles.productDetails}>
@@ -185,7 +186,13 @@ export default function Products() {
                         <p className={styles.maxRate}>{product.maxInterestRate.toFixed(2)}%</p>
                         <p className={styles.baseRate}>기본 {product.minInterestRate.toFixed(2)}%</p>
                       </div>
-                      <button className={styles.detailButton} onClick={() => handleDetailClick(product.productId)}>
+                      <button
+                        className={styles.detailButton}
+                        onClick={(e) => {
+                          e.stopPropagation() // 이벤트 버블링 방지
+                          handleDetailClick(product.productId)
+                        }}
+                      >
                         상세보기
                       </button>
                     </div>
@@ -248,3 +255,4 @@ export default function Products() {
     </main>
   )
 }
+
