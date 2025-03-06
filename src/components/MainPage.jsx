@@ -11,7 +11,7 @@ import "../styles/MainPage.css"
 const MainPage = () => {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeNav, setActiveNav] = useState("dashboard")
+  const [activeNav, setActiveNav] = useState("")
 
   // 실제 환경에서는 로그인한 사용자의 ID를 가져와야 합니다
   // 여기서는 예시로 1을 사용합니다

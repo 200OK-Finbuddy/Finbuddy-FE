@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronDown } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import NotificationBell from "./NotificationBell"
@@ -10,6 +10,28 @@ import PropTypes from "prop-types"
 export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const navigate = useNavigate()
+
+  // 현재 경로에 따라 activeNav 상태 업데이트
+  useEffect(() => {
+    const path = location.pathname
+
+    if (path === "/") {
+      // 메인 페이지에서는 네비게이션 활성화 없음
+      setActiveNav("")
+    } else if (path.includes("/dashboard")) {
+      setActiveNav("dashboard")
+    } else if (path.includes("/transactions")) {
+      setActiveNav("transactions")
+    } else if (path.includes("/products")) {
+      setActiveNav("products")
+    } else if (path.includes("/autotransfer")) {
+      setActiveNav("autotransfer")
+    } else if (path.includes("/budget")) {
+      setActiveNav("budget")
+    } else if (path.includes("/settings")) {
+      setActiveNav("settings")
+    }
+  }, [setActiveNav])
 
   const handleNavigation = (path, navType) => {
     setActiveNav(navType)
@@ -26,7 +48,7 @@ export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
             <img
               src="/image/logo.png"
               alt="Finbuddy"
-              onClick={() => handleNavigation("/", "dashboard")}
+              onClick={() => handleNavigation("/")}
               style={{ cursor: "pointer", width: "120px", height: "27px" }}
             />
           </div>
