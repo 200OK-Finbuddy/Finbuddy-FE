@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowRight, BarChart2, CreditCard, PieChart, RefreshCw, Shield, Smartphone, Users } from "lucide-react"
-import Footer from "../components/Footer"
-import AccountLinkModal from "../components/AccountLinkModal"
+import Footer from "./Footer"
+import AccountLinkModal from "./AccountLinkModal"
 import "../styles/MainPage.css"
 
 const MainPage = () => {
