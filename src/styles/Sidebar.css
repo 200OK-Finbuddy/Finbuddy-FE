@@ -7,11 +7,23 @@
   height: 100vh;
   position: sticky;
   top: 0;
+  transition: all 0.3s ease;
+  z-index: 100;
 }
 
 .logo {
   padding: 0 20px;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.logo span {
+  font-weight: 600;
+  font-size: 18px;
+  color: #404040;
 }
 
 .nav-menu ul {
@@ -27,15 +39,18 @@
   color: #666;
   cursor: pointer;
   transition: all 0.2s;
+  border-left: 3px solid transparent;
 }
 
 .nav-menu li:hover {
-  background-color: rgba(0, 176, 144, 0.05);
+  background-color: rgba(25, 123, 189, 0.05);
+  color: #197bbd;
 }
 
 .nav-menu li.active {
-  background-color: #f0f7ff;
+  background-color: rgba(25, 123, 189, 0.1);
   color: #197bbd;
+  border-left: 3px solid #197bbd;
 }
 
 .nav-menu li svg {
@@ -44,5 +59,94 @@
 
 .nav-menu li span {
   font-size: 14px;
+}
+
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 101;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 80px;
+    min-width: 80px;
+  }
+
+  .logo span {
+    display: none;
+  }
+
+  .nav-menu li span {
+    display: none;
+  }
+
+  .nav-menu li {
+    justify-content: center;
+    padding: 16px 0;
+  }
+
+  .nav-menu li svg {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -240px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.open {
+    left: 0;
+    width: 240px;
+    min-width: 240px;
+  }
+
+  .sidebar.open .logo span,
+  .sidebar.open .nav-menu li span {
+    display: block;
+  }
+
+  .sidebar.open .nav-menu li {
+    justify-content: flex-start;
+    padding: 12px 20px;
+  }
+
+  .sidebar.open .nav-menu li svg {
+    margin-right: 12px;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+
+  .sidebar-overlay.visible {
+    display: block;
+  }
 }
 

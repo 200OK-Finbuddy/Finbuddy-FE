@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Routes, Route } from "react-router-dom"
+import MainPage from "./components/Mainpage"
 import Layout from "./components/Layout"
 import Dashboard from "./components/Dashboard"
 import Products from "./components/Products"
@@ -19,6 +20,8 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/" element={<MainPage />} />
+
       <Route
         path="/dashboard"
         element={

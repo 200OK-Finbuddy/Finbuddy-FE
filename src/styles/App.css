@@ -1,14 +1,47 @@
-.app {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f8f8f8;
+:root {
+  --primary: #197bbd;
+  --primary-light: #f0f7ff;
+  --primary-dark: #0e5a8a;
+  --secondary: #fc6a82;
+  --secondary-light: #fff0f0;
+  --secondary-dark: #e64d65;
+  --text-primary: #404040;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --background: #f8f8f8;
+  --background-card: #ffffff;
+  --border: #eee;
+  --border-light: #f3f4f6;
+  --success: #00b090;
+  --success-light: #f0fdf9;
+  --warning: #f59e0b;
+  --warning-light: #fff7e6;
+  --error: #f33a59;
+  --error-light: #fff0f0;
 }
 
-.main-content {
-  flex: 1;
-  padding: 32px;
-  max-width: 1400px;
-  margin: 0 auto;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  color: var(--text-primary);
+  background-color: var(--background);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .welcome-section {
@@ -18,12 +51,12 @@
 .welcome-section h1 {
   font-size: 24px;
   font-weight: 600;
-  color: #404040;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .welcome-section p {
-  color: #979797;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
@@ -38,7 +71,7 @@
 .page-title {
   font-size: 24px;
   font-weight: bold;
-  color: #404040;
+  color: var(--text-primary);
 }
 
 /* 공통으로 사용될 컨텐츠 영역 스타일 */
@@ -46,8 +79,62 @@
   width: 100%;
 }
 
+/* 공통 카드 스타일 */
+.card {
+  background-color: var(--background-card);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+}
+
+/* 공통 버튼 스타일 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background-color: #e1eeff;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.btn-outline:hover {
+  background-color: var(--background);
+  border-color: var(--text-secondary);
+}
+
+/* 반응형 디자인 */
 @media (max-width: 768px) {
-  .main-content {
-    padding: 16px;
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }
+

@@ -1,0 +1,80 @@
+.footer {
+  width: 100%;
+  padding: 24px 0;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-logo {
+  font-size: 16px;
+  font-weight: 600;
+  color: #197bbd;
+  margin: 0;
+}
+
+.footer-team,
+.footer-copyright {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-size: 13px;
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.footer-link:hover {
+  color: #197bbd;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 640px) {
+  .footer-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .footer-right {
+    width: 100%;
+  }
+
+  .footer-nav {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+}
+
