@@ -270,11 +270,27 @@
   padding: 28px;
   width: 90%;
   max-width: 420px;
+  max-height: 90vh; /* 뷰포트 높이의 90%로 제한 */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: slideUp 0.3s ease;
   transform: translateY(0);
+  position: relative;
+  /* overflow: hidden; 제거 - 스크롤과 충돌 */
 }
+
+/* 그라데이션 바 제거 */
+/* .modalContent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(to right, #9acbd0, #7fb9bf);
+  border-radius: 16px 16px 0 0;
+} */
 
 @keyframes slideUp {
   from {
@@ -284,6 +300,41 @@
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+/* 모달 내부 스크롤바 스타일링 */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 모달 크기가 작은 화면에서도 잘 보이도록 조정 */
+@media (max-height: 700px) {
+  .modalContent {
+    padding: 20px;
+    max-height: 95vh; /* 더 많은 공간 확보 */
+  }
+}
+
+/* 매우 작은 화면에서의 대응 */
+@media (max-height: 600px) {
+  .modalContent {
+    padding: 16px;
+    max-height: 98vh; /* 거의 전체 화면 사용 */
   }
 }
 
@@ -338,6 +389,8 @@
   gap: 12px;
   padding: 16px;
   border-radius: 12px;
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
 }
 
 .modalInfoItem {
@@ -366,9 +419,10 @@
 .modalPasswordSection {
   margin: 24px 0;
   text-align: left;
-  /* background-color: #f9fafb; */
   padding: 16px;
   border-radius: 12px;
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
 }
 
 .verifiedPasswordDisplay {
@@ -438,11 +492,14 @@
   transition: all 0.2s ease;
   flex: 1;
   max-width: 160px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .modalCancelButton:hover {
   background-color: #f3f4f6;
   border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .modalSubmitButton {
@@ -484,6 +541,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
 }
 
 .modalButton:hover {

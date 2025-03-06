@@ -338,7 +338,21 @@
   text-align: center;
   animation: slideUp 0.3s ease;
   transform: translateY(0);
+  position: relative;
+  overflow: hidden;
 }
+
+/* 그라데이션 바 제거 */
+/* .modalContent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(to right, #9acbd0, #7fb9bf);
+  border-radius: 16px 16px 0 0;
+} */
 
 @keyframes slideUp {
   from {
@@ -402,6 +416,8 @@
   gap: 12px;
   padding: 16px;
   border-radius: 12px;
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
 }
 
 .modalInfoItem {
@@ -432,6 +448,8 @@
   text-align: left;
   padding: 16px;
   border-radius: 12px;
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
 }
 
 .modalVerifyButton {
@@ -481,11 +499,14 @@
   transition: all 0.2s ease;
   flex: 1;
   max-width: 160px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .modalCancelButton:hover {
   background-color: #f3f4f6;
   border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .modalSubmitButton {
@@ -527,6 +548,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
 }
 
 .modalButton:hover {

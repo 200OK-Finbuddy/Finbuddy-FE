@@ -33,6 +33,7 @@ export default function PasswordInputKeypad({ onPasswordComplete, reset }) {
     }
   }, [showKeypad, shuffleNumbers])
 
+  // 비밀번호 입력 상태 관리 수정
   const handleDigitClick = (digit) => {
     setPassword((prev) => {
       const nextIndex = prev.findIndex((d) => d === "")
@@ -58,6 +59,7 @@ export default function PasswordInputKeypad({ onPasswordComplete, reset }) {
     })
   }
 
+  // 비밀번호 확인 버튼 클릭 시에만 비밀번호 완료 처리
   const handleConfirm = () => {
     if (password.every((d) => d !== "")) {
       onPasswordComplete(password.join(""))
@@ -132,6 +134,7 @@ export default function PasswordInputKeypad({ onPasswordComplete, reset }) {
 
   return (
     <div className={styles.passwordContainer}>
+      {/* 비밀번호 입력 필드 렌더링 수정 - 항상 빈 원으로 표시 */}
       <div ref={inputRef} className={styles.passwordInput} onClick={handleInputClick}>
         {Array(4)
           .fill(0)

@@ -408,7 +408,7 @@ export default function Transfer() {
                 <div className={styles.passwordVerifiedMessage}>비밀번호 확인 완료</div>
               </div>
             ) : (
-              <>
+              <div style={{ position: "relative", zIndex: 20 }}>
                 <PasswordInputKeypad onPasswordComplete={handleModalPasswordComplete} reset={modalResetPassword} />
                 <button
                   className={styles.modalVerifyButton}
@@ -417,7 +417,7 @@ export default function Transfer() {
                 >
                   비밀번호 확인
                 </button>
-              </>
+              </div>
             )}
           </div>
 

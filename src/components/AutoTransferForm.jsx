@@ -31,6 +31,9 @@ export default function AutoTransferForm() {
   const [alertMessage, setAlertMessage] = useState("")
   const [alertTitle, setAlertTitle] = useState("알림")
   const [alertCallback, setAlertCallback] = useState(null)
+  const [showCompletionModal, setShowCompletionModal] = useState(false)
+  const [completionMessage, setCompletionMessage] = useState("")
+  const [completionTitle, setCompletionTitle] = useState("")
 
   // 이체일 옵션 생성 (1~31일)
   const transferDayOptions = Array.from({ length: 31 }, (_, i) => ({
@@ -93,7 +96,7 @@ export default function AutoTransferForm() {
     }
   }, [id, isEditing, accounts])
 
-  // 계좌 검색 함수
+  // 계좌 검색 함수 수정 - 계좌 검색 성공 시 모달 표시 추가
   const handleAccountSearch = async (e) => {
     e.preventDefault()
 
@@ -116,10 +119,16 @@ export default function AutoTransferForm() {
       const data = await response.json()
       setRecipientName(data.receiverName)
       setSenderMemo(data.receiverName) // 내 통장 표시에 수취인 이름 설정
+
+      // 계좌 확인 모달 표시
+      showAlert(
+        "계좌 확인",
+        `${data.receiverName}님의 계좌가 확인되었습니다.\n내 통장 표시에 수취인 이름이 입력되었습니다.`,
+      )
     } catch (error) {
       console.error("Error searching account:", error)
       // alert 변경
-      showAlert("검색 오류", "계좌 검색 중 오류가 발생했습니다.")
+      showAlert("검색 오류", "은행 또는 계좌번호를 다시 확인해주세요.")
       setRecipientName("")
       setSenderMemo("")
     } finally {
@@ -210,6 +219,7 @@ export default function AutoTransferForm() {
     }
 
     const handleModalPasswordComplete = (value) => {
+      // 비밀번호 확인 버튼을 클릭했을 때만 값을 설정
       setModalPassword(value)
       // 비밀번호가 변경되면 검증 상태를 초기화
       if (isPasswordVerified) {
@@ -262,6 +272,7 @@ export default function AutoTransferForm() {
       }
     }
 
+    // handleModalSubmit 함수 수정 - 성공 시 완료 모달 표시 후 자동이체 리스트로 이동
     const handleModalSubmit = async () => {
       try {
         const url = isEditing ? `${API_URL}/api/autotransfer/${id}` : `${API_URL}/api/autotransfer`
@@ -287,13 +298,15 @@ export default function AutoTransferForm() {
           throw new Error(isEditing ? "자동이체 수정에 실패했습니다." : "자동이체 등록에 실패했습니다.")
         }
 
-        showModalAlert(
-          isEditing ? "수정 완료" : "등록 완료",
+        // 확인 모달 닫기
+        setShowConfirmModal(false)
+
+        // 완료 모달 표시
+        setCompletionTitle(isEditing ? "수정 완료" : "등록 완료")
+        setCompletionMessage(
           isEditing ? "자동이체가 성공적으로 수정되었습니다." : "자동이체가 성공적으로 등록되었습니다.",
-          () => {
-            navigate("/autotransfer")
-          },
         )
+        setShowCompletionModal(true)
       } catch (error) {
         console.error("Error saving auto transfer:", error)
         showModalAlert("오류", error.message)
@@ -342,7 +355,6 @@ export default function AutoTransferForm() {
       )
     }
 
-    //setShowConfirmModal(false)
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.modalContent}>
@@ -419,16 +431,27 @@ export default function AutoTransferForm() {
     )
   }
 
-  // if (isLoading) {
-  //   return (
-  //     <main className="main-content">
-  //       <div className={styles.loadingContainer}>
-  //         <div className={styles.loadingSpinner}></div>
-  //         <p>정보를 불러오는 중입니다...</p>
-  //       </div>
-  //     </main>
-  //   )
-  // }
+  // 완료 모달 컴포넌트 추가
+  const CompletionModal = () => {
+    if (!showCompletionModal) return null
+
+    const handleClose = () => {
+      setShowCompletionModal(false)
+      navigate("/autotransfer") // 자동이체 리스트 페이지로 이동
+    }
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3 className={styles.modalTitle}>{completionTitle}</h3>
+          <p className={styles.modalMessage}>{completionMessage}</p>
+          <button className={styles.modalButton} onClick={handleClose}>
+            확인
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   // AlertModal 컴포넌트 추가 (return 문 바로 위에 추가)
   const AlertModal = () => {
@@ -599,6 +622,7 @@ export default function AutoTransferForm() {
       </div>
       {showConfirmModal && <ConfirmModal />}
       <AlertModal />
+      <CompletionModal />
     </main>
   )
 }

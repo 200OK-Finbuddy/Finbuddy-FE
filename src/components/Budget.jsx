@@ -1,7 +1,7 @@
 "use client"
 
 import API_URL from "../config"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ArrowLeft, Edit2, Trash2, AlertCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import styles from "../styles/Budget.module.css"
@@ -23,12 +23,24 @@ export default function Budget() {
   const [alertTitle, setAlertTitle] = useState("알림")
   const [alertCallback, setAlertCallback] = useState(null)
 
+  // 완료 모달을 위한 상태 변수 추가
+  const [showCompletionModal, setShowCompletionModal] = useState(false)
+  const [completionMessage, setCompletionMessage] = useState("")
+  const [completionTitle, setCompletionTitle] = useState("")
+
   // showAlert 함수 추가 (fetchCurrentBudget 함수 위에 추가)
   const showAlert = (title, message, callback = null) => {
     setAlertTitle(title)
     setAlertMessage(message)
     setAlertCallback(callback)
     setShowAlertModal(true)
+  }
+
+  // 완료 모달 표시 함수 추가
+  const showCompletionAlert = (title, message) => {
+    setCompletionTitle(title)
+    setCompletionMessage(message)
+    setShowCompletionModal(true)
   }
 
   // formatAmountWithKoreanUnit 함수 추가
@@ -68,7 +80,7 @@ export default function Budget() {
   }
 
   // 현재 월 예산 조회
-  const fetchCurrentBudget = async () => {
+  const fetchCurrentBudget = useCallback(async () => {
     try {
       setIsLoading(true)
       setError(null)
@@ -100,11 +112,11 @@ export default function Budget() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [API_URL, memberId])
 
   useEffect(() => {
     fetchCurrentBudget()
-  }, [API_URL, memberId])
+  }, [fetchCurrentBudget])
 
   // 예산 생성
   const createBudget = async (amount) => {
@@ -131,6 +143,9 @@ export default function Budget() {
       await fetchCurrentBudget()
       setAmountInKorean("") // 추가
       setIsEditing(false)
+
+      // 완료 모달 표시
+      showCompletionAlert("예산 생성 완료", "예산이 성공적으로 생성되었습니다.")
     } catch (error) {
       console.error("Error creating budget:", error)
       setError(error.message)
@@ -167,6 +182,9 @@ export default function Budget() {
       setAmountInKorean("") // 추가
       setIsEditing(false)
       setNewAmount("")
+
+      // 완료 모달 표시
+      showCompletionAlert("예산 수정 완료", "예산이 성공적으로 수정되었습니다.")
     } catch (error) {
       console.error("Error updating budget:", error)
       setError(error.message)
@@ -194,6 +212,9 @@ export default function Budget() {
 
       setBudget(null)
       setShowDeleteConfirm(false)
+
+      // 완료 모달 표시
+      showCompletionAlert("예산 삭제 완료", "예산이 성공적으로 삭제되었습니다.")
     } catch (error) {
       console.error("Error deleting budget:", error)
       setError(error.message)
@@ -270,6 +291,27 @@ export default function Budget() {
         <div className={styles.modalContent}>
           <h3 className={styles.modalTitle}>{alertTitle}</h3>
           <p className={styles.modalMessage}>{alertMessage}</p>
+          <button className={styles.modalButton} onClick={handleClose}>
+            확인
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // CompletionModal 컴포넌트 추가
+  const CompletionModal = () => {
+    if (!showCompletionModal) return null
+
+    const handleClose = () => {
+      setShowCompletionModal(false)
+    }
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3 className={styles.modalTitle}>{completionTitle}</h3>
+          <p className={styles.modalMessage}>{completionMessage}</p>
           <button className={styles.modalButton} onClick={handleClose}>
             확인
           </button>
@@ -478,6 +520,7 @@ export default function Budget() {
           </div>
         )}
         <AlertModal />
+        <CompletionModal />
       </div>
     </main>
   )
