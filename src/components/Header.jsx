@@ -100,7 +100,7 @@ export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
               {/* 프로필 메뉴 */}
               <div className={styles.profileMenu}>
                 <button className={styles.profileButton} onClick={() => setShowProfileMenu(!showProfileMenu)}>
-                  <span className={styles.profileName}>홍길동</span>
+                  <span className={styles.profileName}>김진원</span>
                   <ChevronDown size={16} className={styles.chevronIcon} />
                 </button>
 
