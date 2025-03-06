@@ -1,14 +1,29 @@
 "use client"
+
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowRight, BarChart2, CreditCard, PieChart, RefreshCw, Shield, Smartphone, Users } from "lucide-react"
 import Footer from "../components/Footer"
+import AccountLinkModal from "../components/AccountLinkModal"
 import "../styles/MainPage.css"
 
 const MainPage = () => {
   const navigate = useNavigate()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 실제 환경에서는 로그인한 사용자의 ID를 가져와야 합니다
+  // 여기서는 예시로 1을 사용합니다
+  const memberId = 1
 
   const handleConnectAccount = () => {
-    navigate("/dashboard")
+    // 로그인 상태 확인 (실제 구현에서는 상태 관리 라이브러리나 컨텍스트를 사용할 수 있습니다)
+    const isLoggedIn = true // 예시로 true로 설정
+
+    if (isLoggedIn) {
+      setIsModalOpen(true)
+    } else {
+      navigate("/login")
+    }
   }
 
   const navigateToFeature = (path) => {
@@ -144,6 +159,9 @@ const MainPage = () => {
 
       {/* 푸터 */}
       <Footer />
+
+      {/* 계좌 연동 모달 */}
+      <AccountLinkModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} memberId={memberId} />
     </div>
   )
 }
