@@ -16,7 +16,7 @@ export default function Budget() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [error, setError] = useState(null)
   const [amountInKorean, setAmountInKorean] = useState("") // amountInKorean 상태 추가
-  const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   // 상태 변수 추가 (useState 부분 근처에 추가)
   const [showAlertModal, setShowAlertModal] = useState(false)
   const [alertMessage, setAlertMessage] = useState("")

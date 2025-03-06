@@ -17,7 +17,7 @@ export function NotificationProvider({ children }) {
   const [toasts, setToasts] = useState([])
 
   // 테스트용 memberId
-  const memberId = 1
+  const memberId = 4
 
   // SSE EventSource를 담을 ref
   const eventSourceRef = useRef(null)

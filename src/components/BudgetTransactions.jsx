@@ -8,7 +8,7 @@ function BudgetTransactions() {
   const [transactions, setTransactions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
 
   useEffect(() => {
     const fetchTransactions = async () => {

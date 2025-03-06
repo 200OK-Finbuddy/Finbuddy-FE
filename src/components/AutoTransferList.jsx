@@ -9,7 +9,7 @@ import styles from "../styles/AutoTransfer.module.css"
 export default function AutoTransferList() {
   const [autoTransfers, setAutoTransfers] = useState([])
   const navigate = useNavigate()
-  const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   // 상태 변수 추가 (useState 부분 근처에 추가)
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false)
   const [transferToDelete, setTransferToDelete] = useState(null)

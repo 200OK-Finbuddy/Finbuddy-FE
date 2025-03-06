@@ -61,7 +61,7 @@ export default function Transfer() {
   const [alertMessage, setAlertMessage] = useState("")
   const [alertTitle, setAlertTitle] = useState("알림")
   const [alertCallback, setAlertCallback] = useState(null)
-  const memberId = 1
+  const memberId = 4
 
   // 계좌 목록 조회 - 입출금 계좌만 조회
   useEffect(() => {

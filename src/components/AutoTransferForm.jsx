@@ -12,7 +12,7 @@ export default function AutoTransferForm() {
   const navigate = useNavigate()
   const { id } = useParams()
   const isEditing = !!id
-  const memberId = 1 // 실제 구현시 로그인한 사용자의 ID를 사용
+  const memberId = 4 // 실제 구현시 로그인한 사용자의 ID를 사용
 
   const [accounts, setAccounts] = useState([])
   const [selectedAccount, setSelectedAccount] = useState(null)
