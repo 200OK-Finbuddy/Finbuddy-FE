@@ -127,7 +127,7 @@ export default function Budget() {
       // 콤마 제거하여 숫자로 변환
       const numericAmount = Number(amount.replace(/,/g, ""))
 
-      const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}`, {
+      const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}&amount=${numericAmount}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -165,7 +165,7 @@ export default function Budget() {
       // 콤마 제거하여 숫자로 변환
       const numericAmount = Number(newAmount.replace(/,/g, ""))
 
-      const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}`, {
+      const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}&amount=${numericAmount}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
