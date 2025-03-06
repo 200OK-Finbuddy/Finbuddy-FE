@@ -635,3 +635,32 @@
   font-weight: 500;
 }
 
+/* 모달 삭제 버튼을 위한 새로운 스타일 클래스를 추가합니다. */
+.modalDeleteButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #f87979;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 160px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modalDeleteButton:hover {
+  background:  #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modalDeleteButton:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+

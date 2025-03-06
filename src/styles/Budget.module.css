@@ -416,16 +416,33 @@
 }
 
 .modalDeleteButton {
-  background: linear-gradient(to right, #ef4444, #f87171);
-  color: white;
+  padding: 12px 24px;
   border: none;
+  border-radius: 8px;
+  background: #f87979;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 160px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .modalDeleteButton:hover {
-  background: linear-gradient(to right, #dc2626, #ef4444);
+  background:  #ef4444;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+.modalDeleteButton:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 
 .modalButton {
   background: linear-gradient(to right, #00b090, #7fb9bf);

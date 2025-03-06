@@ -10,6 +10,9 @@ export default function AutoTransferList() {
   const [autoTransfers, setAutoTransfers] = useState([])
   const navigate = useNavigate()
   const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  // 상태 변수 추가 (useState 부분 근처에 추가)
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false)
+  const [transferToDelete, setTransferToDelete] = useState(null)
 
   useEffect(() => {
     fetchAutoTransfers()
@@ -27,18 +30,10 @@ export default function AutoTransferList() {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!confirm("자동이체를 삭제하시겠습니까?")) return
-
-    try {
-      const response = await fetch(`${API_URL}/api/autotransfer/${id}`, {
-        method: "DELETE",
-      })
-      if (!response.ok) throw new Error("Failed to delete")
-      fetchAutoTransfers() // 목록 새로고침
-    } catch (error) {
-      console.error("Error deleting auto transfer:", error)
-    }
+  // handleDelete 함수 수정
+  const handleDelete = (id) => {
+    setTransferToDelete(id)
+    setShowDeleteConfirmModal(true)
   }
 
   const handleToggleStatus = async (id) => {
@@ -53,8 +48,54 @@ export default function AutoTransferList() {
     }
   }
 
+  // 실제 삭제 처리 함수 추가
+  const confirmDelete = async () => {
+    if (!transferToDelete) return
+
+    try {
+      const response = await fetch(`${API_URL}/api/autotransfer/${transferToDelete}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) throw new Error("Failed to delete")
+      fetchAutoTransfers() // 목록 새로고침
+    } catch (error) {
+      console.error("Error deleting auto transfer:", error)
+    } finally {
+      setShowDeleteConfirmModal(false)
+      setTransferToDelete(null)
+    }
+  }
+
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("ko-KR").format(amount)
+  }
+
+  // DeleteConfirmModal 컴포넌트 추가 (return 문 바로 위에 추가)
+  const DeleteConfirmModal = () => {
+    if (!showDeleteConfirmModal) return null
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3 className={styles.modalTitle}>자동이체 삭제</h3>
+          <p className={styles.modalMessage}>자동이체를 삭제하시겠습니까?</p>
+          <div className={styles.modalActions}>
+            <button
+              className={styles.modalCancelButton}
+              onClick={() => {
+                setShowDeleteConfirmModal(false)
+                setTransferToDelete(null)
+              }}
+            >
+              취소
+            </button>
+            <button className={styles.modalDeleteButton} onClick={confirmDelete}>
+              삭제
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -131,6 +172,7 @@ export default function AutoTransferList() {
           ))}
         </div>
       </div>
+      <DeleteConfirmModal />
     </main>
   )
 }
