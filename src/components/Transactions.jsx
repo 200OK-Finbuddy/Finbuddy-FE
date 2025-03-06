@@ -3,7 +3,7 @@
 import API_URL from "../config"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import styles from "../styles/Transactions.module.css"
 import AccountExpenseChart from "./AccountExpenseChart"
 import { BANKS } from "../constants/banks"
@@ -18,8 +18,9 @@ export default function Transactions() {
   const [hasMore, setHasMore] = useState(true)
   const [transactions, setTransactions] = useState([])
   const observer = useRef()
-  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 3 // 실제 구현시 로그인한 사용자 ID를 사용
   const location = useLocation()
+  const navigate = useNavigate() // 추가: 송금 페이지로 이동하기 위한 navigate
 
   // URL에서 accountId 파라미터 가져오기
   const getAccountIdFromUrl = useCallback(() => {
@@ -249,6 +250,12 @@ export default function Transactions() {
     }
   }
 
+  // 송금 버튼 클릭 핸들러 추가
+  const handleTransferClick = (e, accountId) => {
+    e.stopPropagation() // 카드 클릭 이벤트 방지
+    navigate(`/transfer?accountId=${accountId}`)
+  }
+
   const formatAmount = (amount) => {
     return amount?.toLocaleString() || "0"
   }
@@ -437,6 +444,11 @@ export default function Transactions() {
                   </div>
                 </div>
                 <div className={styles.accountBalance}>{formatAmount(account.balance)}원</div>
+
+                {/* 송금 버튼 추가 */}
+                <button className={styles.transferButton} onClick={(e) => handleTransferClick(e, account.accountId)}>
+                  송금하기
+                </button>
               </div>
             ))}
           </div>

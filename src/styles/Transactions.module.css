@@ -27,6 +27,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: relative;
+  padding-bottom: 40px; /* 송금 버튼을 위한 공간 확보 */
 }
 
 .accountCard:hover {
@@ -82,6 +84,33 @@
   font-size: 20px;
   font-weight: 700;
   color: #404040;
+}
+
+/* 송금 버튼 스타일 추가 */
+.transferButton {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background-color: #197bbd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.transferButton:hover {
+  background-color: #0e5a9e;
+}
+
+.transferIcon {
+  margin-right: 4px;
 }
 
 .carouselButton {
@@ -484,6 +513,11 @@
 
   .dateInput {
     width: 100%;
+  }
+
+  .transferButton {
+    font-size: 11px;
+    padding: 4px 8px;
   }
 }
 

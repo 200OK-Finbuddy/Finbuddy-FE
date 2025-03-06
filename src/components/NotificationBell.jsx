@@ -65,7 +65,7 @@ export default function NotificationBell() {
   return (
     <div className={styles.notificationBellContainer} ref={dropdownRef}>
       <button className={styles.notificationBellButton} onClick={() => setIsOpen(!isOpen)} aria-label="알림">
-        <Bell size={20} />
+        <Bell size={25} />
         {unreadCount > 0 && <span className={styles.notificationBadge}>{unreadCount > 99 ? "99+" : unreadCount}</span>}
       </button>
 
