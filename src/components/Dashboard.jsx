@@ -6,37 +6,8 @@ import TransactionSection from "./TransactionSection"
 import RecommendedProducts from "./RecommendedProducts"
 import ExpenseChart from "./ExpenseChart"
 import PropTypes from "prop-types"
-import { useState, useEffect } from "react"
-import axios from "axios"
 
 function Dashboard({ setActiveNav }) {
-  const [transactions, setTransactions] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await axios.get("/api/transactions")
-        setTransactions(response.data)
-      } catch (error) {
-        setError(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchTransactions()
-  }, [])
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>
-  }
-
   return (
     <main className="main-content">
       <header className="welcome-section">
@@ -50,16 +21,15 @@ function Dashboard({ setActiveNav }) {
       </div>
 
       <div className="content-grid">
-        <TransactionSection transactions={transactions} />
-        <ExpenseChart transactions={transactions} />
+        <TransactionSection />
+        <ExpenseChart />
       </div>
     </main>
   )
 }
 
 Dashboard.propTypes = {
-  setActiveNav: PropTypes.func.isRequired, // 추가
+  setActiveNav: PropTypes.func.isRequired,
 }
 
 export default Dashboard
-

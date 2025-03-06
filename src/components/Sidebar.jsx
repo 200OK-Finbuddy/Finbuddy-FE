@@ -1,4 +1,4 @@
-import { BarChart2, Users, Send, CreditCard, UserCircle, RefreshCw, Wallet, Cloud } from "lucide-react"
+import { BarChart2, Users, Send, CreditCard, UserCircle, RefreshCw, Wallet } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useEffect } from "react"
 import PropTypes from "prop-types"
