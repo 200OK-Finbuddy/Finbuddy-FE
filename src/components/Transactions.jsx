@@ -18,7 +18,7 @@ export default function Transactions() {
   const [hasMore, setHasMore] = useState(true)
   const [transactions, setTransactions] = useState([])
   const observer = useRef()
-  const memberId = 3 // 실제 구현시 로그인한 사용자 ID를 사용
+  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   const location = useLocation()
   const navigate = useNavigate() // 추가: 송금 페이지로 이동하기 위한 navigate
 

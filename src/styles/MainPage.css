@@ -3,63 +3,6 @@
   color: #333;
 }
 
-/* 헤더 스타일 */
-.main-header {
-  padding: 20px 5%;
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.logo-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #4263eb;
-  margin: 0;
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-.login-button,
-.signup-button {
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 16px;
-}
-
-.login-button {
-  background-color: white;
-  border: 1px solid #ddd;
-}
-
-.login-button:hover {
-  background-color: #f5f5f5;
-}
-
-.signup-button {
-  background-color: #4263eb;
-  color: white;
-  border: none;
-}
-
-.signup-button:hover {
-  background-color: #3b5bdb;
-}
-
 /* 히어로 섹션 스타일 */
 .hero-section {
   display: flex;

@@ -139,6 +139,37 @@
   border-top: 1px solid #eee;
 }
 
+/* 로그인/회원가입 버튼 스타일 */
+.loginButton,
+.signupButton {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.loginButton {
+  background-color: white;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.loginButton:hover {
+  background-color: #f5f5f5;
+}
+
+.signupButton {
+  background-color: #197bbd;
+  color: white;
+  border: none;
+}
+
+.signupButton:hover {
+  background-color: #0e5a8a;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .mainNav {

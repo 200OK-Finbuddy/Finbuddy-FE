@@ -5,15 +5,19 @@ import { useNavigate } from "react-router-dom"
 import { ArrowRight, BarChart2, CreditCard, PieChart, RefreshCw, Shield, Smartphone, Users } from "lucide-react"
 import Footer from "./Footer"
 import AccountLinkModal from "./AccountLinkModal"
+import Header from "../components/Header"
 import "../styles/MainPage.css"
 
 const MainPage = () => {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [activeNav, setActiveNav] = useState("dashboard")
 
   // 실제 환경에서는 로그인한 사용자의 ID를 가져와야 합니다
   // 여기서는 예시로 1을 사용합니다
   const memberId = 4
+
+  const isLoggedIn = true
 
   const handleConnectAccount = () => {
     // 로그인 상태 확인 (실제 구현에서는 상태 관리 라이브러리나 컨텍스트를 사용할 수 있습니다)
@@ -33,22 +37,7 @@ const MainPage = () => {
   return (
     <div className="main-page">
       {/* 헤더 섹션 */}
-      <header className="main-header">
-        <div className="logo-container">
-          <h1 className="logo">FINBUDDY</h1>
-          <div className="nav-buttons">
-            {/* <button className="login-button" onClick={() => navigate("/login")}>
-              로그인
-            </button>
-            <button className="signup-button" onClick={() => navigate("/signup")}>
-              회원가입
-            </button> */}
-            <button className="signup-button">
-              로그아웃
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header activeNav={activeNav} setActiveNav={setActiveNav} isLoggedIn={isLoggedIn} />
 
       {/* 히어로 섹션 */}
       <section className="hero-section">
