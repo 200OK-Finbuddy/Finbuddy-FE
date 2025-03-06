@@ -26,12 +26,25 @@ export default function AutoTransferForm() {
   const [transferDay, setTransferDay] = useState("") // 추가
   const [showConfirmModal, setShowConfirmModal] = useState(false) // 추가
   const [isSearching, setIsSearching] = useState(false) // 추가
+  // 상태 변수 추가 (useState 부분 근처에 추가)
+  const [showAlertModal, setShowAlertModal] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
+  const [alertTitle, setAlertTitle] = useState("알림")
+  const [alertCallback, setAlertCallback] = useState(null)
 
   // 이체일 옵션 생성 (1~31일)
   const transferDayOptions = Array.from({ length: 31 }, (_, i) => ({
     value: i + 1,
     label: `${i + 1}일`,
   }))
+
+  // showAlert 함수 추가 (fetchAutoTransferDetails 함수 위에 추가)
+  const showAlert = (title, message, callback = null) => {
+    setAlertTitle(title)
+    setAlertMessage(message)
+    setAlertCallback(callback)
+    setShowAlertModal(true)
+  }
 
   // 계좌 목록 조회
   useEffect(() => {
@@ -84,8 +97,9 @@ export default function AutoTransferForm() {
   const handleAccountSearch = async (e) => {
     e.preventDefault()
 
+    // alert 변경
     if (!selectedBank || !accountNumber) {
-      alert("은행과 계좌번호를 모두 입력해주세요.")
+      showAlert("입력 오류", "은행과 계좌번호를 모두 입력해주세요.")
       return
     }
 
@@ -104,7 +118,8 @@ export default function AutoTransferForm() {
       setSenderMemo(data.receiverName) // 내 통장 표시에 수취인 이름 설정
     } catch (error) {
       console.error("Error searching account:", error)
-      alert("계좌 검색 중 오류가 발생했습니다.")
+      // alert 변경
+      showAlert("검색 오류", "계좌 검색 중 오류가 발생했습니다.")
       setRecipientName("")
       setSenderMemo("")
     } finally {
@@ -152,9 +167,9 @@ export default function AutoTransferForm() {
   const handleAmountChange = (e) => {
     const value = e.target.value.replace(/[^\d]/g, "")
 
-    // 100억 이상이면 입력 제한
+    // alert 변경
     if (value && Number.parseInt(value) >= 10000000000) {
-      alert("최대 입력 가능 금액은 100억 미만입니다.")
+      showAlert("입력 오류", "최대 입력 가능 금액은 100억 미만입니다.")
       return
     }
 
@@ -182,6 +197,17 @@ export default function AutoTransferForm() {
     const [modalResetPassword, setModalResetPassword] = useState(false)
     const [isPasswordVerified, setIsPasswordVerified] = useState(false)
     const [showPasswordSuccessModal, setShowPasswordSuccessModal] = useState(false)
+    const [modalAlertTitle, setModalAlertTitle] = useState("")
+    const [modalAlertMessage, setModalAlertMessage] = useState("")
+    const [modalAlertCallback, setModalAlertCallback] = useState(null)
+    const [showModalAlertModal, setShowModalAlertModal] = useState(false)
+
+    const showModalAlert = (title, message, callback = null) => {
+      setModalAlertTitle(title)
+      setModalAlertMessage(message)
+      setModalAlertCallback(callback)
+      setShowModalAlertModal(true)
+    }
 
     const handleModalPasswordComplete = (value) => {
       setModalPassword(value)
@@ -217,8 +243,9 @@ export default function AutoTransferForm() {
     }
 
     const handlePasswordVerification = async () => {
+      // alert 변경
       if (!modalPassword) {
-        alert("비밀번호를 입력해주세요.")
+        showModalAlert("입력 오류", "비밀번호를 입력해주세요.")
         return
       }
 
@@ -229,7 +256,7 @@ export default function AutoTransferForm() {
         setIsPasswordVerified(true)
         setShowPasswordSuccessModal(true)
       } else {
-        alert("비밀번호가 일치하지 않습니다.")
+        showModalAlert("비밀번호 오류", "비밀번호가 일치하지 않습니다.")
         setModalPassword("")
         setModalResetPassword((prev) => !prev)
       }
@@ -260,11 +287,16 @@ export default function AutoTransferForm() {
           throw new Error(isEditing ? "자동이체 수정에 실패했습니다." : "자동이체 등록에 실패했습니다.")
         }
 
-        alert(isEditing ? "자동이체가 성공적으로 수정되었습니다." : "자동이체가 성공적으로 등록되었습니다.")
-        navigate("/autotransfer")
+        showModalAlert(
+          isEditing ? "수정 완료" : "등록 완료",
+          isEditing ? "자동이체가 성공적으로 수정되었습니다." : "자동이체가 성공적으로 등록되었습니다.",
+          () => {
+            navigate("/autotransfer")
+          },
+        )
       } catch (error) {
         console.error("Error saving auto transfer:", error)
-        alert(error.message)
+        showModalAlert("오류", error.message)
         setModalPassword("")
         setModalResetPassword((prev) => !prev)
         setIsPasswordVerified(false)
@@ -280,6 +312,29 @@ export default function AutoTransferForm() {
             <h3 className={styles.modalTitle}>비밀번호 확인</h3>
             <p className={styles.modalMessage}>비밀번호가 확인되었습니다.</p>
             <button className={styles.modalButton} onClick={() => setShowPasswordSuccessModal(false)}>
+              확인
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    const ModalAlertModal = () => {
+      if (!showModalAlertModal) return null
+
+      const handleClose = () => {
+        setShowModalAlertModal(false)
+        if (modalAlertCallback) {
+          modalAlertCallback()
+        }
+      }
+
+      return (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3 className={styles.modalTitle}>{modalAlertTitle}</h3>
+            <p className={styles.modalMessage}>{modalAlertMessage}</p>
+            <button className={styles.modalButton} onClick={handleClose}>
               확인
             </button>
           </div>
@@ -359,6 +414,7 @@ export default function AutoTransferForm() {
           </div>
         </div>
         <PasswordSuccessModal />
+        <ModalAlertModal />
       </div>
     )
   }
@@ -373,6 +429,30 @@ export default function AutoTransferForm() {
   //     </main>
   //   )
   // }
+
+  // AlertModal 컴포넌트 추가 (return 문 바로 위에 추가)
+  const AlertModal = () => {
+    if (!showAlertModal) return null
+
+    const handleClose = () => {
+      setShowAlertModal(false)
+      if (alertCallback) {
+        alertCallback()
+      }
+    }
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3 className={styles.modalTitle}>{alertTitle}</h3>
+          <p className={styles.modalMessage}>{alertMessage}</p>
+          <button className={styles.modalButton} onClick={handleClose}>
+            확인
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <main className="main-content">
@@ -518,6 +598,7 @@ export default function AutoTransferForm() {
         </div>
       </div>
       {showConfirmModal && <ConfirmModal />}
+      <AlertModal />
     </main>
   )
 }

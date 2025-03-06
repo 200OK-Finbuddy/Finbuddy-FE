@@ -17,6 +17,19 @@ export default function Budget() {
   const [error, setError] = useState(null)
   const [amountInKorean, setAmountInKorean] = useState("") // amountInKorean 상태 추가
   const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+  // 상태 변수 추가 (useState 부분 근처에 추가)
+  const [showAlertModal, setShowAlertModal] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
+  const [alertTitle, setAlertTitle] = useState("알림")
+  const [alertCallback, setAlertCallback] = useState(null)
+
+  // showAlert 함수 추가 (fetchCurrentBudget 함수 위에 추가)
+  const showAlert = (title, message, callback = null) => {
+    setAlertTitle(title)
+    setAlertMessage(message)
+    setAlertCallback(callback)
+    setShowAlertModal(true)
+  }
 
   // formatAmountWithKoreanUnit 함수 추가
   const formatAmountWithKoreanUnit = (amount) => {
@@ -99,12 +112,15 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
+      // 콤마 제거하여 숫자로 변환
+      const numericAmount = Number(amount.replace(/,/g, ""))
+
       const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ amount: numericAmount }),
       })
 
       if (!response.ok) {
@@ -131,12 +147,15 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
+      // 콤마 제거하여 숫자로 변환
+      const numericAmount = Number(newAmount.replace(/,/g, ""))
+
       const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: `newAmount=${newAmount}`,
+        body: `newAmount=${numericAmount}`,
       })
 
       if (!response.ok) {
@@ -189,12 +208,19 @@ export default function Budget() {
 
     // 100억 이상이면 입력 제한
     if (value && Number.parseInt(value) >= 10000000000) {
-      alert("최대 입력 가능 금액은 100억 미만입니다.")
+      showAlert("입력 오류", "최대 입력 가능 금액은 100억 미만입니다.")
       return
     }
 
-    setNewAmount(value)
+    // 천 단위 콤마 포맷팅 추가
+    const formattedValue = value ? Number.parseInt(value).toLocaleString() : ""
+    setNewAmount(formattedValue)
     setAmountInKorean(formatAmountWithKoreanUnit(value))
+  }
+
+  // 금액 포맷팅 (천 단위 콤마 추가)
+  const formatAmount = (amount) => {
+    return Number(amount)?.toLocaleString() || "0"
   }
 
   // 예산 생성 폼 제출
@@ -226,6 +252,30 @@ export default function Budget() {
   const calculateRemaining = () => {
     if (!budget) return 0
     return Math.max(0, budget.budgetAmount - budget.spentAmount)
+  }
+
+  // AlertModal 컴포넌트 추가 (return 문 바로 위에 추가)
+  const AlertModal = () => {
+    if (!showAlertModal) return null
+
+    const handleClose = () => {
+      setShowAlertModal(false)
+      if (alertCallback) {
+        alertCallback()
+      }
+    }
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3 className={styles.modalTitle}>{alertTitle}</h3>
+          <p className={styles.modalMessage}>{alertMessage}</p>
+          <button className={styles.modalButton} onClick={handleClose}>
+            확인
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -310,8 +360,8 @@ export default function Budget() {
                             className={styles.editButton}
                             onClick={() => {
                               setIsEditing(true)
-                              setNewAmount(budget.budgetAmount.toString())
-                              setAmountInKorean(formatAmountWithKoreanUnit(budget.budgetAmount)) // 추가
+                              setNewAmount(formatAmount(budget.budgetAmount))
+                              setAmountInKorean(formatAmountWithKoreanUnit(budget.budgetAmount))
                             }}
                           >
                             <Edit2 size={18} />
@@ -427,6 +477,7 @@ export default function Budget() {
             </div>
           </div>
         )}
+        <AlertModal />
       </div>
     </main>
   )
