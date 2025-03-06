@@ -16,7 +16,7 @@ function AccountSection({ setActiveNav }) {
 
   const getCheckingAccounts = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/accounts/checking/3`, {
+      const response = await fetch(`${API_URL}/api/accounts/checking/4`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

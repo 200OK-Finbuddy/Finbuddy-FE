@@ -12,7 +12,7 @@ function TransactionSection() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/transactions/checking/recent/1`)
+        const response = await fetch(`${API_URL}/api/transactions/checking/recent/4`)
         if (!response.ok) {
           throw new Error("Network response was not ok")
         }
