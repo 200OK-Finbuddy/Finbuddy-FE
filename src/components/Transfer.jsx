@@ -304,8 +304,8 @@ export default function Transfer() {
             toAccountNumber: accountNumber,
             amount: Number(amount.replace(/,/g, "")),
             password: modalPassword,
-            senderName: senderMemo,
-            receiverName: recipientMemo,
+            senderName: recipientMemo,
+            receiverName: senderMemo,
           }),
         })
 
