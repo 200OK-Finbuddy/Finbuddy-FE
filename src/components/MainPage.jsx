@@ -37,11 +37,14 @@ const MainPage = () => {
         <div className="logo-container">
           <h1 className="logo">FINBUDDY</h1>
           <div className="nav-buttons">
-            <button className="login-button" onClick={() => navigate("/login")}>
+            {/* <button className="login-button" onClick={() => navigate("/login")}>
               로그인
             </button>
             <button className="signup-button" onClick={() => navigate("/signup")}>
               회원가입
+            </button> */}
+            <button className="signup-button">
+              로그아웃
             </button>
           </div>
         </div>
@@ -61,7 +64,8 @@ const MainPage = () => {
           </button>
         </div>
         <div className="hero-image">
-          <img src="/placeholder.svg?height=400&width=500" alt="금융 관리 일러스트레이션" />
+          <img src="/image/fin-image1.png" alt="금융 일러1" style={{  width: '300px', height: '400px' }} />
+          <img src="/image/fin-image2.png" alt="금융 일러2" style={{  width: '310px', height: '420px' }} />
         </div>
       </section>
 

@@ -19,7 +19,7 @@ export default function Header() {
           {/* 프로필 메뉴 */}
           <div className={styles.profileMenu}>
             <button className={styles.profileButton} onClick={() => setShowProfileMenu(!showProfileMenu)}>
-              <span className={styles.profileName}>홍길동</span>
+              <span className={styles.profileName}>최준영</span>
               <ChevronDown size={16} className={styles.chevronIcon} />
             </button>
 
