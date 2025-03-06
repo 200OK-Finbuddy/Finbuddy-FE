@@ -15,7 +15,44 @@ export default function Budget() {
   const [newAmount, setNewAmount] = useState("")
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [error, setError] = useState(null)
+  const [amountInKorean, setAmountInKorean] = useState("") // amountInKorean 상태 추가
   const memberId = 1 // 실제 구현시 로그인한 사용자 ID를 사용
+
+  // formatAmountWithKoreanUnit 함수 추가
+  const formatAmountWithKoreanUnit = (amount) => {
+    if (!amount) return ""
+
+    // 콤마 제거 및 숫자로 변환
+    const num = Number.parseInt(amount.toString().replace(/,/g, ""))
+
+    if (num === 0) return "0원"
+
+    // 최대 입력 가능 금액 (100억 미만)
+    if (num >= 10000000000) {
+      return "입력 가능한 최대 금액을 초과했습니다"
+    }
+
+    // 억, 만 단위로 분리
+    const eok = Math.floor(num / 100000000)
+    const man = Math.floor((num % 100000000) / 10000)
+    const rest = num % 10000
+
+    let result = ""
+
+    if (eok > 0) {
+      result += eok + "억"
+    }
+
+    if (man > 0) {
+      result += man + "만"
+    }
+
+    if (rest > 0) {
+      result += rest
+    }
+
+    return result + "원"
+  }
 
   // 현재 월 예산 조회
   const fetchCurrentBudget = async () => {
@@ -54,7 +91,7 @@ export default function Budget() {
 
   useEffect(() => {
     fetchCurrentBudget()
-  }, [])
+  }, [API_URL, memberId])
 
   // 예산 생성
   const createBudget = async (amount) => {
@@ -62,11 +99,12 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}&amount=${amount}`, {
+      const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ amount }),
       })
 
       if (!response.ok) {
@@ -75,6 +113,7 @@ export default function Budget() {
       }
 
       await fetchCurrentBudget()
+      setAmountInKorean("") // 추가
       setIsEditing(false)
     } catch (error) {
       console.error("Error creating budget:", error)
@@ -92,15 +131,13 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch(
-        `${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}&newAmount=${newAmount}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+      const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-      )
+        body: `newAmount=${newAmount}`,
+      })
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -108,6 +145,7 @@ export default function Budget() {
       }
 
       await fetchCurrentBudget()
+      setAmountInKorean("") // 추가
       setIsEditing(false)
       setNewAmount("")
     } catch (error) {
@@ -145,15 +183,18 @@ export default function Budget() {
     }
   }
 
-  // 금액 입력 처리 (숫자만 입력 가능하도록)
+  // handleAmountChange 함수 수정
   const handleAmountChange = (e) => {
     const value = e.target.value.replace(/[^\d]/g, "")
-    setNewAmount(value)
-  }
 
-  // 금액 포맷팅 (천 단위 콤마 추가)
-  const formatAmount = (amount) => {
-    return Number(amount)?.toLocaleString() || "0"
+    // 100억 이상이면 입력 제한
+    if (value && Number.parseInt(value) >= 10000000000) {
+      alert("최대 입력 가능 금액은 100억 미만입니다.")
+      return
+    }
+
+    setNewAmount(value)
+    setAmountInKorean(formatAmountWithKoreanUnit(value))
   }
 
   // 예산 생성 폼 제출
@@ -239,7 +280,7 @@ export default function Budget() {
                           />
                           <span className={styles.currencyUnit}>원</span>
                         </div>
-                        {newAmount && <div className={styles.amountPreview}>{formatAmount(newAmount)}원</div>}
+                        {amountInKorean && <div className={styles.amountInKorean}>{amountInKorean}</div>}
                       </div>
                       <div className={styles.formActions}>
                         <button
@@ -248,6 +289,7 @@ export default function Budget() {
                           onClick={() => {
                             setIsEditing(false)
                             setNewAmount("")
+                            setAmountInKorean("") // 추가
                           }}
                         >
                           취소
@@ -269,6 +311,7 @@ export default function Budget() {
                             onClick={() => {
                               setIsEditing(true)
                               setNewAmount(budget.budgetAmount.toString())
+                              setAmountInKorean(formatAmountWithKoreanUnit(budget.budgetAmount)) // 추가
                             }}
                           >
                             <Edit2 size={18} />
@@ -282,12 +325,11 @@ export default function Budget() {
                       )}
                     </div>
                     <div className={styles.budgetAmount}>
-                      <span className={styles.amountValue}>{formatAmount(budget.budgetAmount)}</span>
-                      <span className={styles.amountUnit}>원</span>
+                      <span className={styles.amountValue}>{formatAmountWithKoreanUnit(budget.budgetAmount)}</span>
                     </div>
                     <div className={styles.budgetProgress}>
                       <div className={styles.progressInfo}>
-                        <span>사용 금액: {formatAmount(budget.spentAmount)}원</span>
+                        <span>사용 금액: {formatAmountWithKoreanUnit(budget.spentAmount)}</span>
                         <span>{calculateProgress()}%</span>
                       </div>
                       <div className={styles.progressBar}>
@@ -296,7 +338,9 @@ export default function Budget() {
                     </div>
                     <div className={styles.budgetRemaining}>
                       <span className={styles.remainingLabel}>남은 금액</span>
-                      <span className={styles.remainingValue}>{formatAmount(calculateRemaining())}원</span>
+                      <span className={styles.remainingValue}>
+                        {formatAmountWithKoreanUnit(calculateRemaining())}원
+                      </span>
                     </div>
                   </div>
                 )}
@@ -323,7 +367,7 @@ export default function Budget() {
                           />
                           <span className={styles.currencyUnit}>원</span>
                         </div>
-                        {newAmount && <div className={styles.amountPreview}>{formatAmount(newAmount)}원</div>}
+                        {amountInKorean && <div className={styles.amountInKorean}>{amountInKorean}</div>}
                       </div>
                       <div className={styles.formActions}>
                         <button
@@ -332,6 +376,7 @@ export default function Budget() {
                           onClick={() => {
                             setIsEditing(false)
                             setNewAmount("")
+                            setAmountInKorean("") // 추가
                           }}
                         >
                           취소
@@ -348,6 +393,7 @@ export default function Budget() {
                     onClick={() => {
                       setIsEditing(true)
                       setNewAmount("")
+                      setAmountInKorean("") // 추가
                     }}
                   >
                     예산 설정하기

@@ -94,12 +94,6 @@
   color: #00b090;
 }
 
-.amountUnit {
-  font-size: 18px;
-  color: #00b090;
-  margin-left: 4px;
-}
-
 .budgetProgress {
   margin-bottom: 16px;
 }
@@ -248,6 +242,14 @@
   color: #6b7280;
   font-size: 14px;
   margin-top: 8px;
+}
+
+.amountInKorean {
+  margin-top: 8px;
+  font-size: 14px;
+  text-align: right;
+  color: #00b090;
+  font-weight: 500;
 }
 
 .formActions {

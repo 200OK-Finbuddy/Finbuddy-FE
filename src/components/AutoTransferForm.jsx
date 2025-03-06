@@ -19,13 +19,13 @@ export default function AutoTransferForm() {
   const [selectedBank, setSelectedBank] = useState("")
   const [accountNumber, setAccountNumber] = useState("")
   const [amount, setAmount] = useState("")
+  const [amountInKorean, setAmountInKorean] = useState("") // 문자열로 변경
   const [recipientMemo, setRecipientMemo] = useState("")
   const [senderMemo, setSenderMemo] = useState("")
   const [recipientName, setRecipientName] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSearching, setIsSearching] = useState(false)
-  const [showConfirmModal, setShowConfirmModal] = useState(false)
-  const [transferDay, setTransferDay] = useState("")
+  const [transferDay, setTransferDay] = useState("") // 추가
+  const [showConfirmModal, setShowConfirmModal] = useState(false) // 추가
+  const [isSearching, setIsSearching] = useState(false) // 추가
 
   // 이체일 옵션 생성 (1~31일)
   const transferDayOptions = Array.from({ length: 31 }, (_, i) => ({
@@ -41,10 +41,10 @@ export default function AutoTransferForm() {
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
-        setIsLoading(false)
+        //setIsLoading(false)
       } catch (error) {
         console.error("Error fetching accounts:", error)
-        setIsLoading(false)
+        //setIsLoading(false)
       }
     }
 
@@ -64,7 +64,8 @@ export default function AutoTransferForm() {
         setSelectedAccount(accounts.find((acc) => acc.accountId === data.fromAccountId))
         setSelectedBank(data.targetBankName)
         setAccountNumber(data.targetAccountNumber)
-        setAmount(data.amount.toString())
+        setAmount(data.amount.toLocaleString())
+        setAmountInKorean(formatAmountWithKoreanUnit(data.amount))
         setTransferDay(data.transferDay.toString())
         setRecipientName(data.receiverName)
         setRecipientMemo(data.receiverMemo || "")
@@ -111,10 +112,55 @@ export default function AutoTransferForm() {
     }
   }
 
-  // 금액 입력 시 천 단위 콤마 추가
+  // 금액에 단위만 한글로 표시하는 함수를 다음 함수로 교체
+  const formatAmountWithKoreanUnit = (amount) => {
+    if (!amount) return ""
+
+    // 콤마 제거 및 숫자로 변환
+    const num = Number.parseInt(amount.toString().replace(/,/g, ""))
+
+    if (num === 0) return "0원"
+
+    // 최대 입력 가능 금액 (100억 미만)
+    if (num >= 10000000000) {
+      return "입력 가능한 최대 금액을 초과했습니다"
+    }
+
+    // 억, 만 단위로 분리
+    const eok = Math.floor(num / 100000000)
+    const man = Math.floor((num % 100000000) / 10000)
+    const rest = num % 10000
+
+    let result = ""
+
+    if (eok > 0) {
+      result += eok + "억"
+    }
+
+    if (man > 0) {
+      result += man + "만"
+    }
+
+    if (rest > 0) {
+      result += rest
+    }
+
+    return result + "원"
+  }
+
+  // 금액 입력 시 천 단위 콤마 추가 및 한글 단위 변환
   const handleAmountChange = (e) => {
     const value = e.target.value.replace(/[^\d]/g, "")
-    setAmount(value ? Number.parseInt(value).toLocaleString() : "")
+
+    // 100억 이상이면 입력 제한
+    if (value && Number.parseInt(value) >= 10000000000) {
+      alert("최대 입력 가능 금액은 100억 미만입니다.")
+      return
+    }
+
+    const formattedValue = value ? Number.parseInt(value).toLocaleString() : ""
+    setAmount(formattedValue)
+    setAmountInKorean(formatAmountWithKoreanUnit(value))
   }
 
   // 계좌 선택 핸들러 수정
@@ -135,9 +181,14 @@ export default function AutoTransferForm() {
     const [modalPassword, setModalPassword] = useState("")
     const [modalResetPassword, setModalResetPassword] = useState(false)
     const [isPasswordVerified, setIsPasswordVerified] = useState(false)
+    const [showPasswordSuccessModal, setShowPasswordSuccessModal] = useState(false)
 
     const handleModalPasswordComplete = (value) => {
       setModalPassword(value)
+      // 비밀번호가 변경되면 검증 상태를 초기화
+      if (isPasswordVerified) {
+        setIsPasswordVerified(false)
+      }
     }
 
     const verifyPassword = async (accountId, password) => {
@@ -176,6 +227,7 @@ export default function AutoTransferForm() {
 
       if (isValid) {
         setIsPasswordVerified(true)
+        setShowPasswordSuccessModal(true)
       } else {
         alert("비밀번호가 일치하지 않습니다.")
         setModalPassword("")
@@ -185,9 +237,7 @@ export default function AutoTransferForm() {
 
     const handleModalSubmit = async () => {
       try {
-        const url = isEditing
-          ? `${API_URL}/api/autotransfer/${id}`
-          : `${API_URL}/api/autotransfer`
+        const url = isEditing ? `${API_URL}/api/autotransfer/${id}` : `${API_URL}/api/autotransfer`
 
         const response = await fetch(url, {
           method: isEditing ? "PATCH" : "POST",
@@ -221,8 +271,23 @@ export default function AutoTransferForm() {
       }
     }
 
-    if (!showConfirmModal) return null
+    const PasswordSuccessModal = () => {
+      if (!showPasswordSuccessModal) return null
 
+      return (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent} style={{ maxWidth: "300px" }}>
+            <h3 className={styles.modalTitle}>비밀번호 확인</h3>
+            <p className={styles.modalMessage}>비밀번호가 확인되었습니다.</p>
+            <button className={styles.modalButton} onClick={() => setShowPasswordSuccessModal(false)}>
+              확인
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    //setShowConfirmModal(false)
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.modalContent}>
@@ -242,7 +307,7 @@ export default function AutoTransferForm() {
             </div>
             <div className={styles.modalInfoItem}>
               <span className={styles.modalLabel}>이체금액</span>
-              <span className={styles.modalValue}>{amount}원</span>
+              <span className={styles.modalValue}>{amountInKorean}</span> {/* 변경: 한글 금액 표시 */}
             </div>
             <div className={styles.modalInfoItem}>
               <span className={styles.modalLabel}>이체일</span>
@@ -256,15 +321,22 @@ export default function AutoTransferForm() {
 
           <div className={styles.modalPasswordSection}>
             <label className={styles.modalLabel}>비밀번호</label>
-            <PasswordInputKeypad onPasswordComplete={handleModalPasswordComplete} reset={modalResetPassword} />
-            {!isPasswordVerified && (
-              <button
-                className={styles.modalVerifyButton}
-                onClick={handlePasswordVerification}
-                disabled={!modalPassword}
-              >
-                비밀번호 확인
-              </button>
+            {isPasswordVerified ? (
+              <div className={styles.verifiedPasswordDisplay}>
+                <div className={styles.passwordDots}>{Array(modalPassword.length).fill("●").join("")}</div>
+                <div className={styles.passwordVerifiedMessage}>비밀번호 확인 완료</div>
+              </div>
+            ) : (
+              <>
+                <PasswordInputKeypad onPasswordComplete={handleModalPasswordComplete} reset={modalResetPassword} />
+                <button
+                  className={styles.modalVerifyButton}
+                  onClick={handlePasswordVerification}
+                  disabled={!modalPassword}
+                >
+                  비밀번호 확인
+                </button>
+              </>
             )}
           </div>
 
@@ -276,6 +348,7 @@ export default function AutoTransferForm() {
                 setModalPassword("")
                 setModalResetPassword((prev) => !prev)
                 setIsPasswordVerified(false)
+                setShowPasswordSuccessModal(false)
               }}
             >
               취소
@@ -285,20 +358,21 @@ export default function AutoTransferForm() {
             </button>
           </div>
         </div>
+        <PasswordSuccessModal />
       </div>
     )
   }
 
-  if (isLoading) {
-    return (
-      <main className="main-content">
-        <div className={styles.loadingContainer}>
-          <div className={styles.loadingSpinner}></div>
-          <p>정보를 불러오는 중입니다...</p>
-        </div>
-      </main>
-    )
-  }
+  // if (isLoading) {
+  //   return (
+  //     <main className="main-content">
+  //       <div className={styles.loadingContainer}>
+  //         <div className={styles.loadingSpinner}></div>
+  //         <p>정보를 불러오는 중입니다...</p>
+  //       </div>
+  //     </main>
+  //   )
+  // }
 
   return (
     <main className="main-content">
@@ -389,7 +463,7 @@ export default function AutoTransferForm() {
               />
               <span className={styles.currencyUnit}>원</span>
             </div>
-            <div className={styles.amountInKorean}>일십만원</div>
+            {amountInKorean && <div className={styles.amountInKorean}>{amountInKorean}</div>}
           </div>
 
           {/* 이체일 선택 */}
@@ -443,7 +517,7 @@ export default function AutoTransferForm() {
           </button>
         </div>
       </div>
-      <ConfirmModal />
+      {showConfirmModal && <ConfirmModal />}
     </main>
   )
 }
