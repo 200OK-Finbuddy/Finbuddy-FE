@@ -14,6 +14,8 @@ import Transactions from "./components/Transactions"
 import Transfer from "./components/Transfer"
 import Budget from "./components/Budget"
 import "./styles/App.css"
+import SingUp from "./pages/SignUp"
+import SignIn from "./pages/SignIn"
 
 function App() {
   const [activeNav, setActiveNav] = useState("dashboard")
@@ -101,6 +103,14 @@ function App() {
             <Transfer />
           </Layout>
         }
+      />
+      <Route
+        path="/signup"
+        element={<SingUp/>}
+      />
+      <Route
+        path="/signin"
+        element={<SignIn/>}
       />
     </Routes>
   )

@@ -1,5 +1,3 @@
-"use client"
-
 import { BarChart2, Users, Send, CreditCard, UserCircle, RefreshCw, Wallet, Cloud } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useEffect } from "react"
@@ -40,8 +38,7 @@ function Sidebar({ activeNav, setActiveNav }) {
   return (
     <aside className="sidebar">
       <div className="logo">
-        <Cloud size={20} />
-        <span> Finbuddy</span>
+        <img src="/image/logo.png" alt="Finbuddy" onClick={() => handleNavigation('/', 'dashboard')} style={{ cursor: 'pointer', width: '120px', height: '27px' }} />
       </div>
       <nav className="nav-menu">
         <ul>

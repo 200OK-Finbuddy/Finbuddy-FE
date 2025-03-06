@@ -12,7 +12,8 @@
 }
 
 .logo {
-  padding: 0 20px;
+  padding: 0 35px;
+  margin-top: 5px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
