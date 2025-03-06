@@ -22,7 +22,7 @@ function Sidebar({ activeNav, setActiveNav }) {
         <ul>
           <li 
             className={activeNav === 'dashboard' ? 'active' : ''} 
-            onClick={() => handleNavigation('/', 'dashboard')}
+            onClick={() => handleNavigation('/dashboard', 'dashboard')}
           >
             <BarChart2 size={20} />
             <span>대시보드</span>

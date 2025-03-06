@@ -3,6 +3,7 @@
 import API_URL from "../config"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useLocation } from "react-router-dom"
 import styles from "../styles/Transactions.module.css"
 import AccountExpenseChart from "./AccountExpenseChart"
 import { BANKS } from "../constants/banks"
@@ -18,6 +19,13 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([])
   const observer = useRef()
   const memberId = 3 // 실제 구현시 로그인한 사용자 ID를 사용
+  const location = useLocation()
+
+  // URL에서 accountId 파라미터 가져오기
+  const getAccountIdFromUrl = useCallback(() => {
+    const searchParams = new URLSearchParams(location.search)
+    return searchParams.get("accountId")
+  }, [location.search])
 
   // 은행 ID로 은행 이름 찾기
   const getBankNameById = (bankId) => {
@@ -82,9 +90,6 @@ export default function Transactions() {
   // 월간 거래 요약을 위한 독립적인 상태
   const [summaryMonth, setSummaryMonth] = useState(monthOptions[monthOptions.length - 1])
 
-  // 정렬 상태 추가
-  //const [sortDirection, setSortDirection] = useState("DESC")
-
   // 계좌 목록 조회
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -93,9 +98,28 @@ export default function Transactions() {
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data || [])
-        if (data && data.length > 0) {
+
+        // URL에서 accountId 파라미터 가져오기
+        const accountIdFromUrl = getAccountIdFromUrl()
+
+        if (accountIdFromUrl && data && data.length > 0) {
+          // URL에 accountId가 있으면 해당 계좌 선택
+          const accountFromUrl = data.find((acc) => acc.accountId.toString() === accountIdFromUrl)
+          if (accountFromUrl) {
+            setSelectedAccount(accountFromUrl)
+            const index = data.findIndex((acc) => acc.accountId.toString() === accountIdFromUrl)
+            if (index !== -1) {
+              setCurrentIndex(index)
+            }
+          } else {
+            // 해당 계좌가 없으면 첫 번째 계좌 선택
+            setSelectedAccount(data[0])
+          }
+        } else if (data && data.length > 0) {
+          // URL에 accountId가 없으면 첫 번째 계좌 선택
           setSelectedAccount(data[0])
         }
+
         setIsLoading(false)
       } catch (error) {
         console.error("Error fetching accounts:", error)
@@ -104,7 +128,7 @@ export default function Transactions() {
     }
 
     fetchAccounts()
-  }, [memberId])
+  }, [memberId, getAccountIdFromUrl])
 
   // 계좌 상세 정보 조회
   useEffect(() => {
@@ -112,9 +136,7 @@ export default function Transactions() {
       if (!selectedAccount) return
 
       try {
-        const response = await fetch(
-          `${API_URL}/api/accounts/${selectedAccount.accountId}?memberId=${memberId}`,
-        )
+        const response = await fetch(`${API_URL}/api/accounts/${selectedAccount.accountId}?memberId=${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch account details")
         const data = await response.json()
         setAccountDetails(data)
@@ -198,9 +220,6 @@ export default function Transactions() {
     fetchTransactions()
   }, [selectedAccount, page, transactionFilters, memberId])
 
-  // 월간 거래 요약 데이터 계산 함수 추가
-  //const calculateMonthlySummary = (transactions, year, month) => { ... } // 제거
-
   const handleNext = () => {
     if (accounts.length <= 1) return
     setCurrentIndex((prevIndex) => (prevIndex + 1) % accounts.length)
@@ -224,6 +243,9 @@ export default function Transactions() {
       if (newIndex !== -1) {
         setCurrentIndex(newIndex)
       }
+
+      // URL 업데이트 (선택적)
+      window.history.replaceState(null, "", `/transactions?accountId=${account.accountId}`)
     }
   }
 

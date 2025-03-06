@@ -1,5 +1,6 @@
 import API_URL from "../config";
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from "react-router-dom"
 import '../styles/ExpenseChart.css';
 
 const CATEGORY_COLORS = {
@@ -15,6 +16,7 @@ const CATEGORY_COLORS = {
 function ExpenseChart() {
   const [expenses, setExpenses] = useState([])
   const [totalAmount, setTotalAmount] = useState(0)
+  const navigate = useNavigate()
 
   const getCategoryExpenses = useCallback(async () => {
     try {
@@ -80,7 +82,9 @@ function ExpenseChart() {
     <section className="analysis-section">
       <div className="section-header">
         <h2>소비분석</h2>
-        <button className="add-btn">+</button>
+        <button className="add-btn" onClick={() => navigate("/transactions")}>
+          +
+        </button>
       </div>
       <div className="chart-container">
         <div className="chart-content">

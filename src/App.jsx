@@ -20,10 +20,10 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <Layout navType={activeNav} onNavChange={setActiveNav}>
-            <Dashboard />
+            <Dashboard setActiveNav={setActiveNav} />
           </Layout>
         }
       />
