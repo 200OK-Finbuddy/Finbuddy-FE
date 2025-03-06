@@ -431,7 +431,7 @@ export default function Budget() {
                     <div className={styles.budgetRemaining}>
                       <span className={styles.remainingLabel}>남은 금액</span>
                       <span className={styles.remainingValue}>
-                        {formatAmountWithKoreanUnit(calculateRemaining())}원
+                        {formatAmountWithKoreanUnit(calculateRemaining())}
                       </span>
                     </div>
                   </div>
