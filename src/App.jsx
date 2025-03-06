@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Routes, Route } from "react-router-dom"
-import MainPage from "./components/MainPage.jsx"
+import MainPage from "./components/MainPage"
 import Layout from "./components/Layout"
 import Dashboard from "./components/Dashboard"
 import Products from "./components/Products"
