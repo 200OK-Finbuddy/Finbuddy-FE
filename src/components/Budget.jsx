@@ -28,6 +28,9 @@ export default function Budget() {
   const [completionMessage, setCompletionMessage] = useState("")
   const [completionTitle, setCompletionTitle] = useState("")
 
+  // Add a new state for tracking notification toggle loading
+  const [isNotificationLoading, setIsNotificationLoading] = useState(false)
+
   // showAlert 함수 추가 (fetchCurrentBudget 함수 위에 추가)
   const showAlert = (title, message, callback = null) => {
     setAlertTitle(title)
@@ -105,6 +108,7 @@ export default function Budget() {
         spentAmount: data.spentAmount,
         startDate: data.startDate,
         endDate: data.endDate,
+        notificationEnabled: data.notificationEnabled,
       })
     } catch (error) {
       console.error("Error fetching budget:", error)
@@ -165,13 +169,16 @@ export default function Budget() {
       // 콤마 제거하여 숫자로 변환
       const numericAmount = Number(newAmount.replace(/,/g, ""))
 
-      const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}&amount=${numericAmount}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+      const response = await fetch(
+        `${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}&amount=${numericAmount}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `newAmount=${numericAmount}`,
         },
-        body: `newAmount=${numericAmount}`,
-      })
+      )
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -220,6 +227,41 @@ export default function Budget() {
       setError(error.message)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // Add a function to toggle budget notification after the deleteBudget function
+  const toggleNotification = async (enabled) => {
+    if (!budget) return
+
+    try {
+      setIsNotificationLoading(true)
+      setError(null)
+
+      const response = await fetch(
+        `${API_URL}/api/budgets/${budget.budgetId}/notification?memberId=${memberId}&enabled=${enabled}`,
+        {
+          method: "PATCH",
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error("알림 설정 변경에 실패했습니다.")
+      }
+
+      // Update the local budget state with the new notification setting
+      setBudget((prev) => ({
+        ...prev,
+        notificationEnabled: enabled,
+      }))
+
+      // Show completion alert
+      showCompletionAlert("알림 설정 변경 완료", `예산 알림이 ${enabled ? "활성화" : "비활성화"}되었습니다.`)
+    } catch (error) {
+      console.error("Error toggling notification:", error)
+      setError(error.message)
+    } finally {
+      setIsNotificationLoading(false)
     }
   }
 
@@ -395,7 +437,25 @@ export default function Budget() {
                 ) : (
                   <div className={styles.budgetCard}>
                     <div className={styles.budgetHeader}>
-                      <h3 className={styles.budgetTitle}>{getCurrentMonth()} 예산</h3>
+                      <div className={styles.budgetTitleRow}>
+                        <h3 className={styles.budgetTitle}>{getCurrentMonth()} 예산</h3>
+                        <div className={styles.notificationToggle}>
+                          <span className={styles.notificationLabel}>
+                            알림 {budget.notificationEnabled ? "on " : "off "}
+                          </span>
+                          <button
+                            className={`${styles.toggleButton} ${budget.notificationEnabled ? styles.toggleActive : ""}`}
+                            onClick={() => toggleNotification(!budget.notificationEnabled)}
+                            disabled={isNotificationLoading}
+                          >
+                            {isNotificationLoading ? (
+                              <div className={styles.toggleSpinner}></div>
+                            ) : (
+                              <div className={styles.toggleCircle} />
+                            )}
+                          </button>
+                        </div>
+                      </div>
                       {!isEditing && (
                         <div className={styles.headerActions}>
                           <button
@@ -429,10 +489,19 @@ export default function Budget() {
                       </div>
                     </div>
                     <div className={styles.budgetRemaining}>
-                      <span className={styles.remainingLabel}>남은 금액</span>
-                      <span className={styles.remainingValue}>
-                        {formatAmountWithKoreanUnit(calculateRemaining())}
-                      </span>
+                      {budget.spentAmount > budget.budgetAmount ? (
+                        <span className={styles.exceededMessage}>
+                          {getCurrentMonth()} 예산을{" "}
+                          {formatAmountWithKoreanUnit(budget.spentAmount - budget.budgetAmount)} 초과했습니다.
+                        </span>
+                      ) : (
+                        <>
+                          <span className={styles.remainingLabel}>남은 금액</span>
+                          <span className={styles.remainingValue}>
+                            {formatAmountWithKoreanUnit(calculateRemaining())}
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
                 )}

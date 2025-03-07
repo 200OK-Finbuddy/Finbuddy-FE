@@ -143,7 +143,7 @@ function Footer() {
       <div className="footer-container">
         <div className="footer-left">
           <h2 className="footer-logo">FINBUDDY</h2>
-          <p className="footer-team">Team 200ok (손혜정, 심세연, 최준영)</p>
+          <p className="footer-team">Team 200ok | 손혜정 · 심세연 · 최준영</p>
           <p className="footer-copyright">Copyright FinBuddy. All rights reserved</p>
         </div>
         <div className="footer-right">

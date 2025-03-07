@@ -72,8 +72,14 @@
 .budgetHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 16px;
+}
+
+.budgetTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .budgetTitle {
@@ -131,6 +137,13 @@
 .remainingLabel {
   font-size: 16px;
   color: #6b7280;
+}
+
+.remainingLabel:only-child {
+  width: 100%;
+  text-align: center;
+  color: #ef4444;
+  font-weight: 500;
 }
 
 .remainingValue {
@@ -372,7 +385,7 @@
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: linear-gradient(to right, #00b090, #7fb9bf);
+  background-color: #00b090;
   border-radius: 3px;
 }
 
@@ -431,7 +444,7 @@
 }
 
 .modalDeleteButton:hover {
-  background:  #ef4444;
+  background: #ef4444;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -443,9 +456,8 @@
   box-shadow: none;
 }
 
-
 .modalButton {
-  background: linear-gradient(to right, #00b090, #7fb9bf);
+  background: #00b090;
   color: white;
   border: none;
   border-radius: 8px;
@@ -459,7 +471,7 @@
 }
 
 .modalButton:hover {
-  background: linear-gradient(to right, #009378, #6aa7ad);
+  background: #12ad91;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 176, 144, 0.2);
 }
@@ -534,5 +546,57 @@
 
 .transactionsSection {
   margin-top: 24px;
+}
+
+.toggleButton {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: #e5e7eb;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px;
+}
+
+.toggleButton.toggleActive {
+  background-color: #00b090;
+}
+
+.toggleCircle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  top: 2px;
+  left: 2px;
+}
+
+.toggleActive .toggleCircle {
+  transform: translateX(20px);
+}
+
+.toggleSpinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.exceededMessage {
+  width: 100%;
+  text-align: center;
+  color: #ef4444;
+  font-weight: 500;
+  font-size: 16px;
 }
 
