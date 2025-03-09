@@ -440,10 +440,11 @@ export default function Transactions() {
                 </div>
                 <div className={styles.accountBalance}>{formatAmount(account.balance)}원</div>
 
-                {/* 송금 버튼 추가 */}
-                <button className={styles.transferButton} onClick={(e) => handleTransferClick(e, account.accountId)}>
-                  송금하기
-                </button>
+                {accountDetails.accountType === "CHECKING" && (
+                  <button className={styles.transferButton} onClick={(e) => handleTransferClick(e, account.accountId)}>
+                    송금하기
+                  </button>
+                )}
               </div>
             ))}
           </div>

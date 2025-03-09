@@ -71,6 +71,23 @@ export default function Transfer() {
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
+
+        // Get accountId from URL if present
+        const urlParams = new URLSearchParams(window.location.search)
+        const accountIdFromUrl = urlParams.get("accountId")
+
+        if (accountIdFromUrl && data.length > 0) {
+          // Find the account with matching ID
+          const accountFromUrl = data.find((acc) => acc.accountId.toString() === accountIdFromUrl)
+          if (accountFromUrl) {
+            setSelectedAccount(accountFromUrl)
+            // Set recipient memo if available
+            if (accountFromUrl.accountHolder || accountFromUrl.senderName) {
+              setRecipientMemo(accountFromUrl.accountHolder || accountFromUrl.senderName || "")
+            }
+          }
+        }
+
         setIsLoading(false)
       } catch (error) {
         console.error("Error fetching accounts:", error)
@@ -598,4 +615,4 @@ export default function Transfer() {
     </main>
   )
 }
-
+// 이체 성공 실패 모달 띄우기
