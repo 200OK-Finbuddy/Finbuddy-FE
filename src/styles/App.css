@@ -44,22 +44,6 @@ button {
   font-family: inherit;
 }
 
-.welcome-section {
-  margin-bottom: 32px;
-}
-
-.welcome-section h1 {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-}
-
-.welcome-section p {
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
 /* 공통으로 사용될 페이지 타이틀 스타일 */
 .page-header {
   display: flex;

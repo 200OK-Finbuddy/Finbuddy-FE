@@ -458,10 +458,6 @@ export default function Transfer() {
 
   return (
     <main className="main-content">
-      <header className="welcome-section">
-        <h1>환영합니다. 👋</h1>
-        <p>주간 온라인 거래 내역을 확인하세요.</p>
-      </header>
       <div className="content-container">
         <div className="page-header">
           <h2 className="page-title">이체정보 입력</h2>
