@@ -3,19 +3,20 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom"; 
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config";
+import authApi from "../api/authApi";
 
 function SignIn() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
-    const { setAccessToken } = useAuth();
+    // const { setAccessToken } = useAuth();
 
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post(`${API_URL}/api/auth/signin`, data, {
+            const response = await authApi.post(`/api/auth/signin`, data, {
                 withCredentials: true
             });
-            console.log(response.data);
-            setAccessToken(response.data.accessToken);
+            // console.log(response.data);
+            // setAccessToken(response.data.accessToken);
             navigate("/");
         } catch (error) {
             console.error(error);

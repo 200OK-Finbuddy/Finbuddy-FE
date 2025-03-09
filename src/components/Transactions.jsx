@@ -7,6 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom"
 import styles from "../styles/Transactions.module.css"
 import AccountExpenseChart from "./AccountExpenseChart"
 import { BANKS } from "../constants/banks"
+// import { useAuth } from "../context/AuthContext";
+import OtpRegisterModal from "./OtpRegisterModal"
+import authApi from "../api/authApi"
+
 
 export default function Transactions() {
   const [accounts, setAccounts] = useState([])
@@ -21,6 +25,8 @@ export default function Transactions() {
   const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   const location = useLocation()
   const navigate = useNavigate() // 추가: 송금 페이지로 이동하기 위한 navigate
+  const [showOtpModal, setShowOtpModal] = useState(false) // OTP 모달 상태
+  // const { authApi } = useAuth();
 
   // URL에서 accountId 파라미터 가져오기
   const getAccountIdFromUrl = useCallback(() => {
@@ -250,9 +256,31 @@ export default function Transactions() {
     }
   }
 
+  // // otp 등록 상태 확인
+  // const checkOTPStatus = async () => {
+  //   try {
+  //     const response = await authApi.get("api/otp/status")
+  //     // console.log(response.data);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error checking OTP status:", error)
+  //     return false // 오류 발생 시 기본적으로 미등록으로 처리
+  //   }
+  // }
+
   // 송금 버튼 클릭 핸들러 추가
-  const handleTransferClick = (e, accountId) => {
+  const handleTransferClick = async (e, accountId) => {
     e.stopPropagation() // 카드 클릭 이벤트 방지
+
+    // const isOtpRegistered = await checkOTPStatus();
+
+    // if (isOtpRegistered) {
+    //   // OTP 등록되어 있으면 송금 화면으로 이동
+    //   navigate(`/transfer?accountId=${accountId}`)
+    // } else {
+    //   // OTP 미등록 시 모달 띄우기
+    //   setShowOtpModal(true)
+    // }
     navigate(`/transfer?accountId=${accountId}`)
   }
 
@@ -621,6 +649,8 @@ export default function Transactions() {
             </div>
           </div>
         )}
+        {/* OTP 등록 모달 */}
+      {showOtpModal && <OtpRegisterModal isOpen={showOtpModal} onClose={() => setShowOtpModal(false)} />}
       </div>
     </main>
   )
