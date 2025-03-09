@@ -28,6 +28,29 @@ const MONTHS = Array.from({ length: 6 }, (_, i) => {
   }
 }).reverse()
 
+// Add this custom tooltip component
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload
+    return (
+      <div className={styles.customTooltip}>
+        <div className={styles.tooltipContent}>
+          <p className={styles.tooltipCategory}>{data.name}</p>
+          <p className={styles.tooltipAmount}>{data.value.toLocaleString()}원</p>
+          <p className={styles.tooltipPercentage}>({data.percentage.toFixed(1)}%)</p>
+        </div>
+      </div>
+    )
+  }
+  return null
+}
+
+// Add PropTypes for the CustomTooltip component
+CustomTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+}
+
 export default function AccountExpenseChart({ accountId, memberId, accountType }) {
   const [monthlyExpenses, setMonthlyExpenses] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(MONTHS[MONTHS.length - 1])
@@ -103,6 +126,10 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
     name: expense.categoryName,
     value: expense.totalAmount,
     color: expense.color,
+    // Add these properties for the tooltip to use
+    categoryName: expense.categoryName,
+    totalAmount: expense.totalAmount,
+    percentage: expense.percentage,
   }))
 
   const lineChartData = monthlyExpenses.map((data) => ({
@@ -168,6 +195,12 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
+                    <Tooltip
+                      content={<CustomTooltip />}
+                      position={{ x: 0, y: 0 }}
+                      coordinate={{ x: 0, y: 0 }}
+                      wrapperStyle={{ position: "absolute", top: 0, left: 0 }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
