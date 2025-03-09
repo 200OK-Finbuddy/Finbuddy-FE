@@ -18,8 +18,9 @@
   background: white;
   border-radius: 16px;
   padding: 20px;
-  min-width: 300px;
-  flex: 1;
+  width: 300px; /* 고정 너비 설정 */
+  height: 180px; /* 고정 높이 설정 */
+  flex: 0 0 auto; /* flex-grow, flex-shrink, flex-basis 설정 */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -51,6 +52,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%; /* 너비 100%로 설정 */
 }
 
 .bankLogo {
@@ -61,29 +63,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0; /* 로고 크기 고정 */
 }
 
 .accountInfo {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: calc(100% - 44px); /* 로고 너비 + 간격을 제외한 너비 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
 }
 
 .accountName {
   font-size: 16px;
   font-weight: 600;
   color: #404040;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; /* 말줄임표 표시 */
+  max-width: 100%; /* 최대 너비 설정 */
 }
 
 .accountNumber {
   font-size: 14px;
   color: #979797;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; /* 말줄임표 표시 */
+  max-width: 100%; /* 최대 너비 설정 */
 }
 
 .accountBalance {
   font-size: 20px;
   font-weight: 700;
   color: #404040;
+  margin-top: auto; /* 잔액을 아래로 밀기 */
 }
 
 /* 송금 버튼 스타일 추가 */
@@ -335,6 +349,7 @@
 .transactionsTable {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* 테이블 레이아웃 고정 */
 }
 
 .transactionsTable th,
@@ -342,6 +357,35 @@
   padding: 16px 16px;
   text-align: left;
   border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; /* 말줄임표 표시 */
+}
+
+/* 각 열의 너비 설정 */
+.transactionsTable th:nth-child(1),
+.transactionsTable td:nth-child(1) {
+  width: 25%; /* 거래처 */
+}
+
+.transactionsTable th:nth-child(2),
+.transactionsTable td:nth-child(2) {
+  width: 15%; /* 거래 유형 */
+}
+
+.transactionsTable th:nth-child(3),
+.transactionsTable td:nth-child(3) {
+  width: 25%; /* 거래 날짜 */
+}
+
+.transactionsTable th:nth-child(4),
+.transactionsTable td:nth-child(4) {
+  width: 15%; /* 금액 */
+}
+
+.transactionsTable th:nth-child(5),
+.transactionsTable td:nth-child(5) {
+  width: 20%; /* 잔액 */
 }
 
 .transactionsTable th {

@@ -98,6 +98,17 @@ export default function Transactions() {
         const response = await fetch(`${API_URL}/api/accounts/all/${memberId}`)
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
+
+        // 계좌 타입 디버깅을 위한 로그 추가
+        console.log(
+          "계좌 목록과 타입:",
+          data.map((acc) => ({
+            id: acc.accountId,
+            name: acc.accountName,
+            type: acc.accountType,
+          })),
+        )
+
         setAccounts(data || [])
 
         // URL에서 accountId 파라미터 가져오기
@@ -419,34 +430,47 @@ export default function Transactions() {
           </button>
 
           <div className={styles.accountCards}>
-            {visibleAccounts.map((account) => (
-              <div
-                key={`${account.accountId}-${account.position}`}
-                className={`${styles.accountCard} ${
-                  selectedAccount?.accountId === account.accountId ? styles.active : ""
-                }`}
-                onClick={() => handleAccountClick(account)}
-              >
-                <div className={styles.bankInfo}>
-                  <img
-                    src={account.bankLogoUrl || "/placeholder.svg"}
-                    alt={`${account.bankName} 로고`}
-                    className={styles.bankLogo}
-                  />
-                  <div className={styles.accountInfo}>
-                    <h3 className={styles.accountName}>{account.accountName}</h3>
-                    <p className={styles.accountNumber}>{account.accountNumber}</p>
-                  </div>
-                </div>
-                <div className={styles.accountBalance}>{formatAmount(account.balance)}원</div>
+            {visibleAccounts.map((account) => {
+              // 각 계좌의 타입을 콘솔에 출력
+              console.log(`계좌 ID: ${account.accountId}, 이름: ${account.accountName}, 타입: ${account.accountType}`)
 
-                {accountDetails.accountType === "CHECKING" && (
-                  <button className={styles.transferButton} onClick={(e) => handleTransferClick(e, account.accountId)}>
-                    송금하기
-                  </button>
-                )}
-              </div>
-            ))}
+              return (
+                <div
+                  key={`${account.accountId}-${account.position}`}
+                  className={`${styles.accountCard} ${
+                    selectedAccount?.accountId === account.accountId ? styles.active : ""
+                  }`}
+                  onClick={() => handleAccountClick(account)}
+                >
+                  <div className={styles.bankInfo}>
+                    <img
+                      src={account.bankLogoUrl || "/placeholder.svg"}
+                      alt={`${account.bankName} 로고`}
+                      className={styles.bankLogo}
+                    />
+                    <div className={styles.accountInfo}>
+                      <h3 className={styles.accountName} title={account.accountName}>
+                        {account.accountName}
+                      </h3>
+                      <p className={styles.accountNumber} title={account.accountNumber}>
+                        {account.accountNumber}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={styles.accountBalance}>{formatAmount(account.balance)}원</div>
+
+                  {/* Only show transfer button for checking accounts */}
+                  {account.accountType === "CHECKING" && (
+                    <button
+                      className={styles.transferButton}
+                      onClick={(e) => handleTransferClick(e, account.accountId)}
+                    >
+                      송금하기
+                    </button>
+                  )}
+                </div>
+              )
+            })}
           </div>
 
           <button
@@ -588,13 +612,22 @@ export default function Transactions() {
                           key={`${selectedAccount?.accountId}-${transaction.transactionId}-${index}`}
                           ref={index === transactions.length - 1 ? lastTransactionElementRef : null}
                         >
-                          <td>{transaction.opponentName}</td>
-                          <td>{transaction.transactionType === 1 ? "입금" : "출금"}</td>
-                          <td>{formatDate(transaction.transactionDate)}</td>
-                          <td className={getAmountClass(transaction.transactionType)}>
+                          <td title={transaction.opponentName}>{transaction.opponentName}</td>
+                          <td title={transaction.transactionType === 1 ? "입금" : "출금"}>
+                            {transaction.transactionType === 1 ? "입금" : "출금"}
+                          </td>
+                          <td title={formatDate(transaction.transactionDate)}>
+                            {formatDate(transaction.transactionDate)}
+                          </td>
+                          <td
+                            className={getAmountClass(transaction.transactionType)}
+                            title={formatTransactionAmount(transaction.amount, transaction.transactionType) + "원"}
+                          >
                             {formatTransactionAmount(transaction.amount, transaction.transactionType)}원
                           </td>
-                          <td>{formatAmount(transaction.updatedBalance)}원</td>
+                          <td title={formatAmount(transaction.updatedBalance) + "원"}>
+                            {formatAmount(transaction.updatedBalance)}원
+                          </td>
                         </tr>
                       ))
                     ) : (
