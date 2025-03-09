@@ -1,7 +1,11 @@
-import API_URL from "../config";
-import { useState, useEffect, useCallback } from 'react';
+"use client"
+
+import PropTypes from "prop-types"
+import API_URL from "../config"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import '../styles/ExpenseChart.css';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
+import "../styles/ExpenseChart.css"
 
 const CATEGORY_COLORS = {
   카페: "#fde4cf",
@@ -16,8 +20,12 @@ const CATEGORY_COLORS = {
 function ExpenseChart() {
   const [expenses, setExpenses] = useState([])
   const [totalAmount, setTotalAmount] = useState(0)
+  const [showChart, setShowChart] = useState(false)
+  const [animationKey, setAnimationKey] = useState(0)
+  const chartRef = useRef(null)
   const navigate = useNavigate()
 
+  // 데이터 가져오기
   const getCategoryExpenses = useCallback(async () => {
     try {
       // 현재 날짜 가져오기
@@ -47,35 +55,80 @@ function ExpenseChart() {
         ...expense,
         color: CATEGORY_COLORS[expense.categoryName] || CATEGORY_COLORS.기타,
         percentage: (expense.totalAmount / total) * 100,
+        value: expense.totalAmount,
+        name: expense.categoryName,
       }))
 
-      setExpenses(expensesWithColors)
+      // 데이터 설정
+      setExpenses([])
       setTotalAmount(total)
+
+      // 애니메이션을 위한 지연 설정
+      setTimeout(() => {
+        setExpenses(expensesWithColors)
+        setShowChart(true)
+      }, 100)
     } catch (error) {
       console.error("Error fetching category expenses:", error)
+      setShowChart(true)
     }
   }, [])
 
-  useEffect(() => {
-    getCategoryExpenses()
+  // 애니메이션 재설정 함수
+  const resetAnimation = useCallback(() => {
+    setShowChart(false)
+    setExpenses([])
+    setAnimationKey((prev) => prev + 1)
+
+    setTimeout(() => {
+      getCategoryExpenses()
+    }, 50)
   }, [getCategoryExpenses])
 
-  const generateConicGradient = () => {
-    let gradient = ""
-    let startAngle = 0
+  useEffect(() => {
+    // 컴포넌트 마운트 시 데이터 로드
+    resetAnimation()
 
-    expenses.forEach((expense) => {
-      const angle = expense.percentage * 3.6 // 100% = 360 degrees
-      gradient += `${expense.color} ${startAngle}deg ${startAngle + angle}deg, `
-      startAngle += angle
-    })
+    // 페이지 가시성 변경 감지 (탭 전환, 새로고침 등)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        resetAnimation()
+      }
+    }
 
-    gradient = gradient.slice(0, -2) // Remove the trailing comma and space
-    return `conic-gradient(${gradient})`
-  }
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    // 클린업 함수
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
+  }, [resetAnimation])
 
   const formatAmount = (amount) => {
     return amount.toLocaleString()
+  }
+
+  // 커스텀 툴팁 컴포넌트
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload
+      return (
+        <div className="custom-tooltip">
+          <div className="tooltip-content">
+            <p className="tooltip-category">{data.name}</p>
+            <p className="tooltip-amount">{formatAmount(data.totalAmount)}원</p>
+            <p className="tooltip-percentage">({data.percentage.toFixed(1)}%)</p>
+          </div>
+        </div>
+      )
+    }
+    return null
+  }
+
+  // PropTypes 정의 추가
+  CustomTooltip.propTypes = {
+    active: PropTypes.bool,
+    payload: PropTypes.array,
   }
 
   return (
@@ -86,25 +139,56 @@ function ExpenseChart() {
           +
         </button>
       </div>
-      <div className="chart-container">
+
+      <div className="chart-wrapper" ref={chartRef}>
         <div className="chart-content">
-          <div className="donut-chart" style={{ background: generateConicGradient() }}>
-            <div className="chart-center">
-              <span className="amount">{formatAmount(Math.floor(totalAmount / 10000))}</span>
-              <span className="unit">만원</span>
-            </div>
+          <ResponsiveContainer width="100%" height={240}>
+            <PieChart key={animationKey}>
+              <Pie
+                data={expenses}
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={90}
+                paddingAngle={2}
+                dataKey="value"
+                isAnimationActive={true}
+                animationBegin={0}
+                animationDuration={1200}
+                animationEasing="ease-out"
+              >
+                {expenses.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip
+                content={<CustomTooltip />}
+                position={{ x: 0, y: 0 }}
+                cursor={false}
+                wrapperStyle={{ outline: "none" }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="chart-center">
+            <span className="amount">{formatAmount(Math.floor(totalAmount / 10000))}</span>
+            <span className="unit">만원</span>
           </div>
         </div>
+      </div>
 
-        <div className="chart-legend">
+      <div className="expense-list">
+        <h3 className="expense-title">카테고리별 지출</h3>
+        <div className={`expense-items ${showChart ? "loaded" : ""}`}>
           {expenses.map((expense) => (
-            <div key={expense.categoryName} className="legend-item">
-              <div className="legend-color" style={{ backgroundColor: expense.color }} />
-              <span className="legend-label">{expense.categoryName}</span>
-              <span className="legend-amount">
-                {formatAmount(expense.totalAmount)} 원
-                <span className="legend-percentage"> ({expense.percentage.toFixed(1)}%)</span>
-              </span>
+            <div key={expense.categoryName} className="expense-item">
+              <div className="expense-category">
+                <div className="category-color" style={{ backgroundColor: expense.color }} />
+                <span className="category-name">{expense.categoryName}</span>
+              </div>
+              <div className="expense-details">
+                <span className="expense-amount">{formatAmount(expense.totalAmount)}원</span>
+                <span className="expense-percentage">({expense.percentage.toFixed(1)}%)</span>
+              </div>
             </div>
           ))}
         </div>
