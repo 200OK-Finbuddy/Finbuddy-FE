@@ -1,5 +1,6 @@
 "use client"
 
+import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Check, Loader } from "lucide-react"
@@ -69,7 +70,7 @@ const AccountLinkModal = ({ isOpen, onClose, memberId }) => {
     setError(null)
 
     // try {
-    //   const response = await axios.post(`/api/mydata/generate/${memberId}`)
+    //   const response = await axios.post(`${API_URL}/api/mydata/generate/${memberId}`)
 
     //   if (response.data.success) {
     //     setSuccess(true)
