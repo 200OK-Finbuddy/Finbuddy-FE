@@ -550,3 +550,60 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* 결과 모달 스타일 추가 (파일 끝에 추가) */
+.successModal {
+  border-top: 6px solid #00b090;
+}
+
+.errorModal {
+  border-top: 6px solid #ef4444;
+}
+
+.resultIconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.successIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #00b090;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.errorIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.successButton {
+  background: linear-gradient(to right, #00b090, #009378);
+}
+
+.successButton:hover {
+  background: linear-gradient(to right, #009378, #007a63);
+}
+
+.errorButton {
+  background: linear-gradient(to right, #ef4444, #dc2626);
+}
+
+.errorButton:hover {
+  background: linear-gradient(to right, #dc2626, #b91c1c);
+}
+

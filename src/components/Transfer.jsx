@@ -62,6 +62,10 @@ export default function Transfer() {
   const [alertTitle, setAlertTitle] = useState("알림")
   const [alertCallback, setAlertCallback] = useState(null)
   const memberId = 4
+  // 컴포넌트 상단에 상태 변수 추가 (다른 useState 선언 근처에 추가)
+  const [showResultModal, setShowResultModal] = useState(false)
+  const [resultModalType, setResultModalType] = useState("") // "success" 또는 "error"
+  const [resultModalMessage, setResultModalMessage] = useState("")
 
   // 계좌 목록 조회 - 입출금 계좌만 조회
   useEffect(() => {
@@ -330,13 +334,27 @@ export default function Transfer() {
           throw new Error("이체에 실패했습니다.")
         }
 
-        showModalAlert("이체 완료", "이체가 성공적으로 완료되었습니다.", () => {
-          handleCloseTransferModal()
-          resetAllInputs() // 성공 시 모든 입력값 초기화
-        })
+        // 이체 성공 시 모달 닫기
+        handleCloseTransferModal()
+
+        // 성공 결과 모달 표시
+        setResultModalType("success")
+        setResultModalMessage("이체가 성공적으로 완료되었습니다.")
+        setShowResultModal(true)
+
+        // 입력값 초기화
+        resetAllInputs()
       } catch (error) {
         console.error("Error during transfer:", error)
-        showModalAlert("이체 오류", "이체 중 오류가 발생했습니다. 다시 시도해주세요.")
+
+        // 이체 실패 시 모달 닫기
+        handleCloseTransferModal()
+
+        // 실패 결과 모달 표시
+        setResultModalType("error")
+        setResultModalMessage("이체 중 오류가 발생했습니다. 다시 시도해주세요.")
+        setShowResultModal(true)
+
         setModalPassword("")
         setModalResetPassword((prev) => !prev)
         setIsPasswordVerified(false)
@@ -458,6 +476,35 @@ export default function Transfer() {
         </div>
         <PasswordSuccessModal />
         <ModalAlertModal />
+      </div>
+    )
+  }
+
+  // 결과 모달 컴포넌트 추가 (return 문 바로 위에 추가)
+  const ResultModal = () => {
+    if (!showResultModal) return null
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div
+          className={`${styles.modalContent} ${styles[resultModalType === "success" ? "successModal" : "errorModal"]}`}
+        >
+          <div className={styles.resultIconContainer}>
+            {resultModalType === "success" ? (
+              <div className={styles.successIcon}>✓</div>
+            ) : (
+              <div className={styles.errorIcon}>✕</div>
+            )}
+          </div>
+          <h3 className={styles.modalTitle}>{resultModalType === "success" ? "이체 완료" : "이체 실패"}</h3>
+          <p className={styles.modalMessage}>{resultModalMessage}</p>
+          <button
+            className={`${styles.modalButton} ${resultModalType === "success" ? styles.successButton : styles.errorButton}`}
+            onClick={() => setShowResultModal(false)}
+          >
+            확인
+          </button>
+        </div>
       </div>
     )
   }
@@ -612,7 +659,8 @@ export default function Transfer() {
       <AccountConfirmModal />
       <TransferConfirmModal />
       <AlertModal />
+      <ResultModal />
     </main>
   )
 }
-// 이체 성공 실패 모달 띄우기
+
