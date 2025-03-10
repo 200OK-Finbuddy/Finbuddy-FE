@@ -17,8 +17,6 @@ import "./styles/App.css"
 import SignUp from "./pages/SignUp"
 import SignIn from "./pages/SignIn"
 
-import SignUpForm from "./components/SignupForm"
-
 function App() {
   const [activeNav, setActiveNav] = useState("dashboard")
 
@@ -108,11 +106,19 @@ function App() {
       />
       <Route
         path="/signup"
-        element={<SignUp/>}
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <SignUp/>
+          </Layout>
+        }
       />
       <Route
         path="/signin"
-        element={<SignIn/>}
+        element={
+          <Layout navType={activeNav} onNavChange={setActiveNav}>
+            <SignIn/>
+          </Layout>
+        }
       />
     </Routes>
   )

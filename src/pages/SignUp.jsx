@@ -101,7 +101,7 @@ function SignUp() {
         <div className={styles["signup-container"]}>
           <div className={styles["signup-card"]}>
             <div className={styles["signup-header"]}>
-              <img alt="Finbuddy Logo" className={styles.logo} />
+              <img src="/image/logo.png" alt="Finbuddy Logo" className={styles.logo} />
               <h2>회원 정보 입력</h2>
             </div>
             <div className={styles["signup-content"]}>
