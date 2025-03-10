@@ -8,6 +8,7 @@ import styles from "../styles/Header.module.css"
 import PropTypes from "prop-types"
 import { useAuth } from "../context/AuthContext";
 
+
 export default function Header({ activeNav, setActiveNav }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const navigate = useNavigate();
