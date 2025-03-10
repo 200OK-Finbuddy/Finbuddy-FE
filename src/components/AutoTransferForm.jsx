@@ -280,7 +280,7 @@ export default function AutoTransferForm() {
     // handleModalSubmit 함수 수정 - 성공 시 완료 모달 표시 후 자동이체 리스트로 이동
     const handleModalSubmit = async () => {
       try {
-        const url = isEditing ? `${API_URL}/api/autotransfer/${id}` : `${API_URL}/api/autotransfer`
+        const url = isEditing ? `${API_URL}/api/autotransfer` : `${API_URL}/api/autotransfer`
 
         const response = await fetch(url, {
           method: isEditing ? "PATCH" : "POST",
