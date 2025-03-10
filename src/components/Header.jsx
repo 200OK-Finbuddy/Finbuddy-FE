@@ -6,10 +6,15 @@ import { useNavigate } from "react-router-dom"
 import NotificationBell from "./NotificationBell"
 import styles from "../styles/Header.module.css"
 import PropTypes from "prop-types"
+import { useAuth } from "../context/AuthContext";
 
-export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
+export default function Header({ activeNav, setActiveNav }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { user, logout } = useAuth(); // ✅ 현재 로그인한 사용자 정보 가져오기
+
+  // ✅ 로그인 상태 확인
+  const isLoggedIn = !!user; // `user`가 존재하면 true, 아니면 false
 
   // 현재 경로에 따라 activeNav 상태 업데이트
   useEffect(() => {
@@ -100,7 +105,7 @@ export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
               {/* 프로필 메뉴 */}
               <div className={styles.profileMenu}>
                 <button className={styles.profileButton} onClick={() => setShowProfileMenu(!showProfileMenu)}>
-                  <span className={styles.profileName}>김진원</span>
+                  <span className={styles.profileName}>{user.name}</span>
                   <ChevronDown size={16} className={styles.chevronIcon} />
                 </button>
 
@@ -114,7 +119,7 @@ export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
                     </button>
                     <button className={styles.dropdownItem}>설정</button>
                     <hr className={styles.dropdownDivider} />
-                    <button className={styles.dropdownItem}>로그아웃</button>
+                    <button className={styles.dropdownItem} onClick={logout}>로그아웃</button>
                   </div>
                 )}
               </div>
@@ -123,7 +128,7 @@ export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
         ) : (
           /* 우측 메뉴 - 비로그인 상태 */
           <div className={styles.rightSection}>
-            <button className={styles.loginButton} onClick={() => navigate("/login")}>
+            <button className={styles.loginButton} onClick={() => navigate("/signin")}>
               로그인
             </button>
             <button className={styles.signupButton} onClick={() => navigate("/signup")}>
