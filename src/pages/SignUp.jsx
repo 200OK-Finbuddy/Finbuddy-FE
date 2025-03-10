@@ -59,47 +59,21 @@ function SignUp() {
         }
     };
 
-    // const sendVerificationEmail = async () => {
-    //     const { emailId, emailDomain } = getValues();
-    //     const mail = `${emailId}@${emailDomain}`;
-    //     try {
-    //         const response = await axios.post(`${API_URL}/api/mail/send`, { mail })
-    //         if (response.data.success) {
-    //             setEmailStatus('sent');
-    //             alert(response.data.message);
-    //         } else {
-    //             alert(`이메일 전송 실패: ${response.data.error}`);
-    //         }
-    //     } catch (error) {
-    //         alert(`서버 요청 중 오류가 발생했습니다: ${error}`);
-    //     }
-    // };
-
     const sendVerificationEmail = async () => {
-      const { emailId, emailDomain } = getValues();
-      const mail = `${emailId}@${emailDomain}`;
-  
-      try {
-          const response = await axios.post(`${API_URL}/api/mail/send`, 
-              { mail }, 
-              { timeout: 10000 } // 10초 동안 응답이 없으면 요청 취소
-          );
-          
-          if (response.data.success) {
-              setEmailStatus('sent');
-              alert(response.data.message);
-          } else {
-              alert(`이메일 전송 실패: ${response.data.error}`);
-          }
-      } catch (error) {
-          if (error.code === 'ECONNABORTED') {
-              alert("서버 응답 시간이 초과되었습니다. 나중에 다시 시도해주세요.");
-          } else {
-              alert(`서버 요청 중 오류가 발생했습니다: ${error}`);
-          }
-      }
-  };
-  
+        const { emailId, emailDomain } = getValues();
+        const mail = `${emailId}@${emailDomain}`;
+        try {
+            const response = await axios.post(`${API_URL}/api/mail/send`, { mail })
+            if (response.data.success) {
+                setEmailStatus('sent');
+                alert(response.data.message);
+            } else {
+                alert(`이메일 전송 실패: ${response.data.error}`);
+            }
+        } catch (error) {
+            alert(`서버 요청 중 오류가 발생했습니다: ${error}`);
+        }
+    };
 
     const verifyCodeHandler = async () => {
         const { emailId, emailDomain, verificationCode } = getValues();
