@@ -22,7 +22,6 @@ const TransferConfirmModal = ({
   setResultModalMessage,
   setShowResultModal,
   resetAllInputs,
-  memberId
 }) => {
   const [modalPassword, setModalPassword] = useState("")
   const [modalResetPassword, setModalResetPassword] = useState(false)
@@ -161,16 +160,25 @@ const TransferConfirmModal = ({
     }
     
     try {
-      const response = await axios.post(`${API_URL}/api/transfers?memberId=${memberId}`, {
-        fromAccountId: selectedAccount.accountId,
-        toBankName: selectedBank,
-        toAccountNumber: accountNumber,
-        amount: Number(amount.replace(/,/g, "")),
-        password: modalPassword,
-        senderName: recipientMemo,
-        receiverName: senderMemo,
-        otpValue: otpValue, // OTP 값 추가
-      });
+      const response = await axios.post(
+        `${API_URL}/api/transfers`,
+        {
+          fromAccountId: selectedAccount.accountId,
+          toBankName: selectedBank,
+          toAccountNumber: accountNumber,
+          amount: Number(amount.replace(/,/g, "")),
+          password: modalPassword,
+          senderName: recipientMemo,
+          receiverName: senderMemo,
+          otpValue: otpValue, // OTP 값 추가
+        },
+        {
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
 
       // 이체 성공 시 모달 닫기
       handleCloseTransferModal();

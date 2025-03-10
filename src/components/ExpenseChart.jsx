@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
 import "../styles/ExpenseChart.css"
+import axios from "axios"
 
 const CATEGORY_COLORS = {
   카페: "#fde4cf",
@@ -33,21 +34,19 @@ function ExpenseChart() {
       const currentYear = today.getFullYear()
       const currentMonth = today.getMonth() + 1 // JavaScript의 월은 0부터 시작하므로 1을 더합니다
 
-      const response = await fetch(
-        `${API_URL}/api/transactions/category-expenses?memberId=4&year=${currentYear}&month=${currentMonth}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await axios.get(`${API_URL}/api/transactions/category-expenses`, {
+        params: {
+          year: currentYear,
+          month: currentMonth,
         },
-      )
+        withCredentials: true, // 쿠키 및 인증 정보 포함
+      })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
-      const data = await response.json()
+      const data = response.data
 
       const total = data.reduce((sum, item) => sum + item.totalAmount, 0)
 

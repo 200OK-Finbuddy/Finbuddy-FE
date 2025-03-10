@@ -9,7 +9,7 @@ import axios from "axios"
 import PropTypes from "prop-types"
 import "../styles/AccountLinkModal.css"
 
-const AccountLinkModal = ({ isOpen, onClose, memberId }) => {
+const AccountLinkModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate()
   const [agreements, setAgreements] = useState({
     personalInfo: false,
@@ -69,25 +69,38 @@ const AccountLinkModal = ({ isOpen, onClose, memberId }) => {
     setLoading(true)
     setError(null)
 
-    // try {
-    //   const response = await axios.post(`${API_URL}/api/mydata/generate/${memberId}`)
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/mydata/generate`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
 
-    //   if (response.data.success) {
-    //     setSuccess(true)
-    //     // 성공 후 3초 후에 대시보드로 이동
-    //     setTimeout(() => {
-    //       onClose()
-    //       navigate("/dashboard")
-    //     }, 3000)
-    //   } else {
-    //     setError(response.data.message || "계좌 연동 중 오류가 발생했습니다.")
-    //     setLoading(false)
-    //   }
-    // } catch (error) {
-    //   setError("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
-    //   console.error("API 호출 오류:", error)
-    //   setLoading(false)
-    // }
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
+      }
+
+      if (response.data.success) {
+        setSuccess(true)
+        // 성공 후 3초 후에 대시보드로 이동
+        setTimeout(() => {
+          onClose()
+          navigate("/dashboard")
+        }, 3000)
+      } else {
+        setError(response.data.message || "계좌 연동 중 오류가 발생했습니다.")
+        setLoading(false)
+      }
+    } catch (error) {
+      setError("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+      console.error("API 호출 오류:", error)
+      setLoading(false)
+    }
   }
 
   return (
@@ -200,7 +213,6 @@ const AccountLinkModal = ({ isOpen, onClose, memberId }) => {
 AccountLinkModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  memberId: PropTypes.number.isRequired,
 }
 
 export default AccountLinkModal

@@ -9,7 +9,7 @@ import AccountExpenseChart from "./AccountExpenseChart"
 import { BANKS } from "../constants/banks"
 import OtpRegisterModal from "./OtpRegisterModal"
 import authApi from "../api/authApi"
-
+import axios from "axios"
 
 export default function Transactions() {
   const [accounts, setAccounts] = useState([])
@@ -21,7 +21,6 @@ export default function Transactions() {
   const [hasMore, setHasMore] = useState(true)
   const [transactions, setTransactions] = useState([])
   const observer = useRef()
-  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   const location = useLocation()
   const navigate = useNavigate() // 추가: 송금 페이지로 이동하기 위한 navigate
   const [showOtpModal, setShowOtpModal] = useState(false) // OTP 모달 상태
@@ -100,41 +99,36 @@ export default function Transactions() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/accounts/all/${memberId}`)
-        if (!response.ok) throw new Error("Failed to fetch accounts")
-        const data = await response.json()
+        const response = await axios.get(`${API_URL}/api/accounts/all`, {
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        })
 
-        // 계좌 타입 디버깅을 위한 로그 추가
-        console.log(
-          "계좌 목록과 타입:",
-          data.map((acc) => ({
-            id: acc.accountId,
-            name: acc.accountName,
-            type: acc.accountType,
-          })),
-        )
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
 
-        setAccounts(data || [])
+        setAccounts(response.data)
 
-        // URL에서 accountId 파라미터 가져오기
-        const accountIdFromUrl = getAccountIdFromUrl()
+        // Get accountId from URL if present
+        const urlParams = new URLSearchParams(window.location.search)
+        const accountIdFromUrl = urlParams.get("accountId")
 
-        if (accountIdFromUrl && data && data.length > 0) {
-          // URL에 accountId가 있으면 해당 계좌 선택
-          const accountFromUrl = data.find((acc) => acc.accountId.toString() === accountIdFromUrl)
+        if (accountIdFromUrl && response.data && response.data.length > 0) {
+          // Find the account with matching ID
+          const accountFromUrl = response.data.find((acc) => acc.accountId.toString() === accountIdFromUrl)
           if (accountFromUrl) {
             setSelectedAccount(accountFromUrl)
-            const index = data.findIndex((acc) => acc.accountId.toString() === accountIdFromUrl)
+            const index = response.data.findIndex((acc) => acc.accountId.toString() === accountIdFromUrl)
             if (index !== -1) {
               setCurrentIndex(index)
             }
           } else {
             // 해당 계좌가 없으면 첫 번째 계좌 선택
-            setSelectedAccount(data[0])
+            setSelectedAccount(response.data[0])
           }
-        } else if (data && data.length > 0) {
+        } else if (response.data && response.data.length > 0) {
           // URL에 accountId가 없으면 첫 번째 계좌 선택
-          setSelectedAccount(data[0])
+          setSelectedAccount(response.data[0])
         }
 
         setIsLoading(false)
@@ -145,7 +139,7 @@ export default function Transactions() {
     }
 
     fetchAccounts()
-  }, [memberId, getAccountIdFromUrl])
+  }, [getAccountIdFromUrl])
 
   // 계좌 상세 정보 조회
   useEffect(() => {
@@ -153,35 +147,47 @@ export default function Transactions() {
       if (!selectedAccount) return
 
       try {
-        const response = await fetch(`${API_URL}/api/accounts/${selectedAccount.accountId}?memberId=${memberId}`)
-        if (!response.ok) throw new Error("Failed to fetch account details")
-        const data = await response.json()
-        setAccountDetails(data)
+        const response = await axios.get(`${API_URL}/api/accounts/${selectedAccount.accountId}`, {
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        })
+
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
+
+        setAccountDetails(response.data)
       } catch (error) {
         console.error("Error fetching account details:", error)
       }
     }
 
     fetchAccountDetails()
-  }, [selectedAccount, memberId])
+  }, [selectedAccount])
 
   // 월간 거래 요약 데이터를 가져오는 함수 추가
   const fetchMonthlySummary = useCallback(async () => {
     if (!selectedAccount) return
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/transactions/account/monthly-summary?memberId=${memberId}&accountId=${selectedAccount.accountId}&year=${summaryMonth.year}&month=${summaryMonth.value}`,
-      )
+      const response = await axios.get(`${API_URL}/api/transactions/account/monthly-summary`, {
+        params: {
+          accountId: selectedAccount.accountId,
+          year: summaryMonth.year,
+          month: summaryMonth.value,
+        },
+        withCredentials: true, // 쿠키 및 인증 정보 포함
+      })
 
-      if (!response.ok) throw new Error("Failed to fetch monthly summary")
-      const data = await response.json()
-      setMonthlySummary(data)
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
+      }
+
+      setMonthlySummary(response.data)
     } catch (error) {
       console.error("Error fetching monthly summary:", error)
       setMonthlySummary({ depositTotal: 0, withdrawalTotal: 0 })
     }
-  }, [selectedAccount, summaryMonth, memberId])
+  }, [selectedAccount, summaryMonth])
 
   // selectedAccount나 selectedMonth가 변경될 때마다 월간 거래 요약 조회
   useEffect(() => {
@@ -199,7 +205,6 @@ export default function Transactions() {
 
         // URL 파라미터 구성
         const params = new URLSearchParams({
-          memberId: memberId.toString(),
           page: page.toString(),
           size: "20",
           sort: `transactionDate,${transactionFilters.sortDirection.toLowerCase()}`,
@@ -218,12 +223,16 @@ export default function Transactions() {
           params.append("endDate", transactionFilters.endDate)
         }
 
-        const response = await fetch(
-          `${API_URL}/api/transactions/account/${selectedAccount.accountId}?${params.toString()}`,
-        )
+        const response = await axios.get(`${API_URL}/api/transactions/account/${selectedAccount.accountId}`, {
+          params: params, // URLSearchParams 또는 객체 형태의 쿼리 파라미터 전달
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        })
 
-        if (!response.ok) throw new Error("Failed to fetch transactions")
-        const data = await response.json()
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
+
+        const data = response.data
 
         setTransactions((prev) => (page === 0 ? data.content : [...prev, ...data.content]))
         setHasMore(!data.last)
@@ -235,7 +244,7 @@ export default function Transactions() {
     }
 
     fetchTransactions()
-  }, [selectedAccount, page, transactionFilters, memberId])
+  }, [selectedAccount, page, transactionFilters])
 
   const handleNext = () => {
     if (accounts.length <= 1) return
@@ -271,7 +280,7 @@ export default function Transactions() {
     try {
       const response = await authApi.get("api/otp/status")
       // console.log(response.data);
-      return response.data;
+      return response.data
     } catch (error) {
       console.error("Error checking OTP status:", error)
       return false // 오류 발생 시 기본적으로 미등록으로 처리
@@ -282,7 +291,7 @@ export default function Transactions() {
   const handleTransferClick = async (e, accountId) => {
     e.stopPropagation() // 카드 클릭 이벤트 방지
 
-    const isOtpRegistered = await checkOTPStatus();
+    const isOtpRegistered = await checkOTPStatus()
 
     if (isOtpRegistered) {
       // OTP 등록되어 있으면 송금 화면으로 이동
@@ -589,7 +598,6 @@ export default function Transactions() {
             {/* AccountExpenseChart를 독립적으로 렌더링 */}
             <AccountExpenseChart
               accountId={selectedAccount.accountId}
-              memberId={memberId}
               accountType={accountDetails.accountType}
               key={`expense-chart-${selectedAccount.accountId}`}
             />
@@ -678,7 +686,7 @@ export default function Transactions() {
           </div>
         )}
         {/* OTP 등록 모달 */}
-      {showOtpModal && <OtpRegisterModal isOpen={showOtpModal} onClose={() => setShowOtpModal(false)} />}
+        {showOtpModal && <OtpRegisterModal isOpen={showOtpModal} onClose={() => setShowOtpModal(false)} />}
       </div>
     </main>
   )

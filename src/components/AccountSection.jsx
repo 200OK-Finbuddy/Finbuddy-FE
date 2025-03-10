@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/AccountSection.css"
 import PropTypes from "prop-types"
+import axios from "axios"
 
 function AccountSection({ setActiveNav }) {
   const [accountSummary, setAccountSummary] = useState({
@@ -16,19 +17,18 @@ function AccountSection({ setActiveNav }) {
 
   const getCheckingAccounts = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/accounts/checking/4`, {
-        method: "GET",
+      const response = await axios.get(`${API_URL}/api/accounts/checking`, {
+        withCredentials: true, // 쿠키 및 인증 정보 포함
         headers: {
           "Content-Type": "application/json",
         },
       })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
-      const data = await response.json()
-      setAccountSummary(data)
+      setAccountSummary(response.data)
     } catch (error) {
       console.error("Error fetching checking accounts:", error)
     }

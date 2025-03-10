@@ -1,166 +1,181 @@
-"use client"
+"use client";
 
-import API_URL from "../config"
-import PropTypes from "prop-types"
-import { createContext, useState, useContext, useEffect, useRef } from "react"
-import NotificationToast from "./NotificationToast"
+import API_URL from "../config";
+import PropTypes from "prop-types";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
+import { useAuth } from "../context/AuthContext"; // ✅ 로그인 정보 가져오기
+import NotificationToast from "./NotificationToast";
 
 // 알림 컨텍스트 생성
-const NotificationContext = createContext()
+const NotificationContext = createContext();
 
 export function NotificationProvider({ children }) {
   // 알림 목록
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState([]);
   // 읽지 않은 알림 개수
-  const [unreadCount, setUnreadCount] = useState(0)
+  const [unreadCount, setUnreadCount] = useState(0);
   // 토스트 알림 배열
-  const [toasts, setToasts] = useState([])
+  const [toasts, setToasts] = useState([]);
 
-  // 테스트용 memberId
-  const memberId = 4
+  // 로그인 정보 가져오기
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
 
   // SSE EventSource를 담을 ref
-  const eventSourceRef = useRef(null)
+  const eventSourceRef = useRef(null);
 
-  // 컴포넌트 마운트 시에만 실행
+  // 로그인 상태 변화 시 실행
   useEffect(() => {
-    // 처음 알림 목록 및 unreadCount 불러오기
-    loadNotifications()
-    updateUnreadCount()
-    // SSE 연결
-    setupSSE()
+    if (isLoggedIn) {
+      loadNotifications();
+      updateUnreadCount();
+      setupSSE();
+    }
 
-    // 컴포넌트 언마운트 시 연결 종료
-    // unmount될 때 SSE 닫기
     return () => {
       if (eventSourceRef.current) {
-        console.log("❌ SSE Connection Closed")
-        eventSourceRef.current.close()
+        console.log("❌ SSE Connection Closed");
+        eventSourceRef.current.close();
       }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    };
+  }, [isLoggedIn]);
 
   // SSE 연결 설정
   const setupSSE = () => {
-    // 브라우저에서 SSE 연결 시작
-    const eventSource = new EventSource(`${API_URL}/api/notifications/subscribe/${memberId}`)
+    if (!isLoggedIn) return;
+
+    const eventSource = new EventSource(`${API_URL}/api/notifications/subscribe`, {
+      withCredentials: true, // ✅ 쿠키 포함
+    });
 
     eventSource.addEventListener("connect", (event) => {
-      console.log("✅ SSE Connected:", event.data)
-    })
+      console.log("✅ SSE Connected:", event.data);
+    });
 
-    // 서버에서 알림 이벤트가 오면
     eventSource.addEventListener("notification", (event) => {
-      const notification = JSON.parse(event.data)
-      // 새 알림을 토스트로 표시
-      showToast(notification)
-      // 알림 목록에 추가
-      setNotifications((prev) => [notification, ...prev])
-      // unreadCount 업데이트
-      updateUnreadCount()
-    })
+      const notification = JSON.parse(event.data);
+      showToast(notification);
+      setNotifications((prev) => [notification, ...prev]);
+      updateUnreadCount();
+    });
 
-    // 연결 오류 처리 및 재연결
     eventSource.onerror = (error) => {
-      console.error("❌ SSE Error:", error)
-      eventSource.close()
+      console.error("❌ SSE Error:", error);
+      eventSource.close();
+      if (isLoggedIn) {
+        setTimeout(() => {
+          setupSSE();
+        }, 5000);
+      }
+    };
 
-      // 5초 후 재연결 시도
-      setTimeout(() => {
-        setupSSE()
-      }, 5000)
-    }
+    eventSourceRef.current = eventSource;
+  };
 
-    eventSourceRef.current = eventSource
-  }
+  // 공통 fetch 옵션
+  const fetchOptions = {
+    credentials: "include", // ✅ 쿠키 포함
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
   // 알림 목록 로드
   const loadNotifications = async () => {
+    if (!isLoggedIn) return;
+
     try {
-      const response = await fetch(`${API_URL}/api/notifications/${memberId}`)
+      const response = await fetch(`${API_URL}/api/notifications`, fetchOptions);
       if (response.ok) {
-        const data = await response.json()
-        setNotifications(data)
+        const data = await response.json();
+        setNotifications(data);
       }
     } catch (error) {
-      console.error("Failed to load notifications:", error)
+      console.error("Failed to load notifications:", error);
     }
-  }
+  };
 
   // 읽지 않은 알림 개수 업데이트
   const updateUnreadCount = async () => {
+    if (!isLoggedIn) return;
+
     try {
-      const response = await fetch(`${API_URL}/api/notifications/unread-count/${memberId}`)
+      const response = await fetch(`${API_URL}/api/notifications/unread-count`, fetchOptions);
       if (response.ok) {
-        const count = await response.json()
-        setUnreadCount(count)
+        const count = await response.json();
+        setUnreadCount(count);
       }
     } catch (error) {
-      console.error("Failed to get unread count:", error)
+      console.error("Failed to get unread count:", error);
     }
-  }
+  };
 
   // 알림 읽음 표시
   const markAsRead = async (notificationId) => {
+    if (!isLoggedIn) return;
+
     try {
       const response = await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
+        ...fetchOptions,
         method: "PATCH",
-      })
+      });
       if (response.ok) {
-        // 로컬 상태 업데이트
         setNotifications((prev) =>
-          prev.map((n) => (n.notificationId === notificationId ? { ...n, isRead: true } : n)),
-        )
-        // 읽지 않은 수 다시 계산
-        updateUnreadCount()
+          prev.map((n) => (n.notificationId === notificationId ? { ...n, isRead: true } : n))
+        );
+        updateUnreadCount();
       }
     } catch (error) {
-      console.error("Failed to mark notification as read:", error)
+      console.error("Failed to mark notification as read:", error);
     }
-  }
+  };
 
   // 알림 삭제
   const deleteNotification = async (notificationId) => {
+    if (!isLoggedIn) return;
+
     try {
       const response = await fetch(`${API_URL}/api/notifications/${notificationId}`, {
+        ...fetchOptions,
         method: "DELETE",
-      })
+      });
       if (response.ok) {
-        // 로컬 상태에서 제거
-        setNotifications((prev) => prev.filter((n) => n.notificationId !== notificationId))
-        updateUnreadCount()
+        setNotifications((prev) => prev.filter((n) => n.notificationId !== notificationId));
+        updateUnreadCount();
       }
     } catch (error) {
-      console.error("Failed to delete notification:", error)
+      console.error("Failed to delete notification:", error);
     }
-  }
+  };
 
   // 모든 알림 삭제
   const deleteAllNotifications = async () => {
+    if (!isLoggedIn) return;
+
     try {
-      const response = await fetch(`${API_URL}/api/notifications/member/${memberId}`, {
+      const response = await fetch(`${API_URL}/api/notifications/member`, {
+        ...fetchOptions,
         method: "DELETE",
-      })
+      });
       if (response.ok) {
-        setNotifications([])
-        setUnreadCount(0)
+        setNotifications([]);
+        setUnreadCount(0);
       }
     } catch (error) {
-      console.error("Failed to delete all notifications:", error)
+      console.error("Failed to delete all notifications:", error);
     }
-  }
+  };
 
   // 토스트 알림 표시
   const showToast = (notification) => {
-    const id = Date.now()
-    setToasts((prev) => [...prev, { id, notification }])
-  }
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, notification }]);
+  };
 
   // 토스트 알림 제거
   const removeToast = (id) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id))
-  }
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
 
   return (
     <NotificationContext.Provider
@@ -180,14 +195,14 @@ export function NotificationProvider({ children }) {
         ))}
       </div>
     </NotificationContext.Provider>
-  )
+  );
 }
 
 NotificationProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-  }
+  children: PropTypes.node.isRequired,
+};
 
 // 알림 컨텍스트 사용을 위한 커스텀 훅
 export function useNotification() {
-  return useContext(NotificationContext)
+  return useContext(NotificationContext);
 }

@@ -7,12 +7,12 @@ import { Search } from "lucide-react"
 import styles from "../styles/AutoTransfer.module.css"
 import { BANKS } from "../constants/banks"
 import PasswordInputKeypad from "./PasswordInputKeypad"
+import axios from "axios"
 
 export default function AutoTransferForm() {
   const navigate = useNavigate()
   const { id } = useParams()
   const isEditing = !!id
-  const memberId = 4 // 실제 구현시 로그인한 사용자의 ID를 사용
 
   const [accounts, setAccounts] = useState([])
   const [selectedAccount, setSelectedAccount] = useState(null)
@@ -53,10 +53,15 @@ export default function AutoTransferForm() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/transfers/all/checking-account?memberId=${memberId}`)
-        if (!response.ok) throw new Error("Failed to fetch accounts")
-        const data = await response.json()
-        setAccounts(data)
+        const response = await axios.get(`${API_URL}/api/transfers/all/checking-account`, {
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        })
+
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
+
+        setAccounts(response.data)
         //setIsLoading(false)
       } catch (error) {
         console.error("Error fetching accounts:", error)
