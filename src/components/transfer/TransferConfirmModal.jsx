@@ -174,6 +174,9 @@ const TransferConfirmModal = ({
         },
         {
           withCredentials: true, // 쿠키 및 인증 정보 포함
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       )
 

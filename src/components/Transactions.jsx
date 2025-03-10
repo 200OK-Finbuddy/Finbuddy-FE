@@ -101,42 +101,34 @@ export default function Transactions() {
       try {
         const response = await axios.get(`${API_URL}/api/accounts/all`, {
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        });
+        })
 
-        if (!response.ok) throw new Error("Failed to fetch accounts")
-        const data = await response.json()
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
 
-        // 계좌 타입 디버깅을 위한 로그 추가
-        console.log(
-          "계좌 목록과 타입:",
-          data.map((acc) => ({
-            id: acc.accountId,
-            name: acc.accountName,
-            type: acc.accountType,
-          })),
-        )
+        setAccounts(response.data)
 
-        setAccounts(data || [])
+        // Get accountId from URL if present
+        const urlParams = new URLSearchParams(window.location.search)
+        const accountIdFromUrl = urlParams.get("accountId")
 
-        // URL에서 accountId 파라미터 가져오기
-        const accountIdFromUrl = getAccountIdFromUrl()
-
-        if (accountIdFromUrl && data && data.length > 0) {
-          // URL에 accountId가 있으면 해당 계좌 선택
-          const accountFromUrl = data.find((acc) => acc.accountId.toString() === accountIdFromUrl)
+        if (accountIdFromUrl && response.data && response.data.length > 0) {
+          // Find the account with matching ID
+          const accountFromUrl = response.data.find((acc) => acc.accountId.toString() === accountIdFromUrl)
           if (accountFromUrl) {
             setSelectedAccount(accountFromUrl)
-            const index = data.findIndex((acc) => acc.accountId.toString() === accountIdFromUrl)
+            const index = response.data.findIndex((acc) => acc.accountId.toString() === accountIdFromUrl)
             if (index !== -1) {
               setCurrentIndex(index)
             }
           } else {
             // 해당 계좌가 없으면 첫 번째 계좌 선택
-            setSelectedAccount(data[0])
+            setSelectedAccount(response.data[0])
           }
-        } else if (data && data.length > 0) {
+        } else if (response.data && response.data.length > 0) {
           // URL에 accountId가 없으면 첫 번째 계좌 선택
-          setSelectedAccount(data[0])
+          setSelectedAccount(response.data[0])
         }
 
         setIsLoading(false)
@@ -157,10 +149,13 @@ export default function Transactions() {
       try {
         const response = await axios.get(`${API_URL}/api/accounts/${selectedAccount.accountId}`, {
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        });
-        if (!response.ok) throw new Error("Failed to fetch account details")
-        const data = await response.json()
-        setAccountDetails(data)
+        })
+
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
+
+        setAccountDetails(response.data)
       } catch (error) {
         console.error("Error fetching account details:", error)
       }
@@ -181,11 +176,13 @@ export default function Transactions() {
           month: summaryMonth.value,
         },
         withCredentials: true, // 쿠키 및 인증 정보 포함
-      });      
+      })
 
-      if (!response.ok) throw new Error("Failed to fetch monthly summary")
-      const data = await response.json()
-      setMonthlySummary(data)
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
+      }
+
+      setMonthlySummary(response.data)
     } catch (error) {
       console.error("Error fetching monthly summary:", error)
       setMonthlySummary({ depositTotal: 0, withdrawalTotal: 0 })
@@ -229,10 +226,13 @@ export default function Transactions() {
         const response = await axios.get(`${API_URL}/api/transactions/account/${selectedAccount.accountId}`, {
           params: params, // URLSearchParams 또는 객체 형태의 쿼리 파라미터 전달
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        });        
+        })
 
-        if (!response.ok) throw new Error("Failed to fetch transactions")
-        const data = await response.json()
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
+
+        const data = response.data
 
         setTransactions((prev) => (page === 0 ? data.content : [...prev, ...data.content]))
         setHasMore(!data.last)
@@ -280,7 +280,7 @@ export default function Transactions() {
     try {
       const response = await authApi.get("api/otp/status")
       // console.log(response.data);
-      return response.data;
+      return response.data
     } catch (error) {
       console.error("Error checking OTP status:", error)
       return false // 오류 발생 시 기본적으로 미등록으로 처리
@@ -291,7 +291,7 @@ export default function Transactions() {
   const handleTransferClick = async (e, accountId) => {
     e.stopPropagation() // 카드 클릭 이벤트 방지
 
-    const isOtpRegistered = await checkOTPStatus();
+    const isOtpRegistered = await checkOTPStatus()
 
     if (isOtpRegistered) {
       // OTP 등록되어 있으면 송금 화면으로 이동
@@ -686,7 +686,7 @@ export default function Transactions() {
           </div>
         )}
         {/* OTP 등록 모달 */}
-      {showOtpModal && <OtpRegisterModal isOpen={showOtpModal} onClose={() => setShowOtpModal(false)} />}
+        {showOtpModal && <OtpRegisterModal isOpen={showOtpModal} onClose={() => setShowOtpModal(false)} />}
       </div>
     </main>
   )

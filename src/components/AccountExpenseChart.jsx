@@ -74,19 +74,24 @@ export default function AccountExpenseChart({ accountId, accountType }) {
               },
               withCredentials: true, // 쿠키 및 인증 정보 포함
             })
-            .then((response) => ({
-              month: month.label,
-              shortMonth: month.shortLabel,
-              totalAmount: response.data.reduce((sum, item) => sum + item.totalAmount, 0),
-              expenses: response.data,
-            }))
+            .then((response) => {
+              if (!response || response.status !== 200) {
+                throw new Error(`Network response was not ok, status: ${response.status}`)
+              }
+              return {
+                month: month.label,
+                shortMonth: month.shortLabel,
+                totalAmount: response.data.reduce((sum, item) => sum + item.totalAmount, 0),
+                expenses: response.data,
+              }
+            })
             .catch(() => ({
               month: month.label,
               shortMonth: month.shortLabel,
               totalAmount: 0,
               expenses: [],
-            }))
-        )        
+            })),
+        )
 
         const results = await Promise.all(promises)
         setMonthlyExpenses(results)

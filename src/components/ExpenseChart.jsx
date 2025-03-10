@@ -40,13 +40,13 @@ function ExpenseChart() {
           month: currentMonth,
         },
         withCredentials: true, // 쿠키 및 인증 정보 포함
-      })      
+      })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
-      const data = await response.json()
+      const data = response.data
 
       const total = data.reduce((sum, item) => sum + item.totalAmount, 0)
 

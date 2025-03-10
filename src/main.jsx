@@ -9,12 +9,12 @@ import { AuthProvider } from "./context/AuthContext"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* <AuthProvider> */}
+      <AuthProvider>
         {/* 변경 없음: App 전체를 NotificationProvider로 감싸서 알림 전역 관리 */}
         <NotificationProvider>
           <App />
         </NotificationProvider>
-      {/* </AuthProvider> */}
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

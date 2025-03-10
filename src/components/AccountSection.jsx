@@ -22,13 +22,17 @@ function AccountSection({ setActiveNav }) {
         headers: {
           "Content-Type": "application/json",
         },
-      });
-  
-      setAccountSummary(response.data);
+      })
+
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
+      }
+
+      setAccountSummary(response.data)
     } catch (error) {
-      console.error("Error fetching checking accounts:", error);
+      console.error("Error fetching checking accounts:", error)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     getCheckingAccounts()

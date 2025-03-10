@@ -1,127 +1,137 @@
 .loginContainer {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9fafb;
-    padding: 1rem;
-  }
-  
-  .loginCard {
-    width: 100%;
-    max-width: 400px;
-    background-color: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .loginHeader {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .loginHeader h1 {
-    font-size: 1.875rem;
-    font-weight: bold;
-    color: #111827;
-    margin-bottom: 0.5rem;
-  }
-  
-  .loginHeader p {
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
-  
-  .loginForm {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .formGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .formGroup label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #374151;
-  }
-  
-  .formGroup input {
-    width: 100%;
-    height: 3rem;
-    padding: 0 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.75rem;
-    font-size: 0.875rem;
-  }
-  
-  .formGroup input:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-  }
-  
-  .errorMessage {
-    color: #ef4444;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-  }
-  
-  .loginButton {
-    width: 100%;
-    height: 3rem;
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .loginButton:hover {
-    background-color: #1d4ed8;
-  }
-  
-  .signupPrompt {
-    text-align: center;
-    font-size: 0.875rem;
-  }
-  
-  .signupPrompt span {
-    color: #6b7280;
-  }
-  
-  .signupLink {
-    color: #2563eb;
-    text-decoration: none;
-    font-weight: 500;
-    margin-left: 0.25rem;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-  }
-  
-  .signupLink:hover {
-    text-decoration: underline;
-  }
-  
-  /* 반응형 디자인 */
-  @media (max-width: 640px) {
-    .loginCard {
-      padding: 1.5rem;
-    }
-  
-    .loginHeader h1 {
-      font-size: 1.5rem;
-    }
-  }
-  
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.loginCard {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+}
+
+.loginHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.loginHeader h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.loginHeader p {
+  color: #666;
+  font-size: 14px;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.formGroup input {
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.formGroup input:focus {
+  border-color: #4f46e5;
+  outline: none;
+}
+
+.errorMessage {
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.loginButton {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.loginButton:hover {
+  background-color: #4338ca;
+}
+
+.signupPrompt {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.signupLink {
+  color: #4f46e5;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.signupLink:hover {
+  text-decoration: underline;
+}
+
+/* 모달 관련 스타일 */
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.modalContent p {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  font-size: 16px;
+}
+
+.modalButton {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.modalButton:hover {
+  background-color: #4338ca;
+}
+

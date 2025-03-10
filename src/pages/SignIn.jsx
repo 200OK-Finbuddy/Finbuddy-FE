@@ -1,8 +1,10 @@
 "use client"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
-import authApi from "../api/authApi"
 import styles from "../styles/SignIn.module.css"
+import { useAuth } from "../context/AuthContext"
+import Modal from "../components/Modal"
 
 function SignIn() {
   const {
@@ -11,24 +13,44 @@ function SignIn() {
     formState: { errors },
   } = useForm()
   const navigate = useNavigate()
-  // const { setAccessToken } = useAuth();
+  const { login } = useAuth() // ✅ 로그인 상태 업데이트
+
+  // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMessage, setModalMessage] = useState("")
 
   const onSubmit = async (data) => {
     try {
-      const response = await authApi.post(`/api/auth/signin`, data, {
-        withCredentials: true,
-      })
-      // console.log(response.data);
-      // setAccessToken(response.data.accessToken);
-      navigate("/")
+      // 모달 상태 초기화
+      setIsModalOpen(false)
+      setModalMessage("")
+
+      const isLoginSuccess = await login(data.email, data.password)
+
+      if (isLoginSuccess) {
+        navigate("/") // ✅ 로그인 성공한 경우에만 이동
+      } else {
+        // 로그인 실패 시 모달 표시
+        setModalMessage("이메일 또는 비밀번호를 확인해주세요.")
+        setIsModalOpen(true)
+        console.error("로그인 실패: 잘못된 이메일 또는 비밀번호")
+      }
     } catch (error) {
-      console.error(error)
+      // 오류 발생 시 모달 표시
+      setModalMessage("로그인 중 오류가 발생했습니다. 다시 시도해주세요.")
+      setIsModalOpen(true)
+      console.error("로그인 중 오류 발생:", error)
     }
   }
 
   const goToSignUp = () => {
-    navigate("/signup");
-};
+    navigate("/signup")
+  }
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
   return (
     <div className={styles.loginContainer}>
@@ -75,16 +97,22 @@ function SignIn() {
 
           <div className={styles.signupPrompt}>
             <span>계정이 없으신가요?</span>{" "}
-            <button 
-                onClick={goToSignUp} 
-                className={styles.signupLink}
-                type="button"
-            >
-                회원가입
+            <button onClick={goToSignUp} className={styles.signupLink} type="button">
+              회원가입
             </button>
-        </div>
+          </div>
         </form>
       </div>
+
+      {/* 로그인 실패 모달 */}
+      <Modal isOpen={isModalOpen} onClose={closeModal} title="로그인 실패">
+        <div className={styles.modalContent}>
+          <p>{modalMessage}</p>
+          <button className={styles.modalButton} onClick={closeModal}>
+            확인
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }

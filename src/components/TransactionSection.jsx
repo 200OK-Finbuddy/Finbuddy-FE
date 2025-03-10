@@ -15,13 +15,15 @@ function TransactionSection() {
       try {
         const response = await axios.get(`${API_URL}/api/transactions/checking/recent`, {
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        });
-        
-        if (!response.ok) {
-          throw new Error("Network response was not ok")
+        })
+
+        console.log("API Response:", response)
+
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
         }
-        const data = await response.json()
-        setTransactions(data)
+
+        setTransactions(response.data)
       } catch (error) {
         console.error("Error fetching transactions:", error)
       }

@@ -89,29 +89,25 @@ export default function Budget() {
       setError(null)
       const response = await axios.get(`${API_URL}/api/budgets/current`, {
         withCredentials: true, // 쿠키 및 인증 정보 포함
-      });
-      
+      })
 
-      if (response.status === 404) {
-        // 예산이 없는 경우
-        setBudget(null)
-        return
+      if (!response || response.status !== 200) {
+        if (response && response.status === 404) {
+          // 예산이 없는 경우
+          setBudget(null)
+          return
+        }
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
-
-      if (!response.ok) {
-        throw new Error("예산 정보를 불러오는데 실패했습니다.")
-      }
-
-      const data = await response.json()
 
       // API 응답 필드명과 프론트엔드가 사용하는 필드명 매핑
       setBudget({
-        budgetId: data.id,
-        budgetAmount: data.amount,
-        spentAmount: data.spentAmount,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        notificationEnabled: data.notificationEnabled,
+        budgetId: response.data.id,
+        budgetAmount: response.data.amount,
+        spentAmount: response.data.spentAmount,
+        startDate: response.data.startDate,
+        endDate: response.data.endDate,
+        notificationEnabled: response.data.notificationEnabled,
       })
     } catch (error) {
       console.error("Error fetching budget:", error)
@@ -140,12 +136,14 @@ export default function Budget() {
         {
           params: { amount: numericAmount }, // 쿼리 파라미터로 amount 추가
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        }
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
       )
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.message || "예산 생성에 실패했습니다.")
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
       await fetchCurrentBudget()
@@ -179,12 +177,14 @@ export default function Budget() {
         {
           params: { newAmount: numericAmount }, // 쿼리 파라미터 추가
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        }
-      );
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.message || "예산 수정에 실패했습니다.")
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
       await fetchCurrentBudget()
@@ -212,11 +212,13 @@ export default function Budget() {
 
       const response = await axios.delete(`${API_URL}/api/budgets/${budget.budgetId}`, {
         withCredentials: true, // 쿠키 및 인증 정보 포함
-      });      
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.message || "예산 삭제에 실패했습니다.")
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
       setBudget(null)
@@ -246,11 +248,14 @@ export default function Budget() {
         {
           params: { enabled: enabled }, // 쿼리 파라미터 추가
           withCredentials: true, // 쿠키 및 인증 정보 포함
-        }
-      );
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
 
-      if (!response.ok) {
-        throw new Error("알림 설정 변경에 실패했습니다.")
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
       // Update the local budget state with the new notification setting

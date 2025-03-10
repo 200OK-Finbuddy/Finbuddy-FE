@@ -134,20 +134,20 @@
 
 .tabContainer {
   display: inline-flex;
-  background-color: #f3f4f6;
   padding: 4px;
   border-radius: 8px;
   margin-bottom: 24px;
 }
 
 .tabButton {
+  margin-right: 10px;
   padding: 8px 24px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
   border: none;
-  background: none;
+  background: aa;
   cursor: pointer;
   color: #4b5563;
 }

@@ -79,9 +79,11 @@ export default function Transfer() {
           withCredentials: true, // 쿠키 및 인증 정보 포함
         })
                 
-        if (!response.ok) throw new Error("Failed to fetch accounts")
-        const data = await response.json()
-        setAccounts(data)
+        if (!response || response.status !== 200) {
+          throw new Error(`Network response was not ok, status: ${response.status}`)
+        }
+        
+        setAccounts(response.data)
 
         // Get accountId from URL if present
         const urlParams = new URLSearchParams(window.location.search)

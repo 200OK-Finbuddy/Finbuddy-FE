@@ -70,9 +70,20 @@ const AccountLinkModal = ({ isOpen, onClose }) => {
     setError(null)
 
     try {
-      const response = await axios.post(`${API_URL}/api/mydata/generate`, {}, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${API_URL}/api/mydata/generate`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+
+      if (!response || response.status !== 200) {
+        throw new Error(`Network response was not ok, status: ${response.status}`)
+      }
 
       if (response.data.success) {
         setSuccess(true)
