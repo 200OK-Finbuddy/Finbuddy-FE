@@ -123,7 +123,7 @@ export default function Header({ activeNav, setActiveNav, isLoggedIn = false }) 
         ) : (
           /* 우측 메뉴 - 비로그인 상태 */
           <div className={styles.rightSection}>
-            <button className={styles.loginButton} onClick={() => navigate("/login")}>
+            <button className={styles.loginButton} onClick={() => navigate("/signin")}>
               로그인
             </button>
             <button className={styles.signupButton} onClick={() => navigate("/signup")}>
