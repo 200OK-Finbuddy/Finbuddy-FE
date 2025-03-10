@@ -22,7 +22,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route 
+      path="/" 
+      element={
+        <Layout navType={activeNav} onNavChange={setActiveNav}>
+          <MainPage />
+        </Layout>
+      } 
+      />
 
       <Route
         path="/dashboard"
