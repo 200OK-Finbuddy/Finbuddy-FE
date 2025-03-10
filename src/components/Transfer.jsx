@@ -3,6 +3,7 @@
 import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
+import { useNavigate } from "react-router-dom" // 추가: 페이지 이동을 위한 훅
 import styles from "../styles/Transfer.module.css"
 import { BANKS } from "../constants/banks"
 
@@ -48,6 +49,7 @@ const formatAmountWithKoreanUnit = (amount) => {
   return result + "원"
 }
 
+// Transfer 컴포넌트 내부에 navigate 선언 추가
 export default function Transfer() {
   const [accounts, setAccounts] = useState([])
   const [selectedAccount, setSelectedAccount] = useState(null)
@@ -70,6 +72,7 @@ export default function Transfer() {
   const [showResultModal, setShowResultModal] = useState(false)
   const [resultModalType, setResultModalType] = useState("")
   const [resultModalMessage, setResultModalMessage] = useState("")
+  const navigate = useNavigate() // 추가: 페이지 이동을 위한 navigate
 
   // 계좌 목록 조회 - 입출금 계좌만 조회
   useEffect(() => {
@@ -304,9 +307,7 @@ export default function Transfer() {
               />
               <span className={styles.currencyUnit}>원</span>
             </div>
-            {amountInKorean && (
-              <div className={styles.amountInKorean}>{amountInKorean}</div>
-            )}
+            {amountInKorean && <div className={styles.amountInKorean}>{amountInKorean}</div>}
           </div>
 
           <hr className={styles.formDivider} />
@@ -347,15 +348,15 @@ export default function Transfer() {
           </button>
         </div>
       </div>
-      
+
       {/* 모달 컴포넌트들 */}
-      <AccountConfirmModal 
+      <AccountConfirmModal
         showAccountModal={showAccountModal}
         recipientName={recipientName}
         handleCloseAccountModal={handleCloseAccountModal}
       />
-      
-      <TransferConfirmModal 
+
+      <TransferConfirmModal
         showTransferModal={showTransferModal}
         selectedAccount={selectedAccount}
         selectedBank={selectedBank}
@@ -370,16 +371,16 @@ export default function Transfer() {
         resetAllInputs={resetAllInputs}
         memberId={memberId}
       />
-      
-      <AlertModal 
+
+      <AlertModal
         showAlertModal={showAlertModal}
         alertTitle={alertTitle}
         alertMessage={alertMessage}
         alertCallback={alertCallback}
         setShowAlertModal={setShowAlertModal}
       />
-      
-      <ResultModal 
+
+      <ResultModal
         showResultModal={showResultModal}
         resultModalType={resultModalType}
         resultModalMessage={resultModalMessage}
@@ -388,3 +389,4 @@ export default function Transfer() {
     </main>
   )
 }
+
