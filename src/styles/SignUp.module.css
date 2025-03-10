@@ -1,208 +1,289 @@
 .signup-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
-  
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.signup-card {
+  background: white;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 48rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.signup-header {
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  width: 120px;
+  height: 40px;
+  margin-bottom: 1rem;
+}
+
+.signup-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #404040;
+}
+
+.signup-content {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #404040;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #197bbd;
+  box-shadow: 0 0 0 1px #197bbd;
+}
+
+.email-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.email-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.email-input-group input {
+  flex: 1;
+  min-width: 0;
+}
+
+.email-input-group span {
+  color: #404040;
+  font-size: 0.875rem;
+}
+
+.email-input-group select {
+  width: 150px;
+}
+
+.verification-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #197bbd;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+}
+
+.verification-button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.verification-button:hover:not(:disabled) {
+  background-color: #0f4264;
+}
+
+.password-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.password-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.birth-date-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.verification-status {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.verification-status.success {
+  color: #059669;
+}
+
+.verification-status.error {
+  color: #dc2626;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #197bbd;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.submit-button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #0f4264;
+}
+
+@media (max-width: 768px) {
   .signup-card {
-    background: white;
-    border-radius: 1rem;
-    width: 100%;
-    max-width: 48rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
   }
-  
-  .signup-header {
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .logo {
-    width: 120px;
-    height: 40px;
-    margin-bottom: 1rem;
-  }
-  
-  .signup-header h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #404040;
-  }
-  
-  .signup-content {
-    padding: 2rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    color: #404040;
-  }
-  
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus {
-    outline: none;
-    border-color: #197bbd;
-    box-shadow: 0 0 0 1px #197bbd;
-  }
-  
-  .email-group {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-  }
-  
-  .email-input-group {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex: 1;
-  }
-  
-  .email-input-group input {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .email-input-group span {
-    color: #404040;
-    font-size: 0.875rem;
-  }
-  
-  .email-input-group select {
-    width: 150px;
-  }
-  
-  .verification-button {
-    padding: 0.75rem 1.5rem;
-    background-color: #197bbd;
-    color: white;
-    border: none;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    cursor: pointer;
-    height: 45px;
-  }
-  
-  .verification-button:disabled {
-    background-color: #cbd5e0;
-    cursor: not-allowed;
-  }
-  
-  .verification-button:hover:not(:disabled) {
-    background-color: #0f4264;
-  }
-  
-  .password-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  
-  .password-hint {
-    font-size: 0.75rem;
-    color: #666;
-    margin-top: 0.25rem;
-  }
-  
-  .error-message {
-    color: #dc2626;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-  }
-  
+
   .birth-date-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: 1fr;
   }
-  
-  .info-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+
+  .email-group {
+    flex-direction: column;
   }
-  
-  .verification-status {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-  }
-  
-  .verification-status.success {
-    color: #059669;
-  }
-  
-  .verification-status.error {
-    color: #dc2626;
-  }
-  
-  .submit-button {
+
+  .email-input-group {
     width: 100%;
-    padding: 0.875rem;
-    background-color: #197bbd;
-    color: white;
-    border: none;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1.5rem;
   }
-  
-  .submit-button:disabled {
-    background-color: #cbd5e0;
-    cursor: not-allowed;
-    opacity: 0.7;
+
+  .verification-button {
+    width: 100%;
   }
-  
-  .submit-button:hover:not(:disabled) {
-    background-color: #0f4264;
+
+  .info-row {
+    grid-template-columns: 1fr;
   }
-  
-  @media (max-width: 768px) {
-    .signup-card {
-      margin: 1rem;
-    }
-  
-    .birth-date-group {
-      grid-template-columns: 1fr;
-    }
-  
-    .email-group {
-      flex-direction: column;
-    }
-  
-    .email-input-group {
-      width: 100%;
-    }
-  
-    .verification-button {
-      width: 100%;
-    }
-  
-    .info-row {
-      grid-template-columns: 1fr;
-    }
-  
-    .password-group {
-      grid-template-columns: 1fr;
-    }
+
+  .password-group {
+    grid-template-columns: 1fr;
   }
-  
-  
+}
+
+/* Modal styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.modalMessage {
+  margin-bottom: 24px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.modalButton {
+  background-color: #197bbd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modalButton:hover {
+  background-color: #0f4264;
+}
+
+/* Button spinner */
+.buttonSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Timer styles */
+.timer {
+  color: #e53e3e;
+  font-weight: 600;
+  margin-left: 8px;
+  font-size: 14px;
+}
+
