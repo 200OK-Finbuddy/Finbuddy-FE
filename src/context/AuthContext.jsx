@@ -1,56 +1,60 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import API_URL from "../config";
+import authApi from "../api/authApi";
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) { 
-    const [accessToken, setAccessToken] = useState(undefined);
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null); // ✅ 로그인한 사용자 정보 저장
 
-    // ✅ Axios 인스턴스 생성
-    const authApi = axios.create({
-        baseURL: `${API_URL}`,
-        withCredentials: true,
-    });
+    // 현재 로그인한 사용자 정보 가져오기
+    const fetchUser = async () => {
+        try {
+            const response = await authApi.get("/api/me", {
+                withCredentials: true,
+            });
+            setUser(response.data); // ✅ 로그인한 사용자 정보 저장
+        } catch (error) {
+            setUser(null); // 로그인 정보 없음
+        }
+    };
 
-    // // ✅ accessToken 변경 시 Axios 인터셉터 설정 (AuthProvider 내부에서 실행)
-    // useEffect(() => {
-    //     const requestInterceptor = authApi.interceptors.request.use(
-    //         (config) => {
-    //             if (accessToken) {
-    //                 config.headers.Authorization = `Bearer ${accessToken}`;
-    //             }
-    //             return config;
-    //         },
-    //         (error) => Promise.reject(error)
-    //     );
+    // 로그인 상태 유지 (앱이 처음 실행될 때)
+    useEffect(() => {
+        fetchUser();
+    }, []);
 
-    //     return () => {
-    //         authApi.interceptors.request.eject(requestInterceptor);
-    //     };
-    // }, [accessToken]); // ✅ accessToken 변경 시 인터셉터 업데이트
+    // 로그인 처리
+    const login = async (email, password) => {
+        try {
+            await authApi.post("/api/auth/signin", { email, password });
+            await fetchUser(); // ✅ 로그인 성공 후 사용자 정보 가져오기
+            return true; // ✅ 로그인 성공 시 true 반환
+        } catch (error) {
+            console.error("로그인 실패", error);
+            return false; // ❌ 로그인 실패 시 false 반환
+        }
+    };
+    
 
-    // // ✅ 새로고침 시 accessToken 자동 갱신
-    // useEffect(() => {
-    //     const refreshAccessToken = async () => {
-    //         try {
-    //             const response = await axios.post(`${API_URL}/api/auth/refresh`, {}, { withCredentials: true });
-    //             setAccessToken(response.data.accessToken);
-    //         } catch (error) {
-    //             setAccessToken(null);
-    //         }
-    //     };
+    // 로그아웃 처리
+    const logout = async () => {
+        try {
+            await authApi.post("/api/auth/logout");
+            setUser(null); // ✅ 로그아웃 처리
+        } catch (error) {
+            console.error("로그아웃 실패", error);
+        }
+    };
 
-    //     refreshAccessToken();
-    // }, []);
+    return (
+        <AuthContext.Provider value={{ user, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
-    // return (
-    //     <AuthContext.Provider value={{ accessToken, setAccessToken, authApi }}>
-    //         {children}
-    //     </AuthContext.Provider>
-    // );
-}
-
-export function useAuth() { 
+// 🔹 useAuth 훅 생성 (편리하게 로그인 상태 사용)
+export const useAuth = () => {
     return useContext(AuthContext);
-}
+};

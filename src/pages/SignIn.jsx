@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import authApi from "../api/authApi"
 import styles from "../styles/SignIn.module.css"
+import { useAuth } from "../context/AuthContext";
+
 
 function SignIn() {
   const {
@@ -11,18 +13,24 @@ function SignIn() {
     formState: { errors },
   } = useForm()
   const navigate = useNavigate()
-  // const { setAccessToken } = useAuth();
+  const { login } = useAuth(); // ✅ 로그인 상태 업데이트
 
   const onSubmit = async (data) => {
     try {
-      const response = await authApi.post(`/api/auth/signin`, data, {
-        withCredentials: true,
-      })
+      // const response = await authApi.post(`/api/auth/signin`, data, {
+      //   withCredentials: true,
+      // })
       // console.log(response.data);
       // setAccessToken(response.data.accessToken);
-      navigate("/")
+      const isLoginSuccess = await login(data.email, data.password);
+        
+        if (isLoginSuccess) {
+            navigate("/"); // ✅ 로그인 성공한 경우에만 이동
+        } else {
+            console.error("로그인 실패: 잘못된 이메일 또는 비밀번호");
+        }
     } catch (error) {
-      console.error(error)
+      console.error("로그인 중 오류 발생:", error);
     }
   }
 
