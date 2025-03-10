@@ -69,9 +69,6 @@ function BudgetTransactions() {
         <div className={styles.sectionHeader}>
           <h2>이번 달 거래내역</h2>
         </div>
-        <div className={styles.errorMessage}>
-          <p>{error}</p>
-        </div>
       </section>
     )
   }

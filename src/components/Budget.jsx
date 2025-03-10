@@ -2,7 +2,7 @@
 
 import API_URL from "../config"
 import { useState, useEffect, useCallback } from "react"
-import { ArrowLeft, Edit2, Trash2, AlertCircle } from "lucide-react"
+import { ArrowLeft, Edit2, Trash2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import styles from "../styles/Budget.module.css"
 import BudgetTransactions from "./BudgetTransactions"
@@ -382,16 +382,6 @@ export default function Budget() {
             <h2 className="page-title">예산 관리</h2>
           </div>
         </div>
-
-        {error && (
-          <div className={styles.errorMessage}>
-            <AlertCircle size={20} />
-            <span>{error}</span>
-            <button className={styles.dismissButton} onClick={() => setError(null)} aria-label="에러 메시지 닫기">
-              ✕
-            </button>
-          </div>
-        )}
 
         {isLoading ? (
           <div className={styles.loadingContainer}>
