@@ -30,6 +30,13 @@ function SignUp() {
   // Add navigate constant after the useState declarations
   const navigate = useNavigate()
 
+  // Add a new state for agreement checkboxes after the other useState declarations
+  const [agreements, setAgreements] = useState({
+    termsOfService: false,
+    privacyPolicy: false,
+    marketingConsent: false,
+  })
+
   const watchedFields = watch(["emailId", "emailDomain"])
   const emailFilled = watchedFields.every(Boolean)
 
@@ -64,10 +71,34 @@ function SignUp() {
     setIsModalOpen(true)
   }
 
-  // Modify the onSubmit function to navigate to main page after successful signup
+  // Add a function to handle checkbox changes
+  const handleAgreementChange = (agreement) => {
+    setAgreements((prev) => ({
+      ...prev,
+      [agreement]: !prev[agreement],
+    }))
+  }
+
+  // Add a function to handle "agree to all"
+  const handleAllAgreements = () => {
+    const allChecked = Object.values(agreements).every((value) => value)
+    setAgreements({
+      termsOfService: !allChecked,
+      privacyPolicy: !allChecked,
+      marketingConsent: !allChecked,
+    })
+  }
+
+  // Modify the onSubmit function to check for required agreements
   const onSubmit = async (data) => {
     if (emailStatus !== "verified") {
       showModal("인증 필요", "이메일 인증을 완료해주세요.")
+      return
+    }
+
+    // Check if required agreements are accepted
+    if (!agreements.termsOfService || !agreements.privacyPolicy) {
+      showModal("약관 동의 필요", "필수 약관에 동의해주세요.")
       return
     }
 
@@ -79,6 +110,7 @@ function SignUp() {
       ...rest,
       email,
       birthDate,
+      marketingConsent: agreements.marketingConsent,
     }
     console.log(formData)
 
@@ -86,14 +118,24 @@ function SignUp() {
       const response = await axios.post(`${API_URL}/api/signup`, formData)
       if (response.data.success) {
         showModal("회원가입 성공", "회원가입에 성공했습니다. 메인 페이지로 이동합니다.")
+        // Set a timeout to allow the user to see the success message before redirecting
         setTimeout(() => {
-          navigate("/signin")
+          navigate("/")
         }, 2000)
       } else {
         showModal("회원가입 실패", `회원가입 실패: ${response.data.error}`)
       }
     } catch (error) {
-      showModal("오류", `${error.response.data.message}`)
+      // Check if the error response contains the specific error message
+      if (error.response && error.response.data && error.response.data.message === "이미 가입된 이메일입니다.") {
+        showModal("회원가입 실패", "이미 가입된 이메일입니다.")
+      } else if (error.response && error.response.data && error.response.data.message) {
+        // Display any other error message from the server
+        showModal("회원가입 실패", error.response.data.message)
+      } else {
+        // Generic error message as fallback
+        showModal("오류", `서버 요청 중 오류가 발생했습니다: ${error.message}`)
+      }
     }
   }
 
@@ -374,6 +416,131 @@ function SignUp() {
                 <option value="between_400_600">400만원 이상 600만원 미만</option>
                 <option value="above_600">600만원 이상</option>
               </select>
+            </div>
+
+            {/* 약관 동의 섹션 */}
+            <div className={styles["form-group"]}>
+              <div className={styles["agreements-section"]}>
+                <div className={styles["agreement-all"]}>
+                  <label className={styles["agreement-label"]}>
+                    <input
+                      type="checkbox"
+                      checked={Object.values(agreements).every((value) => value)}
+                      onChange={handleAllAgreements}
+                    />
+                    <span>모든 약관에 동의합니다</span>
+                  </label>
+                </div>
+
+                <div className={styles["agreement-items"]}>
+                  <label className={styles["agreement-label"]}>
+                    <input
+                      type="checkbox"
+                      checked={agreements.termsOfService}
+                      onChange={() => handleAgreementChange("termsOfService")}
+                    />
+                    <span className={styles["required"]}>서비스 이용약관 동의 (필수)</span>
+                  </label>
+                  <button
+                    type="button"
+                    className={styles["view-terms-button"]}
+                    onClick={() =>
+                      showModal(
+                        "서비스 이용약관",
+                        `제 1조 (목적)
+                      이 약관은 핀버디(이하 "회사")가 제공하는 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+
+                      제 2조 (정의)
+                      이 약관에서 사용하는 용어의 정의는 다음과 같습니다.
+                      1. "서비스"란 회사가 제공하는 금융 관리 서비스를 의미합니다.
+                      2. "회원"이란 회사와 서비스 이용계약을 체결하고 회사가 제공하는 서비스를 이용하는 개인을 의미합니다.
+                      3. "계정"이란 회원의 식별과 서비스 이용을 위하여 회원이 설정하고 회사가 승인하는 이메일 주소와 비밀번호를 의미합니다.
+
+                      제 3조 (약관의 효력 및 변경)
+                      1. 회사는 이 약관의 내용을 회원이 쉽게 알 수 있도록 서비스 초기 화면에 게시합니다.
+                      2. 회사는 필요한 경우 관련법령을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.`,
+                      )
+                    }
+                  >
+                    보기
+                  </button>
+
+                  <label className={styles["agreement-label"]}>
+                    <input
+                      type="checkbox"
+                      checked={agreements.privacyPolicy}
+                      onChange={() => handleAgreementChange("privacyPolicy")}
+                    />
+                    <span className={styles["required"]}>개인정보 수집 및 이용 동의 (필수)</span>
+                  </label>
+                  <button
+                    type="button"
+                    className={styles["view-terms-button"]}
+                    onClick={() =>
+                      showModal(
+                        "개인정보 수집 및 이용",
+                        `1. 수집하는 개인정보 항목
+                      - 필수항목: 이름, 이메일, 비밀번호, 생년월일, 성별, 직업, 소득 정보
+                      - 선택항목: 마케팅 정보 수신 동의 여부
+
+                      2. 개인정보의 수집 및 이용 목적
+                      - 회원 가입 및 관리
+                      - 서비스 제공 및 운영
+                      - 서비스 이용 기록 분석 및 통계
+                      - 맞춤형 금융 서비스 제공
+                      - 고객 상담 및 불만 처리
+
+                      3. 개인정보의 보유 및 이용 기간
+                      - 회원 탈퇴 시까지 (단, 관련 법령에 따라 일정 기간 보관이 필요한 정보는 해당 기간 동안 보관)
+
+                      4. 개인정보의 파기 절차 및 방법
+                      - 회원 탈퇴 시 또는 보유기간 종료 후 즉시 파기
+                      - 전자적 파일은 복구 불가능한 방법으로 영구 삭제하며, 종이 문서는 파쇄기로 파쇄`,
+                      )
+                    }
+                  >
+                    보기
+                  </button>
+
+                  <label className={styles["agreement-label"]}>
+                    <input
+                      type="checkbox"
+                      checked={agreements.marketingConsent}
+                      onChange={() => handleAgreementChange("marketingConsent")}
+                    />
+                    <span>마케팅 정보 수신 동의 (선택)</span>
+                  </label>
+                  <button
+                    type="button"
+                    className={styles["view-terms-button"]}
+                    onClick={() =>
+                      showModal(
+                        "마케팅 정보 수신",
+                        `마케팅 정보 수신 동의 (선택)
+
+                      1. 수집 및 이용 목적
+                      - 새로운 서비스 및 이벤트 정보 제공
+                      - 맞춤형 금융 상품 추천
+                      - 혜택 및 프로모션 안내
+
+                      2. 수신 정보 유형
+                      - 금융 상품 및 서비스 안내
+                      - 이벤트 및 프로모션 정보
+                      - 서비스 업데이트 및 변경사항 안내
+
+                      3. 전송 방법
+                      - 이메일, SMS, 앱 푸시 알림 등
+
+                      4. 동의 철회
+                      - 마케팅 정보 수신 동의는 언제든지 회원 설정에서 변경하거나 고객센터를 통해 철회할 수 있습니다.
+                      - 동의를 철회하더라도 서비스 이용에는 제한이 없습니다.`,
+                      )
+                    }
+                  >
+                    보기
+                  </button>
+                </div>
+              </div>
             </div>
 
             <button
