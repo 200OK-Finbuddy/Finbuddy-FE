@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
 import styles from "../styles/Transfer.module.css"
 import { BANKS } from "../constants/banks"
+import axios from "axios"
 
 // transfer 폴더 안의 모달 컴포넌트들 가져오기
 import AlertModal from "./transfer/AlertModal"
@@ -66,7 +67,6 @@ export default function Transfer() {
   const [alertMessage, setAlertMessage] = useState("")
   const [alertTitle, setAlertTitle] = useState("알림")
   const [alertCallback, setAlertCallback] = useState(null)
-  const memberId = 4
   const [showResultModal, setShowResultModal] = useState(false)
   const [resultModalType, setResultModalType] = useState("")
   const [resultModalMessage, setResultModalMessage] = useState("")
@@ -75,7 +75,10 @@ export default function Transfer() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/transfers/all/checking-account?memberId=${memberId}`)
+        const response = await axios.get(`${API_URL}/api/transfers/all/checking-account`, {
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        })
+                
         if (!response.ok) throw new Error("Failed to fetch accounts")
         const data = await response.json()
         setAccounts(data)
@@ -368,7 +371,6 @@ export default function Transfer() {
         setResultModalMessage={setResultModalMessage}
         setShowResultModal={setShowResultModal}
         resetAllInputs={resetAllInputs}
-        memberId={memberId}
       />
       
       <AlertModal 

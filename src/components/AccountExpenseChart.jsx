@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import styles from "../styles/AccountExpenseChart.module.css"
+import axios from "axios"
 
 const CATEGORY_COLORS = {
   카페: "#fde4cf",
@@ -51,7 +52,7 @@ CustomTooltip.propTypes = {
   payload: PropTypes.array,
 }
 
-export default function AccountExpenseChart({ accountId, memberId, accountType }) {
+export default function AccountExpenseChart({ accountId, accountType }) {
   const [monthlyExpenses, setMonthlyExpenses] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(MONTHS[MONTHS.length - 1])
   const [currentMonthExpenses, setCurrentMonthExpenses] = useState([])
@@ -64,23 +65,28 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
       try {
         setIsLoading(true)
         const promises = MONTHS.map((month) =>
-          fetch(
-            `${API_URL}/api/transactions/account-category-expense?memberId=${memberId}&accountId=${accountId}&year=${month.year}&month=${month.value}`,
-          )
-            .then((res) => res.json())
-            .then((data) => ({
+          axios
+            .get(`${API_URL}/api/transactions/account-category-expense`, {
+              params: {
+                accountId: accountId,
+                year: month.year,
+                month: month.value,
+              },
+              withCredentials: true, // 쿠키 및 인증 정보 포함
+            })
+            .then((response) => ({
               month: month.label,
               shortMonth: month.shortLabel,
-              totalAmount: data.reduce((sum, item) => sum + item.totalAmount, 0),
-              expenses: data,
+              totalAmount: response.data.reduce((sum, item) => sum + item.totalAmount, 0),
+              expenses: response.data,
             }))
             .catch(() => ({
               month: month.label,
               shortMonth: month.shortLabel,
               totalAmount: 0,
               expenses: [],
-            })),
-        )
+            }))
+        )        
 
         const results = await Promise.all(promises)
         setMonthlyExpenses(results)
@@ -104,7 +110,7 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
     }
 
     fetchAllMonthlyExpenses()
-  }, [accountId, memberId, selectedMonth])
+  }, [accountId, selectedMonth])
 
   if (accountType !== "CHECKING") {
     return null
@@ -249,7 +255,6 @@ export default function AccountExpenseChart({ accountId, memberId, accountType }
 
 AccountExpenseChart.propTypes = {
   accountId: PropTypes.number.isRequired,
-  memberId: PropTypes.number.isRequired,
   accountType: PropTypes.string.isRequired,
 }
 

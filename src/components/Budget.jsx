@@ -6,6 +6,7 @@ import { ArrowLeft, Edit2, Trash2, AlertCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import styles from "../styles/Budget.module.css"
 import BudgetTransactions from "./BudgetTransactions"
+import axios from "axios"
 
 export default function Budget() {
   const navigate = useNavigate()
@@ -16,7 +17,6 @@ export default function Budget() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [error, setError] = useState(null)
   const [amountInKorean, setAmountInKorean] = useState("") // amountInKorean 상태 추가
-  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   // 상태 변수 추가 (useState 부분 근처에 추가)
   const [showAlertModal, setShowAlertModal] = useState(false)
   const [alertMessage, setAlertMessage] = useState("")
@@ -87,7 +87,10 @@ export default function Budget() {
     try {
       setIsLoading(true)
       setError(null)
-      const response = await fetch(`${API_URL}/api/budgets/current?memberId=${memberId}`)
+      const response = await axios.get(`${API_URL}/api/budgets/current`, {
+        withCredentials: true, // 쿠키 및 인증 정보 포함
+      });
+      
 
       if (response.status === 404) {
         // 예산이 없는 경우
@@ -116,7 +119,7 @@ export default function Budget() {
     } finally {
       setIsLoading(false)
     }
-  }, [API_URL, memberId])
+  }, [API_URL])
 
   useEffect(() => {
     fetchCurrentBudget()
@@ -131,13 +134,14 @@ export default function Budget() {
       // 콤마 제거하여 숫자로 변환
       const numericAmount = Number(amount.replace(/,/g, ""))
 
-      const response = await fetch(`${API_URL}/api/budgets?memberId=${memberId}&amount=${numericAmount}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: numericAmount }),
-      })
+      const response = await axios.post(
+        `${API_URL}/api/budgets`,
+        null, // 요청 본문이 필요 없으므로 null
+        {
+          params: { amount: numericAmount }, // 쿼리 파라미터로 amount 추가
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        }
+      )
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -169,16 +173,14 @@ export default function Budget() {
       // 콤마 제거하여 숫자로 변환
       const numericAmount = Number(newAmount.replace(/,/g, ""))
 
-      const response = await fetch(
-        `${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}&amount=${numericAmount}`,
+      const response = await axios.patch(
+        `${API_URL}/api/budgets/${budget.budgetId}`,
+        null, // 요청 본문이 필요 없으므로 null
         {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: `newAmount=${numericAmount}`,
-        },
-      )
+          params: { newAmount: numericAmount }, // 쿼리 파라미터 추가
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -208,9 +210,9 @@ export default function Budget() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch(`${API_URL}/api/budgets/${budget.budgetId}?memberId=${memberId}`, {
-        method: "DELETE",
-      })
+      const response = await axios.delete(`${API_URL}/api/budgets/${budget.budgetId}`, {
+        withCredentials: true, // 쿠키 및 인증 정보 포함
+      });      
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -238,12 +240,14 @@ export default function Budget() {
       setIsNotificationLoading(true)
       setError(null)
 
-      const response = await fetch(
-        `${API_URL}/api/budgets/${budget.budgetId}/notification?memberId=${memberId}&enabled=${enabled}`,
+      const response = await axios.patch(
+        `${API_URL}/api/budgets/${budget.budgetId}/notification`,
+        null, // 요청 본문이 필요 없으므로 null
         {
-          method: "PATCH",
-        },
-      )
+          params: { enabled: enabled }, // 쿼리 파라미터 추가
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        }
+      );
 
       if (!response.ok) {
         throw new Error("알림 설정 변경에 실패했습니다.")

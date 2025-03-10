@@ -5,11 +5,11 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight } from "lucide-react"
 import styles from "../styles/AutoTransfer.module.css"
+import axios from "axios"
 
 export default function AutoTransferList() {
   const [autoTransfers, setAutoTransfers] = useState([])
   const navigate = useNavigate()
-  const memberId = 4 // 실제 구현시 로그인한 사용자 ID를 사용
   // 상태 변수 추가 (useState 부분 근처에 추가)
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false)
   const [transferToDelete, setTransferToDelete] = useState(null)
@@ -20,7 +20,10 @@ export default function AutoTransferList() {
 
   const fetchAutoTransfers = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/autotransfer/list/${memberId}`)
+      const response = await axios.get(`${API_URL}/api/autotransfer/list`, {
+        withCredentials: true, // 쿠키 및 인증 정보 포함
+      })
+      
       if (!response.ok) throw new Error("Failed to fetch")
       const data = await response.json()
       console.log(data)

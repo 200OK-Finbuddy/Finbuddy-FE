@@ -4,6 +4,7 @@ import API_URL from "../config"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/TransactionSection.css"
+import axios from "axios"
 
 function TransactionSection() {
   const [transactions, setTransactions] = useState([])
@@ -12,7 +13,10 @@ function TransactionSection() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/transactions/checking/recent/4`)
+        const response = await axios.get(`${API_URL}/api/transactions/checking/recent`, {
+          withCredentials: true, // 쿠키 및 인증 정보 포함
+        });
+        
         if (!response.ok) {
           throw new Error("Network response was not ok")
         }

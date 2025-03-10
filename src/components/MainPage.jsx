@@ -13,10 +13,6 @@ const MainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeNav, setActiveNav] = useState("")
 
-  // 실제 환경에서는 로그인한 사용자의 ID를 가져와야 합니다
-  // 여기서는 예시로 1을 사용합니다
-  const memberId = 4
-
   const isLoggedIn = true
 
   const handleConnectAccount = () => {
@@ -154,7 +150,7 @@ const MainPage = () => {
       <Footer />
 
       {/* 계좌 연동 모달 */}
-      <AccountLinkModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} memberId={memberId} />
+      <AccountLinkModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
     </div>
   )
 }
