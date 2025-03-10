@@ -7,7 +7,7 @@ import NotificationBell from "./NotificationBell"
 import styles from "../styles/Header.module.css"
 import PropTypes from "prop-types"
 
-export default function Header({ activeNav, setActiveNav, isLoggedIn = true }) {
+export default function Header({ activeNav, setActiveNav, isLoggedIn = false }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const navigate = useNavigate()
 
