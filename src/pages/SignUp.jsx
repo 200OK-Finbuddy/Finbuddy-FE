@@ -433,21 +433,22 @@ function SignUp() {
                 </div>
 
                 <div className={styles["agreement-items"]}>
-                  <label className={styles["agreement-label"]}>
-                    <input
-                      type="checkbox"
-                      checked={agreements.termsOfService}
-                      onChange={() => handleAgreementChange("termsOfService")}
-                    />
-                    <span className={styles["required"]}>서비스 이용약관 동의 (필수)</span>
-                  </label>
-                  <button
-                    type="button"
-                    className={styles["view-terms-button"]}
-                    onClick={() =>
-                      showModal(
-                        "서비스 이용약관",
-                        `제 1조 (목적)
+                  <div className={styles["agreement-row"]}>
+                    <label className={styles["agreement-label"]}>
+                      <input
+                        type="checkbox"
+                        checked={agreements.termsOfService}
+                        onChange={() => handleAgreementChange("termsOfService")}
+                      />
+                      <span className={styles["required"]}>서비스 이용약관 동의 (필수)</span>
+                    </label>
+                    <button
+                      type="button"
+                      className={styles["view-terms-button"]}
+                      onClick={() =>
+                        showModal(
+                          "서비스 이용약관",
+                          `제 1조 (목적)
                       이 약관은 핀버디(이하 "회사")가 제공하는 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
 
                       제 2조 (정의)
@@ -459,27 +460,29 @@ function SignUp() {
                       제 3조 (약관의 효력 및 변경)
                       1. 회사는 이 약관의 내용을 회원이 쉽게 알 수 있도록 서비스 초기 화면에 게시합니다.
                       2. 회사는 필요한 경우 관련법령을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.`,
-                      )
-                    }
-                  >
-                    보기
-                  </button>
+                        )
+                      }
+                    >
+                      보기
+                    </button>
+                  </div>
 
-                  <label className={styles["agreement-label"]}>
-                    <input
-                      type="checkbox"
-                      checked={agreements.privacyPolicy}
-                      onChange={() => handleAgreementChange("privacyPolicy")}
-                    />
-                    <span className={styles["required"]}>개인정보 수집 및 이용 동의 (필수)</span>
-                  </label>
-                  <button
-                    type="button"
-                    className={styles["view-terms-button"]}
-                    onClick={() =>
-                      showModal(
-                        "개인정보 수집 및 이용",
-                        `1. 수집하는 개인정보 항목
+                  <div className={styles["agreement-row"]}>
+                    <label className={styles["agreement-label"]}>
+                      <input
+                        type="checkbox"
+                        checked={agreements.privacyPolicy}
+                        onChange={() => handleAgreementChange("privacyPolicy")}
+                      />
+                      <span className={styles["required"]}>개인정보 수집 및 이용 동의 (필수)</span>
+                    </label>
+                    <button
+                      type="button"
+                      className={styles["view-terms-button"]}
+                      onClick={() =>
+                        showModal(
+                          "개인정보 수집 및 이용",
+                          `1. 수집하는 개인정보 항목
                       - 필수항목: 이름, 이메일, 비밀번호, 생년월일, 성별, 직업, 소득 정보
                       - 선택항목: 마케팅 정보 수신 동의 여부
 
@@ -496,27 +499,29 @@ function SignUp() {
                       4. 개인정보의 파기 절차 및 방법
                       - 회원 탈퇴 시 또는 보유기간 종료 후 즉시 파기
                       - 전자적 파일은 복구 불가능한 방법으로 영구 삭제하며, 종이 문서는 파쇄기로 파쇄`,
-                      )
-                    }
-                  >
-                    보기
-                  </button>
+                        )
+                      }
+                    >
+                      보기
+                    </button>
+                  </div>
 
-                  <label className={styles["agreement-label"]}>
-                    <input
-                      type="checkbox"
-                      checked={agreements.marketingConsent}
-                      onChange={() => handleAgreementChange("marketingConsent")}
-                    />
-                    <span>마케팅 정보 수신 동의 (선택)</span>
-                  </label>
-                  <button
-                    type="button"
-                    className={styles["view-terms-button"]}
-                    onClick={() =>
-                      showModal(
-                        "마케팅 정보 수신",
-                        `마케팅 정보 수신 동의 (선택)
+                  <div className={styles["agreement-row"]}>
+                    <label className={styles["agreement-label"]}>
+                      <input
+                        type="checkbox"
+                        checked={agreements.marketingConsent}
+                        onChange={() => handleAgreementChange("marketingConsent")}
+                      />
+                      <span>마케팅 정보 수신 동의 (선택)</span>
+                    </label>
+                    <button
+                      type="button"
+                      className={styles["view-terms-button"]}
+                      onClick={() =>
+                        showModal(
+                          "마케팅 정보 수신",
+                          `마케팅 정보 수신 동의 (선택)
 
                       1. 수집 및 이용 목적
                       - 새로운 서비스 및 이벤트 정보 제공
@@ -534,11 +539,12 @@ function SignUp() {
                       4. 동의 철회
                       - 마케팅 정보 수신 동의는 언제든지 회원 설정에서 변경하거나 고객센터를 통해 철회할 수 있습니다.
                       - 동의를 철회하더라도 서비스 이용에는 제한이 없습니다.`,
-                      )
-                    }
-                  >
-                    보기
-                  </button>
+                        )
+                      }
+                    >
+                      보기
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
