@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import styles from "../styles/Transactions.module.css"
 import AccountExpenseChart from "./AccountExpenseChart"
 import { BANKS } from "../constants/banks"
-// import { useAuth } from "../context/AuthContext";
 import OtpRegisterModal from "./OtpRegisterModal"
 import authApi from "../api/authApi"
 
@@ -268,31 +267,31 @@ export default function Transactions() {
   }
 
   // // otp 등록 상태 확인
-  // const checkOTPStatus = async () => {
-  //   try {
-  //     const response = await authApi.get("api/otp/status")
-  //     // console.log(response.data);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Error checking OTP status:", error)
-  //     return false // 오류 발생 시 기본적으로 미등록으로 처리
-  //   }
-  // }
+  const checkOTPStatus = async () => {
+    try {
+      const response = await authApi.get("api/otp/status")
+      // console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error checking OTP status:", error)
+      return false // 오류 발생 시 기본적으로 미등록으로 처리
+    }
+  }
 
   // 송금 버튼 클릭 핸들러 추가
   const handleTransferClick = async (e, accountId) => {
     e.stopPropagation() // 카드 클릭 이벤트 방지
 
-    // const isOtpRegistered = await checkOTPStatus();
+    const isOtpRegistered = await checkOTPStatus();
 
-    // if (isOtpRegistered) {
-    //   // OTP 등록되어 있으면 송금 화면으로 이동
-    //   navigate(`/transfer?accountId=${accountId}`)
-    // } else {
-    //   // OTP 미등록 시 모달 띄우기
-    //   setShowOtpModal(true)
-    // }
-    navigate(`/transfer?accountId=${accountId}`)
+    if (isOtpRegistered) {
+      // OTP 등록되어 있으면 송금 화면으로 이동
+      navigate(`/transfer?accountId=${accountId}`)
+    } else {
+      // OTP 미등록 시 모달 띄우기
+      setShowOtpModal(true)
+    }
+    // navigate(`/transfer?accountId=${accountId}`)
   }
 
   const formatAmount = (amount) => {

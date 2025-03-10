@@ -5,7 +5,12 @@ import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
 import styles from "../styles/Transfer.module.css"
 import { BANKS } from "../constants/banks"
-import PasswordInputKeypad from "./PasswordInputKeypad"
+
+// transfer 폴더 안의 모달 컴포넌트들 가져오기
+import AlertModal from "./transfer/AlertModal"
+import AccountConfirmModal from "./transfer/AccountConfirmModal"
+import TransferConfirmModal from "./transfer/TransferConfirmModal"
+import ResultModal from "./transfer/ResultModal"
 
 // 금액에 단위만 한글로 표시하는 함수를 다음 함수로 교체
 const formatAmountWithKoreanUnit = (amount) => {
@@ -49,7 +54,7 @@ export default function Transfer() {
   const [selectedBank, setSelectedBank] = useState("")
   const [accountNumber, setAccountNumber] = useState("")
   const [amount, setAmount] = useState("")
-  const [amountInKorean, setAmountInKorean] = useState("") // 수정된 부분
+  const [amountInKorean, setAmountInKorean] = useState("")
   const [recipientMemo, setRecipientMemo] = useState("")
   const [senderMemo, setSenderMemo] = useState("")
   const [recipientName, setRecipientName] = useState("")
@@ -62,9 +67,8 @@ export default function Transfer() {
   const [alertTitle, setAlertTitle] = useState("알림")
   const [alertCallback, setAlertCallback] = useState(null)
   const memberId = 4
-  // 컴포넌트 상단에 상태 변수 추가 (다른 useState 선언 근처에 추가)
   const [showResultModal, setShowResultModal] = useState(false)
-  const [resultModalType, setResultModalType] = useState("") // "success" 또는 "error"
+  const [resultModalType, setResultModalType] = useState("")
   const [resultModalMessage, setResultModalMessage] = useState("")
 
   // 계좌 목록 조회 - 입출금 계좌만 조회
@@ -196,319 +200,6 @@ export default function Transfer() {
     return balance?.toLocaleString() || "0"
   }
 
-  // 알림 모달 컴포넌트
-  const AlertModal = () => {
-    if (!showAlertModal) return null
-
-    const handleClose = () => {
-      setShowAlertModal(false)
-      if (alertCallback) {
-        alertCallback()
-      }
-    }
-
-    return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <h3 className={styles.modalTitle}>{alertTitle}</h3>
-          <p className={styles.modalMessage}>{alertMessage}</p>
-          <button className={styles.modalButton} onClick={handleClose}>
-            확인
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  // 모달 컴포넌트 수정 - 이름 변경
-  const AccountConfirmModal = () => {
-    if (!showAccountModal) return null
-
-    return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <h3 className={styles.modalTitle}>계좌 확인</h3>
-          <p className={styles.modalMessage}>
-            <span className={styles.highlightText}>{recipientName}</span>님의 계좌가 확인되었습니다.
-          </p>
-          <p className={styles.modalSubMessage}>내 통장 표시에 수취인 이름이 입력되었습니다.</p>
-          <button className={styles.modalButton} onClick={handleCloseAccountModal}>
-            확인
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  // 이체 확인 모달 컴포넌트 추가
-  const TransferConfirmModal = () => {
-    const [modalPassword, setModalPassword] = useState("")
-    const [modalResetPassword, setModalResetPassword] = useState(false)
-    const [isPasswordVerified, setIsPasswordVerified] = useState(false)
-    const [showPasswordSuccessModal, setShowPasswordSuccessModal] = useState(false)
-    const [modalAlertTitle, setModalAlertTitle] = useState("")
-    const [modalAlertMessage, setModalAlertMessage] = useState("")
-    const [modalAlertCallback, setModalAlertCallback] = useState(null)
-    const [showModalAlertModal, setShowModalAlertModal] = useState(false)
-
-    if (!showTransferModal) return null
-
-    const showModalAlert = (title, message, callback = null) => {
-      setModalAlertTitle(title)
-      setModalAlertMessage(message)
-      setModalAlertCallback(callback)
-      setShowModalAlertModal(true)
-    }
-
-    const handleModalPasswordComplete = (value) => {
-      setModalPassword(value)
-      // 비밀번호가 변경되면 검증 상태를 초기화
-      if (isPasswordVerified) {
-        setIsPasswordVerified(false)
-      }
-    }
-
-    const verifyPassword = async (accountId, password) => {
-      try {
-        const response = await fetch(`${API_URL}/api/accounts/verify-password`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            accountId,
-            password,
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error("비밀번호 검증에 실패했습니다.")
-        }
-
-        const data = await response.json()
-        return data.valid
-      } catch (error) {
-        console.error("Error verifying password:", error)
-        return false
-      }
-    }
-
-    const handlePasswordVerification = async () => {
-      if (!modalPassword) {
-        showModalAlert("입력 오류", "비밀번호를 입력해주세요.")
-        return
-      }
-
-      // 비밀번호 검증
-      const isValid = await verifyPassword(selectedAccount.accountId, modalPassword)
-
-      if (isValid) {
-        setIsPasswordVerified(true)
-        setShowPasswordSuccessModal(true)
-      } else {
-        showModalAlert("비밀번호 오류", "비밀번호가 일치하지 않습니다.")
-        setModalPassword("")
-        setModalResetPassword((prev) => !prev)
-      }
-    }
-
-    const handleModalSubmit = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/transfers?memberId=${memberId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fromAccountId: selectedAccount.accountId,
-            toBankName: selectedBank,
-            toAccountNumber: accountNumber,
-            amount: Number(amount.replace(/,/g, "")),
-            password: modalPassword,
-            senderName: recipientMemo,
-            receiverName: senderMemo,
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error("이체에 실패했습니다.")
-        }
-
-        // 이체 성공 시 모달 닫기
-        handleCloseTransferModal()
-
-        // 성공 결과 모달 표시
-        setResultModalType("success")
-        setResultModalMessage("이체가 성공적으로 완료되었습니다.")
-        setShowResultModal(true)
-
-        // 입력값 초기화
-        resetAllInputs()
-      } catch (error) {
-        console.error("Error during transfer:", error)
-
-        // 이체 실패 시 모달 닫기
-        handleCloseTransferModal()
-
-        // 실패 결과 모달 표시
-        setResultModalType("error")
-        setResultModalMessage("이체 중 오류가 발생했습니다. 다시 시도해주세요.")
-        setShowResultModal(true)
-
-        setModalPassword("")
-        setModalResetPassword((prev) => !prev)
-        setIsPasswordVerified(false)
-      }
-    }
-
-    const PasswordSuccessModal = () => {
-      if (!showPasswordSuccessModal) return null
-
-      return (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent} style={{ maxWidth: "300px" }}>
-            <h3 className={styles.modalTitle}>비밀번호 확인</h3>
-            <p className={styles.modalMessage}>비밀번호가 확인되었습니다.</p>
-            <button className={styles.modalButton} onClick={() => setShowPasswordSuccessModal(false)}>
-              확인
-            </button>
-          </div>
-        </div>
-      )
-    }
-
-    const ModalAlertModal = () => {
-      if (!showModalAlertModal) return null
-
-      const handleClose = () => {
-        setShowModalAlertModal(false)
-        if (modalAlertCallback) {
-          modalAlertCallback()
-        }
-      }
-
-      return (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h3 className={styles.modalTitle}>{modalAlertTitle}</h3>
-            <p className={styles.modalMessage}>{modalAlertMessage}</p>
-            <button className={styles.modalButton} onClick={handleClose}>
-              확인
-            </button>
-          </div>
-        </div>
-      )
-    }
-
-    return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <h3 className={styles.modalTitle}>이체 확인</h3>
-          <div className={styles.modalInfo}>
-            <div className={styles.modalInfoItem}>
-              <span className={styles.modalLabel}>출금계좌</span>
-              <span className={styles.modalValue}>
-                {selectedAccount?.bankName} {selectedAccount?.accountNumber}
-              </span>
-            </div>
-            <div className={styles.modalInfoItem}>
-              <span className={styles.modalLabel}>입금계좌</span>
-              <span className={styles.modalValue}>
-                {selectedBank} {accountNumber}
-              </span>
-            </div>
-            <div className={styles.modalInfoItem}>
-              <span className={styles.modalLabel}>이체금액</span>
-              <span className={styles.modalValue}>{amount}원</span>
-            </div>
-            {recipientMemo && (
-              <div className={styles.modalInfoItem}>
-                <span className={styles.modalLabel}>받는분 통장 표시</span>
-                <span className={styles.modalValue}>{recipientMemo}</span>
-              </div>
-            )}
-            {senderMemo && (
-              <div className={styles.modalInfoItem}>
-                <span className={styles.modalLabel}>내 통장 표시</span>
-                <span className={styles.modalValue}>{senderMemo}</span>
-              </div>
-            )}
-          </div>
-
-          <div className={styles.modalPasswordSection}>
-            <label className={styles.modalLabel}>비밀번호</label>
-            {isPasswordVerified ? (
-              <div className={styles.verifiedPasswordDisplay}>
-                <div className={styles.passwordDots}>{Array(modalPassword.length).fill("●").join("")}</div>
-                <div className={styles.passwordVerifiedMessage}>비밀번호 확인 완료</div>
-              </div>
-            ) : (
-              <div style={{ position: "relative", zIndex: 20 }}>
-                <PasswordInputKeypad onPasswordComplete={handleModalPasswordComplete} reset={modalResetPassword} />
-                <button
-                  className={styles.modalVerifyButton}
-                  onClick={handlePasswordVerification}
-                  disabled={!modalPassword}
-                >
-                  비밀번호 확인
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className={styles.modalActions}>
-            <button
-              className={styles.modalCancelButton}
-              onClick={() => {
-                handleCloseTransferModal()
-                setModalPassword("")
-                setModalResetPassword((prev) => !prev)
-                setIsPasswordVerified(false)
-                setShowPasswordSuccessModal(false)
-              }}
-            >
-              취소
-            </button>
-            <button className={styles.modalSubmitButton} onClick={handleModalSubmit} disabled={!isPasswordVerified}>
-              이체
-            </button>
-          </div>
-        </div>
-        <PasswordSuccessModal />
-        <ModalAlertModal />
-      </div>
-    )
-  }
-
-  // 결과 모달 컴포넌트 추가 (return 문 바로 위에 추가)
-  const ResultModal = () => {
-    if (!showResultModal) return null
-
-    return (
-      <div className={styles.modalOverlay}>
-        <div
-          className={`${styles.modalContent} ${styles[resultModalType === "success" ? "successModal" : "errorModal"]}`}
-        >
-          <div className={styles.resultIconContainer}>
-            {resultModalType === "success" ? (
-              <div className={styles.successIcon}>✓</div>
-            ) : (
-              <div className={styles.errorIcon}>✕</div>
-            )}
-          </div>
-          <h3 className={styles.modalTitle}>{resultModalType === "success" ? "이체 완료" : "이체 실패"}</h3>
-          <p className={styles.modalMessage}>{resultModalMessage}</p>
-          <button
-            className={`${styles.modalButton} ${resultModalType === "success" ? styles.successButton : styles.errorButton}`}
-            onClick={() => setShowResultModal(false)}
-          >
-            확인
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   if (isLoading) {
     return (
       <main className="main-content">
@@ -613,7 +304,7 @@ export default function Transfer() {
               />
               <span className={styles.currencyUnit}>원</span>
             </div>
-            {amountInKorean && ( // 수정된 부분
+            {amountInKorean && (
               <div className={styles.amountInKorean}>{amountInKorean}</div>
             )}
           </div>
@@ -656,11 +347,44 @@ export default function Transfer() {
           </button>
         </div>
       </div>
-      <AccountConfirmModal />
-      <TransferConfirmModal />
-      <AlertModal />
-      <ResultModal />
+      
+      {/* 모달 컴포넌트들 */}
+      <AccountConfirmModal 
+        showAccountModal={showAccountModal}
+        recipientName={recipientName}
+        handleCloseAccountModal={handleCloseAccountModal}
+      />
+      
+      <TransferConfirmModal 
+        showTransferModal={showTransferModal}
+        selectedAccount={selectedAccount}
+        selectedBank={selectedBank}
+        accountNumber={accountNumber}
+        amount={amount}
+        recipientMemo={recipientMemo}
+        senderMemo={senderMemo}
+        handleCloseTransferModal={handleCloseTransferModal}
+        setResultModalType={setResultModalType}
+        setResultModalMessage={setResultModalMessage}
+        setShowResultModal={setShowResultModal}
+        resetAllInputs={resetAllInputs}
+        memberId={memberId}
+      />
+      
+      <AlertModal 
+        showAlertModal={showAlertModal}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+        alertCallback={alertCallback}
+        setShowAlertModal={setShowAlertModal}
+      />
+      
+      <ResultModal 
+        showResultModal={showResultModal}
+        resultModalType={resultModalType}
+        resultModalMessage={resultModalMessage}
+        setShowResultModal={setShowResultModal}
+      />
     </main>
   )
 }
-
