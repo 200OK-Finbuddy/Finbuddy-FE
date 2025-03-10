@@ -607,3 +607,86 @@
   background: linear-gradient(to right, #dc2626, #b91c1c);
 }
 
+/* Transfer.module.css 파일에 추가할 비밀번호 오류 메시지 스타일 */
+
+.passwordError {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Transfer.module.css 파일에 추가할 OTP 관련 스타일 */
+
+.modalOtpSection {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.otpInputWrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.otpInput {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  letter-spacing: 0.5rem;
+  text-align: center;
+}
+
+.otpError {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.otpVerifiedMessage {
+  color: #48bb78;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.otpDescription {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.modalNextButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #9acbd0, #7fb9bf);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 160px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modalNextButton:hover {
+  background: linear-gradient(to right, #7fb9bf, #6aa7ad);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modalNextButton:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
