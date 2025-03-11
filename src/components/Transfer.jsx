@@ -137,7 +137,6 @@ export default function Transfer() {
       const response = await fetch(
         `${API_URL}/api/transfers/receiving-account?bankName=${selectedBank}&accountNumber=${accountNumber}`,
       )
-      console.log(selectedBank)
 
       if (!response.ok) {
         throw new Error("계좌 검색에 실패했습니다.")

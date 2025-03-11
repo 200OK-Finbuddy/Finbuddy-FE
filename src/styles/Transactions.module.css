@@ -12,6 +12,7 @@
   overflow-x: hidden;
   padding: 8px 0;
   flex: 1;
+  justify-content: center;
 }
 
 .accountCard {

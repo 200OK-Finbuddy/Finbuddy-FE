@@ -468,7 +468,7 @@ export default function Transactions() {
           <div className={styles.accountCards}>
             {visibleAccounts.map((account) => {
               // 각 계좌의 타입을 콘솔에 출력
-              console.log(`계좌 ID: ${account.accountId}, 이름: ${account.accountName}, 타입: ${account.accountType}`)
+              // console.log(`계좌 ID: ${account.accountId}, 이름: ${account.accountName}, 타입: ${account.accountType}`)
 
               return (
                 <div

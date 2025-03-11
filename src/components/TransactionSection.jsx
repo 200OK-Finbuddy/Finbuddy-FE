@@ -17,8 +17,6 @@ function TransactionSection() {
           withCredentials: true, // 쿠키 및 인증 정보 포함
         })
 
-        console.log("API Response:", response)
-
         if (!response || response.status !== 200) {
           throw new Error(`Network response was not ok, status: ${response.status}`)
         }

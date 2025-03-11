@@ -45,7 +45,7 @@ export function NotificationProvider({ children }) {
     if (!isLoggedIn) return;
 
     const eventSource = new EventSource(`${API_URL}/api/notifications/subscribe`, {
-      withCredentials: true, // ✅ 쿠키 포함
+      withCredentials: true, // 쿠키 포함
     });
 
     eventSource.addEventListener("connect", (event) => {
