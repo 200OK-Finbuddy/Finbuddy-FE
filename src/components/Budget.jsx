@@ -91,7 +91,7 @@ export default function Budget() {
         withCredentials: true, // 쿠키 및 인증 정보 포함
       })
 
-      if (!response || response.status !== 200) {
+      if (response.status < 200 || response.status >= 300) {
         if (response && response.status === 404) {
           // 예산이 없는 경우
           setBudget(null)
@@ -142,7 +142,7 @@ export default function Budget() {
         },
       )
 
-      if (!response || response.status !== 200) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
@@ -183,7 +183,7 @@ export default function Budget() {
         },
       )
 
-      if (!response || response.status !== 200) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
@@ -217,7 +217,7 @@ export default function Budget() {
         },
       })
 
-      if (!response || response.status !== 200) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
@@ -254,7 +254,7 @@ export default function Budget() {
         },
       )
 
-      if (!response || response.status !== 200) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Network response was not ok, status: ${response.status}`)
       }
 
