@@ -70,7 +70,7 @@ function OtpRegisterModal() {
         setCurrentStep(currentStep + 1)
         } catch (err) {
         console.error("TOTP 인증 오류:", err)
-        setVerificationError("다시 입력하세요")
+        setVerificationError("올바르지 않은 코드입니다.")
         setTotpCode("")
         } finally {
         setIsVerifying(false)
@@ -99,7 +99,7 @@ function OtpRegisterModal() {
                 <div className={currentStep >= 1 ? otpStyles.stepActive : otpStyles.stepInactive}>
                     {currentStep > 1 ? <Check className={otpStyles.checkIcon} /> : "1"}
                 </div>
-                <div className={otpStyles.stepLabel}>어플 설치</div>
+                <span className={otpStyles.stepLabel}>앱 설치</span>
                 </div>
                 <div className={currentStep > 1 ? otpStyles.connectorActive : otpStyles.connectorInactive} />
 
@@ -107,7 +107,7 @@ function OtpRegisterModal() {
                 <div className={currentStep >= 2 ? otpStyles.stepActive : otpStyles.stepInactive}>
                     {currentStep > 2 ? <Check className={otpStyles.checkIcon} /> : "2"}
                 </div>
-                <div className={otpStyles.stepLabel}>TOTP 설정</div>
+                <span className={otpStyles.stepLabel}>QR 스캔</span>
                 </div>
                 <div className={currentStep > 2 ? otpStyles.connectorActive : otpStyles.connectorInactive} />
 
@@ -115,7 +115,7 @@ function OtpRegisterModal() {
                 <div className={currentStep >= 3 ? otpStyles.stepActive : otpStyles.stepInactive}>
                     {currentStep > 3 ? <Check className={otpStyles.checkIcon} /> : "3"}
                 </div>
-                <div className={otpStyles.stepLabel}>TOTP 인증</div>
+                <span className={otpStyles.stepLabel}>코드 입력</span>
                 </div>
                 <div className={currentStep > 3 ? otpStyles.connectorActive : otpStyles.connectorInactive} />
 
@@ -123,7 +123,7 @@ function OtpRegisterModal() {
                 <div className={currentStep >= 4 ? otpStyles.stepActive : otpStyles.stepInactive}>
                     {currentStep > 4 ? <Check className={otpStyles.checkIcon} /> : "4"}
                 </div>
-                <div className={otpStyles.stepLabel}>설정 완료</div>
+                <span className={otpStyles.stepLabel}>설정 완료</span>
                 </div>
             </div>
             </div>
@@ -132,9 +132,9 @@ function OtpRegisterModal() {
             {currentStep === 1 && (
                 <div className={otpStyles.stepContent}>
                 <div className={otpStyles.infoMessage}>
-                    이체 기능을 이용하시려면 OTP를 등록하셔야합니다.
+                    이체 기능을 사용하려면 OTP 설정이 필요합니다.
                     <br />
-                    Google Authenticator를 설치하세요.
+                    스마트폰에 Google Authenticator를 설치하세요.
                 </div>
                 </div>
             )}
@@ -197,7 +197,7 @@ function OtpRegisterModal() {
                 />
                 {verificationError && <div className={otpStyles.verificationError}>{verificationError}</div>}
                 {isVerified && <div className={otpStyles.verificationSuccess}>인증 성공!</div>}
-                <div className={otpStyles.totpInstruction}>인증키에 6자리 TOTP 코드를 입력하세요.</div>
+                <div className={otpStyles.totpInstruction}>앱에 표시된 6자리 인증 코드를 입력하세요.</div>
                 </div>
             )}
 
